@@ -11,7 +11,7 @@ import { ThemeToggle } from './theme-toggle';
 import { SignOutButton } from './sign-out-button';
 import { NavigationIndicator } from './navigation-indicator';
 import { homeFor } from '@/lib/permissions';
-import type { SessionUser } from '@/types/lms';
+import { ROLES, type SessionUser } from '@/types/lms';
 
 export function DashboardShell({
   user,
@@ -22,13 +22,14 @@ export function DashboardShell({
 }) {
   const [open, setOpen] = useState(false);
   const initials = user.username.slice(0, 2).toUpperCase() || 'U';
+  const lumenHref = user.role === ROLES.STUDENT ? '/' : homeFor(user.role);
 
   return (
     <div className="min-h-dvh bg-background">
       <NavigationIndicator />
       <div className="mx-auto flex max-w-[1400px]">
         <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-3 py-4 md:flex">
-          <Link href={homeFor(user.role)} className="mb-6 flex items-center gap-2 px-3 font-heading text-sm font-semibold">
+          <Link href={lumenHref} className="mb-6 flex items-center gap-2 px-3 font-heading text-sm font-semibold">
             <GraduationCap className="size-5 text-pine" aria-hidden />
             Lumen
           </Link>
@@ -61,9 +62,15 @@ export function DashboardShell({
                 }
               />
               <SheetContent side="left" className="flex w-64 flex-col p-4">
-                <SheetTitle className="mb-5 flex items-center gap-2 font-heading text-sm font-semibold">
-                  <GraduationCap className="size-5 text-pine" aria-hidden />
-                  Lumen
+                <SheetTitle className="mb-5">
+                  <Link
+                    href={lumenHref}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-2 font-heading text-sm font-semibold"
+                  >
+                    <GraduationCap className="size-5 text-pine" aria-hidden />
+                    Lumen
+                  </Link>
                 </SheetTitle>
                 <DashboardNav role={user.role} onNavigate={() => setOpen(false)} />
                 <div className="mt-auto space-y-3 pt-4">

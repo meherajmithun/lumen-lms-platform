@@ -36,7 +36,7 @@ export async function updateUserRoleAction(
 }
 
 export async function reviewEnrollmentAction(id: string, decision: 'approved' | 'rejected') {
-  await requireRole('admin');
-  try { await reviewEnrollmentApplication(id, decision); revalidatePath('/admin/enrollments'); revalidatePath('/admin'); return { ok: true as const }; }
+  await requireRole('content_manager');
+  try { await reviewEnrollmentApplication(id, decision); revalidatePath('/enrollment-requests'); return { ok: true as const }; }
   catch (error) { return { ok: false as const, error: toUserMessage(error) }; }
 }

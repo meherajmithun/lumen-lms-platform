@@ -87,12 +87,15 @@ const STUDENT_LEARNING = [
 ];
 
 const ADMIN_ONLY = [
-  'api::enrollment-application.enrollment-application.queue',
-  'api::enrollment-application.enrollment-application.review',
   'plugin::users-permissions.user.find',
   'plugin::users-permissions.user.findOne',
   'plugin::users-permissions.user.updateRole',
   'plugin::users-permissions.user.stats',
+];
+
+const ENROLLMENT_REVIEW = [
+  'api::enrollment-application.enrollment-application.queue',
+  'api::enrollment-application.enrollment-application.review',
 ];
 
 export const PERMISSIONS: Record<RoleType, string[]> = {
@@ -115,6 +118,7 @@ export const PERMISSIONS: Record<RoleType, string[]> = {
     ...CONTENT_AUTHORING,
     ...BLOG_AUTHORING,
     ...PROGRESS_OVERSIGHT,
+    ...ENROLLMENT_REVIEW,
   ],
 
   // Matrix row: own courses only. The same endpoints as a Content Manager, but every

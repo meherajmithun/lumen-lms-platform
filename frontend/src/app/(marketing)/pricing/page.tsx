@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BadgePercent, Clock } from 'lucide-react';
+import { BadgePercent, BookOpen, Clock } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { EnrollButton } from '@/components/lms/enroll-button';
 import { getPublishedCourses } from '@/lib/api/courses';
@@ -70,6 +70,12 @@ export default async function PricingPage() {
                     <span className="font-medium tabular">
                       {formatCourseDuration(course.totalDurationMinutes ?? 0)}
                     </span>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between gap-4 text-sm">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <BookOpen className="size-4" aria-hidden /> Lessons
+                    </span>
+                    <span className="font-medium tabular">{course.lessonCount ?? 0}</span>
                   </div>
                 </div>
 
