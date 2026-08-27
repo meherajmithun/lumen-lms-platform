@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,6 @@ type Mode = 'login' | 'register';
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
-  const params = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [role, setRole] = useState<'student' | 'instructor'>('student');
@@ -47,9 +46,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       return;
     }
 
-    const next = params.get('next');
-    const destination = next?.startsWith('/') && !next.startsWith('//') ? next : '/';
-    router.push(destination);
+    router.push('/');
     router.refresh();
   }
 
