@@ -142,9 +142,10 @@ export function CourseForm({
       <div className="flex items-start gap-3 rounded-lg border border-border p-3">
         <Switch id="isPublished" name="isPublished" defaultChecked={course?.isPublished ?? false} />
         <Label htmlFor="isPublished" className="cursor-pointer text-sm font-normal">
-          <span className="block font-medium">Published</span>
+          <span className="block font-medium">Course visibility</span>
           <span className="text-muted-foreground">
-            Students can find and enroll in this course. Unpublished courses stay private to you.
+            {course?.isPublished ? 'Published — ' : 'Draft — '}
+            turn this on so students can find and enroll in the course. Turn it off to keep the course private.
           </span>
         </Label>
       </div>
