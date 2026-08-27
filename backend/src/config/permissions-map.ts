@@ -58,6 +58,8 @@ const BLOG_AUTHORING = [
   'api::post.post.create',
   'api::post.post.update',
   'api::post.post.delete',
+  'api::post.post.publish',
+  'api::post.post.unpublish',
 ];
 
 /** Seeing enrolled students' progress — granted to course owners and platform content roles. */
