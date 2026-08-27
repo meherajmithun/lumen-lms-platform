@@ -5,7 +5,6 @@ import {
   CircleDollarSign,
   GraduationCap,
   Home,
-  Newspaper,
   UserPlus,
 } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
@@ -31,7 +30,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 text-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
-      <div className="mx-auto flex h-16 max-w-7xl items-center gap-5 px-4 sm:px-6">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6">
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
@@ -41,7 +40,7 @@ export async function SiteHeader() {
           Lumen
         </Link>
 
-        <nav className="ml-auto flex items-center gap-1 text-sm text-muted-foreground md:ml-8 md:gap-2" aria-label="Main navigation">
+        <nav className="flex items-center justify-center gap-1 text-sm text-muted-foreground md:gap-2" aria-label="Main navigation">
           <Link href="/courses" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
             Courses
           </Link>
@@ -53,6 +52,9 @@ export async function SiteHeader() {
             className="hidden rounded-md px-3 py-2 font-semibold italic text-foreground transition-colors hover:bg-muted sm:block"
           >
             Enroll
+          </Link>
+          <Link href="/blog" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
+            Blog
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -78,15 +80,11 @@ export async function SiteHeader() {
                 <Home aria-hidden />
                 Home
               </DropdownMenuItem>
-              <DropdownMenuItem render={<Link href="/blog" />}>
-                <Newspaper aria-hidden />
-                Blog
-              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
 
-        <div className="hidden items-center gap-1 border-l border-border pl-3 md:flex">
+        <div className="hidden items-center justify-self-end gap-1 border-l border-border pl-4 lg:flex">
           <ThemeToggle />
           {user ? (
             <>
