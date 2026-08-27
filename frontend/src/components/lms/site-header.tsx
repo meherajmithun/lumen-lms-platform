@@ -5,6 +5,8 @@ import {
   CircleDollarSign,
   GraduationCap,
   Home,
+  Mail,
+  MessageSquareQuote,
   UsersRound,
   UserPlus,
 } from 'lucide-react';
@@ -91,6 +93,12 @@ export async function SiteHeader() {
               <DropdownMenuItem render={<Link href="/" />}>
                 <Home aria-hidden />
                 Home
+              </DropdownMenuItem>
+              <DropdownMenuItem render={<Link href="/stories" />}>
+                <MessageSquareQuote aria-hidden /> Stories
+              </DropdownMenuItem>
+              <DropdownMenuItem render={<Link href="/contact" />}>
+                <Mail aria-hidden /> Contact
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

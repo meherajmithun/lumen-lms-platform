@@ -26,6 +26,7 @@ const SELF_ACTIONS = [
 
 /** Reading published courses and posts is open to everyone, logged in or not. */
 const PUBLIC_READ = [
+  'api::student-story.student-story.approved',
   'api::enrollment-guide.enrollment-guide.current',
   'plugin::users-permissions.user.publicInstructors',
   'api::course.course.find',
@@ -71,6 +72,7 @@ const PROGRESS_OVERSIGHT = [
 ];
 
 const STUDENT_LEARNING = [
+  'api::student-story.student-story.submit',
   'api::enrollment-application.enrollment-application.submit',
   'api::enrollment-application.enrollment-application.mine',
   'api::lesson.lesson.find',
@@ -96,6 +98,8 @@ const ADMIN_ONLY = [
 ];
 
 const ENROLLMENT_REVIEW = [
+  'api::student-story.student-story.queue',
+  'api::student-story.student-story.review',
   'api::enrollment-guide.enrollment-guide.save',
   'api::enrollment-application.enrollment-application.queue',
   'api::enrollment-application.enrollment-application.review',

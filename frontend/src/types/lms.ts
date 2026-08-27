@@ -130,6 +130,7 @@ export type EnrollmentApplication = {
   createdAt?: string;
   reviewedAt?: string | null;
 };
+export type StudentStory={documentId:string;studentName:string;title:string;body:string;status?:'pending'|'approved'|'rejected';createdAt?:string};
 
 export type QuestionOption = { id: string; text: string };
 

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   BookMarked, BookOpen, ClipboardList, LayoutDashboard,
-  Newspaper, PenSquare, User, Users,
+  MessageSquareQuote, Newspaper, PenSquare, User, Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Role } from '@/types/lms';
@@ -26,6 +26,7 @@ const NAV: Record<Role, Item[]> = {
   content_manager: [
     { href: '/teach', label: 'Courses', icon: BookOpen },
     { href: '/enrollment-requests', label: 'Enrollment requests', icon: ClipboardList },
+    { href: '/story-requests', label: 'Story requests', icon: MessageSquareQuote },
     { href: '/blog-admin', label: 'Blog', icon: Newspaper },
   ],
   instructor: [{ href: '/teach', label: 'My courses', icon: PenSquare }],
@@ -33,6 +34,7 @@ const NAV: Record<Role, Item[]> = {
     { href: '/my-courses', label: 'My courses', icon: BookMarked },
     { href: '/courses', label: 'Browse', icon: BookOpen },
     { href: '/results', label: 'Quiz results', icon: ClipboardList },
+    { href: '/share-story', label: 'Share your story', icon: MessageSquareQuote },
   ],
 };
 

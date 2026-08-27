@@ -976,6 +976,53 @@ export interface ApiQuizQuiz extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiStudentStoryStudentStory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'student_stories';
+  info: {
+    displayName: 'Student Story';
+    pluralName: 'student-stories';
+    singularName: 'student-story';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    body: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 4000;
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::student-story.student-story'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    reviewedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<['pending', 'approved', 'rejected']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    student: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    studentName: Schema.Attribute.String & Schema.Attribute.Required;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 140;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1507,6 +1554,7 @@ declare module '@strapi/strapi' {
       'api::question.question': ApiQuestionQuestion;
       'api::quiz-attempt.quiz-attempt': ApiQuizAttemptQuizAttempt;
       'api::quiz.quiz': ApiQuizQuiz;
+      'api::student-story.student-story': ApiStudentStoryStudentStory;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

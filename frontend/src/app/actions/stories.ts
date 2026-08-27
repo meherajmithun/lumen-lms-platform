@@ -1,0 +1,3 @@
+'use server';import{revalidatePath,updateTag}from'next/cache';import{requireRole}from'@/lib/auth';import{reviewStory,submitStory}from'@/lib/api/stories';import{toUserMessage}from'@/lib/strapi';
+export async function submitStoryAction(data:{title:string;body:string}){await requireRole('student');try{await submitStory(data);revalidatePath('/story-requests');return{ok:true as const}}catch(e){return{ok:false as const,error:toUserMessage(e)}}}
+export async function reviewStoryAction(id:string,decision:'approved'|'rejected'){await requireRole('content_manager');try{await reviewStory(id,decision);updateTag('stories');revalidatePath('/stories');revalidatePath('/story-requests');return{ok:true as const}}catch(e){return{ok:false as const,error:toUserMessage(e)}}}
