@@ -21,27 +21,22 @@ function StatCard({
   hint?: string;
   href?: string;
 }) {
-  const body = (
-    <>
+  return (
+    <div className="group relative h-full w-full rounded-xl border border-border bg-card p-5 transition-colors hover:border-pine/40">
+      {href && (
+        <Link
+          href={href}
+          aria-label={`Open ${label}`}
+          className="absolute inset-0 z-10 rounded-xl"
+        />
+      )}
       <div className="flex items-center gap-2 text-muted-foreground">
         <Icon className="size-4" aria-hidden />
         <span className="text-xs font-medium uppercase tracking-[0.1em]">{label}</span>
       </div>
       <p className="mt-3 font-heading text-3xl font-semibold tracking-tight tabular">{value}</p>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
-    </>
-  );
-
-  const className =
-    'rounded-xl border border-border bg-card p-5 transition-colors' +
-    (href ? ' hover:border-pine/40' : '');
-
-  return href ? (
-    <Link href={href} className={className}>
-      {body}
-    </Link>
-  ) : (
-    <div className={className}>{body}</div>
+    </div>
   );
 }
 
@@ -59,7 +54,7 @@ function RoleBreakdown({ usersByRole }: { usersByRole: Partial<Record<Role, numb
   const max = Math.max(1, ...rows.map((r) => r.count));
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
+    <div className="h-full rounded-xl border border-border bg-card p-5">
       <h2 className="font-heading text-sm font-semibold tracking-tight">People by role</h2>
       <ul className="mt-4 space-y-3">
         {rows.map(({ role, count }) => (
@@ -94,28 +89,28 @@ export default async function AdminOverviewPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard icon={Users} label="People" value={stats.totalUsers} href="/admin/users" hint="Manage roles" />
         <StatCard icon={BookOpen} label="Courses" value={stats.totalCourses} href="/teach" />
-        <StatCard icon={FileText} label="Lessons" value={stats.totalLessons} />
-        <StatCard icon={GraduationCap} label="Enrollments" value={stats.totalEnrollments} />
+        <StatCard icon={FileText} label="Lessons" value={stats.totalLessons} href="/teach" />
+        <StatCard icon={GraduationCap} label="Enrollments" value={stats.totalEnrollments} href="/teach" />
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-        <RoleBreakdown usersByRole={stats.usersByRole} />
-
-        <div className="space-y-4">
-          <StatCard
-            icon={Newspaper}
-            label="Blog posts"
-            value={stats.totalPosts}
-            hint={`${stats.publishedPosts} published · ${stats.draftPosts} draft`}
-            href="/blog-admin"
-          />
-          <StatCard
-            icon={FileText}
-            label="Quiz attempts"
-            value={stats.totalQuizAttempts}
-            hint={`across ${stats.totalQuizzes} quizzes`}
-          />
+        <div className="lg:row-span-2">
+          <RoleBreakdown usersByRole={stats.usersByRole} />
         </div>
+        <StatCard
+          icon={Newspaper}
+          label="Blog posts"
+          value={stats.totalPosts}
+          hint={`${stats.publishedPosts} published · ${stats.draftPosts} draft`}
+          href="/blog-admin"
+        />
+        <StatCard
+          icon={FileText}
+          label="Quiz attempts"
+          value={stats.totalQuizAttempts}
+          hint={`across ${stats.totalQuizzes} quizzes`}
+          href="/teach"
+        />
       </div>
     </div>
   );

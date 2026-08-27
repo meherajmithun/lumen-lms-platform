@@ -6,6 +6,7 @@ import { repairProgress } from './bootstrap/repair-progress';
 import { registerRoleFilteredRelations } from './extensions/content-manager/role-filtered-relations';
 import { repairRoleRelations } from './bootstrap/repair-role-relations';
 import { repairLearningSessions } from './bootstrap/repair-learning-sessions';
+import { repairUsers } from './bootstrap/repair-users';
 
 export default {
   register({ strapi }: { strapi: Core.Strapi }) {
@@ -23,6 +24,7 @@ export default {
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
     await ensureRoles(strapi);
     await applyPermissions(strapi);
+    await repairUsers(strapi);
     await repairRoleRelations(strapi);
     await repairProgress(strapi);
     await repairLearningSessions(strapi);

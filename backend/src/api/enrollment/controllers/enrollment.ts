@@ -1,5 +1,6 @@
 import { factories } from '@strapi/strapi';
 import type { ApiContext } from '../../../utils/context';
+import { calculateProgress } from '../../../utils/progress';
 import { bodyData } from '../../../utils/request';
 
 export default factories.createCoreController('api::enrollment.enrollment', ({ strapi }) => ({
@@ -70,22 +71,59 @@ export default factories.createCoreController('api::enrollment.enrollment', ({ s
       limit: -1,
     });
 
-    const service = strapi.service('api::course.course');
-    const data = await Promise.all(
-      enrollments.map(async (e) => {
-        const course = e.course as { documentId?: string } | undefined;
-        const progress = course?.documentId
-          ? await service.getProgressFor(course.documentId, user.id)
-          : { completed: 0, total: 0, percent: 0, completedLessonIds: [] };
-        return {
-          documentId: e.documentId,
-          enrolledAt: e.enrolledAt,
-          status: e.status,
-          course: e.course,
-          progress,
-        };
-      })
-    );
+    // Fetch progress in two queries regardless of enrollment count. The old
+    // implementation ran two queries per course, making navigation slower with
+    // every new enrollment.
+    const courseIds = enrollments
+      .map((e) => (e.course as { documentId?: string } | undefined)?.documentId)
+      .filter((id): id is string => Boolean(id));
+    const [lessons, completedRows] = courseIds.length > 0
+      ? await Promise.all([
+          strapi.documents('api::lesson.lesson').findMany({
+            filters: { course: { documentId: { $in: courseIds } } },
+            fields: ['documentId'],
+            populate: { course: { fields: ['documentId'] } },
+            limit: -1,
+          }),
+          strapi.documents('api::lesson-progress.lesson-progress').findMany({
+            filters: { student: { id: user.id }, course: { documentId: { $in: courseIds } } },
+            populate: {
+              course: { fields: ['documentId'] },
+              lesson: { fields: ['documentId'] },
+            },
+            limit: -1,
+          }),
+        ])
+      : [[], []];
+
+    const lessonIdsByCourse = new Map<string, string[]>();
+    for (const lesson of lessons) {
+      const courseId = (lesson.course as { documentId?: string } | undefined)?.documentId;
+      if (!courseId) continue;
+      lessonIdsByCourse.set(courseId, [...(lessonIdsByCourse.get(courseId) ?? []), lesson.documentId]);
+    }
+    const completedIdsByCourse = new Map<string, string[]>();
+    for (const row of completedRows) {
+      const courseId = (row.course as { documentId?: string } | undefined)?.documentId;
+      const lessonId = (row.lesson as { documentId?: string } | undefined)?.documentId;
+      if (!courseId || !lessonId) continue;
+      completedIdsByCourse.set(courseId, [...(completedIdsByCourse.get(courseId) ?? []), lessonId]);
+    }
+
+    const data = enrollments.map((e) => {
+      const course = e.course as { documentId?: string } | undefined;
+      const courseId = course?.documentId;
+      const progress = courseId
+        ? calculateProgress(lessonIdsByCourse.get(courseId) ?? [], completedIdsByCourse.get(courseId) ?? [])
+        : { completed: 0, total: 0, percent: 0, completedLessonIds: [] };
+      return {
+        documentId: e.documentId,
+        enrolledAt: e.enrolledAt,
+        status: e.status,
+        course: e.course,
+        progress,
+      };
+    });
 
     // Historical rows can outlive a course when a database was created before
     // delete cleanup existed. Never send an unusable enrollment to the client;

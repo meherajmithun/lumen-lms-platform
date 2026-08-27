@@ -1,20 +1,7 @@
 import type { Metadata } from 'next';
-import { Familjen_Grotesk, Source_Serif_4 } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/components/theme-provider';
 import './globals.css';
-
-const familjen = Familjen_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-familjen',
-  display: 'swap',
-});
-
-const sourceSerif = Source_Serif_4({
-  subsets: ['latin'],
-  variable: '--font-source-serif',
-  display: 'swap',
-});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
@@ -40,7 +27,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${familjen.variable} ${sourceSerif.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ThemeProvider>
           {children}
           <Toaster position="bottom-right" />

@@ -1,7 +1,8 @@
 'use client';
 
+import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   BookMarked, BookOpen, ClipboardList, LayoutDashboard,
   Newspaper, PenSquare, User, Users,
@@ -39,10 +40,16 @@ const COMMON: Item[] = [{ href: '/account', label: 'Your profile', icon: User }]
 
 export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const items = useMemo(() => [...NAV[role], ...COMMON], [role]);
+
+  useEffect(() => {
+    for (const { href } of items) router.prefetch(href);
+  }, [items, router]);
 
   return (
     <nav className="flex flex-col gap-0.5">
-      {[...NAV[role], ...COMMON].map(({ href, label, icon: Icon }) => {
+      {items.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link

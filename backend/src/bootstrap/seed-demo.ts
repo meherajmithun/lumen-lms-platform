@@ -182,14 +182,26 @@ export async function seedDemoData(strapi: Core.Strapi): Promise<void> {
       .query('plugin::users-permissions.user')
       .findOne({ where: { email: u.email } });
 
-    if (found) {
-      byEmail.set(u.email, found);
-      continue;
-    }
-
     const role = await strapi
       .query('plugin::users-permissions.role')
       .findOne({ where: { type: u.role } });
+
+    if (found) {
+      // Demo mode promises deterministic walkthrough credentials. Reconcile
+      // existing rows too, so databases created by an older seed can log in
+      // without requiring a reset from the admin panel.
+      const updated = await userService.edit(found.id, {
+        username: u.username,
+        email: u.email,
+        password: PASSWORD,
+        confirmed: true,
+        blocked: false,
+        provider: 'local',
+        role: role?.id,
+      });
+      byEmail.set(u.email, updated);
+      continue;
+    }
 
     const created = await userService.add({
       username: u.username,

@@ -64,8 +64,10 @@ export default async function AccountPage() {
       ? getMyEnrollments().then((rows) => rows.filter((row) => row.course !== null)).catch(() => [])
       : Promise.resolve([]),
     isStudent ? getMyAttempts().catch(() => []) : Promise.resolve([]),
-    isAuthor ? getManagedCourses(user.role === ROLES.INSTRUCTOR).catch(() => []) : Promise.resolve([]),
-    isBlogAuthor
+    isAuthor && user.role !== ROLES.ADMIN
+      ? getManagedCourses(user.role === ROLES.INSTRUCTOR).catch(() => [])
+      : Promise.resolve([]),
+    isBlogAuthor && user.role !== ROLES.ADMIN
       ? getManagedPosts(user.role === ROLES.CONTENT_MANAGER).catch(() => [])
       : Promise.resolve([]),
     user.role === ROLES.ADMIN ? getPlatformStats().catch(() => null) : Promise.resolve(null),
@@ -139,7 +141,7 @@ export default async function AccountPage() {
         </section>
       )}
 
-      {isAuthor && (
+      {isAuthor && user.role !== ROLES.ADMIN && (
         <section className="mt-6">
           <h2 className="mb-3 font-heading text-sm font-semibold uppercase tracking-[0.1em] text-muted-foreground">
             Your teaching
