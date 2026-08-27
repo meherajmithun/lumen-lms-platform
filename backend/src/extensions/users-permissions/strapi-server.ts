@@ -48,8 +48,13 @@ export default (plugin: Plugin) => {
       );
     }
 
-    // The plugin ignores an unknown `role` key, so resolve it ourselves after.
-    delete body.role;
+    // Strapi validates the registration payload with a strict schema. Replacing
+    // the request body is intentional: mutating the object returned by Koa is
+    // not sufficient in every Strapi 5 request-body implementation, and leaves
+    // `role` visible to the stock validator as an invalid parameter.
+    const registrationBody = { ...body };
+    delete registrationBody.role;
+    ctx.request.body = registrationBody;
     await originalRegister(ctx);
 
     const created = (ctx.body ?? {}) as { user?: { id?: number } };
