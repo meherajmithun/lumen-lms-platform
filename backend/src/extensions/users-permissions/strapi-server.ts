@@ -60,9 +60,12 @@ export default (plugin: Plugin) => {
         .query('plugin::users-permissions.role')
         .findOne({ where: { type: requested } });
       if (role) {
+        // Use the plugin service for relations. A low-level query update leaves
+        // the user attached to Strapi's default Authenticated role in v5.
         await strapi
-          .query('plugin::users-permissions.user')
-          .update({ where: { id: created.user.id }, data: { role: role.id } });
+          .plugin('users-permissions')
+          .service('user')
+          .edit(created.user.id, { role: role.id });
         (created.user as Record<string, unknown>).role = { id: role.id, type: role.type, name: role.name };
       }
     }
