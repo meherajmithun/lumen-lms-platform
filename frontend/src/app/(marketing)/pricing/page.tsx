@@ -1,50 +1,107 @@
 import Link from 'next/link';
-import { Check } from 'lucide-react';
+import { BadgePercent, Clock } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
-
-const included = [
-  'Access to every published course',
-  'Lesson progress that saves automatically',
-  'Instant quiz results',
-  'Learn on any device',
-];
+import { EnrollButton } from '@/components/lms/enroll-button';
+import { getPublishedCourses } from '@/lib/api/courses';
+import { getMyEnrollmentsOptional } from '@/lib/api/enrollments';
+import { getCurrentUser } from '@/lib/auth';
+import { can } from '@/lib/permissions';
+import { discountedPrice, formatCourseDuration, formatCoursePrice } from '@/lib/course-pricing';
 
 export const metadata = {
   title: 'Pricing | Lumen',
-  description: 'Simple, transparent access to learning on Lumen.',
+  description: 'Compare Lumen courses, prices, discounts, and durations.',
 };
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const [courses, user] = await Promise.all([
+    getPublishedCourses().catch(() => []),
+    getCurrentUser(),
+  ]);
+  const enrollments = user && can.enroll(user.role) ? await getMyEnrollmentsOptional() : [];
+  const enrolledIds = new Set(
+    (enrollments ?? []).flatMap((row) => row.course ? [row.course.documentId] : [])
+  );
+
   return (
-    <section className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
+    <section className="mx-auto max-w-7xl px-5 py-14 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-pine">Pricing</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-pine">Course pricing</p>
         <h1 className="mt-3 font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-          Start learning for free.
+          Choose what you want to learn next.
         </h1>
         <p className="mt-4 text-base text-muted-foreground">
-          One straightforward plan with the tools you need to keep learning consistently.
+          Compare course prices, current discounts, and total learning time.
         </p>
       </div>
 
-      <div className="mx-auto mt-10 max-w-md rounded-2xl border border-border bg-card p-7 shadow-sm">
-        <p className="font-heading text-lg font-semibold">Lumen learner</p>
-        <div className="mt-4 flex items-end gap-2">
-          <span className="font-heading text-4xl font-semibold">Free</span>
-          <span className="pb-1 text-sm text-muted-foreground">to get started</span>
+      {courses.length > 0 ? (
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {courses.filter((course) => course.isPublished).map((course) => {
+            const originalPrice = Number(course.price ?? 0);
+            const discount = Number(course.discountPercent ?? 0);
+            const finalPrice = discountedPrice(originalPrice, discount);
+            const enrolled = enrolledIds.has(course.documentId);
+
+            return (
+              <article key={course.documentId} className="flex min-h-80 flex-col rounded-xl border border-border bg-card p-6 shadow-sm">
+                <div className="flex min-h-12 items-start justify-between gap-3">
+                  <h2 className="font-heading text-lg font-semibold leading-snug">{course.title}</h2>
+                  {discount > 0 && originalPrice > 0 && (
+                    <span className="flex shrink-0 items-center gap-1 rounded-md bg-pine-wash px-2 py-1 text-xs font-bold text-pine">
+                      <BadgePercent className="size-3.5" aria-hidden />
+                      {discount}% OFF
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-7 flex items-baseline gap-2 tabular">
+                  <p className="font-heading text-3xl font-semibold">{formatCoursePrice(finalPrice)}</p>
+                  {discount > 0 && originalPrice > 0 && (
+                    <p className="text-sm text-muted-foreground line-through">{formatCoursePrice(originalPrice)}</p>
+                  )}
+                </div>
+
+                <div className="mt-7 border-t border-border pt-5">
+                  <div className="flex items-center justify-between gap-4 text-sm">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <Clock className="size-4" aria-hidden /> Duration
+                    </span>
+                    <span className="font-medium tabular">
+                      {formatCourseDuration(course.totalDurationMinutes ?? 0)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-auto grid grid-cols-2 gap-3 pt-7">
+                  <Link href={`/courses/${course.slug}`} className={buttonVariants({ variant: 'outline', size: 'lg' })}>
+                    View course
+                  </Link>
+                  {!user ? (
+                    <Link href="/login?next=/pricing" className={buttonVariants({ size: 'lg' })}>
+                      Enroll now
+                    </Link>
+                  ) : can.enroll(user.role) ? (
+                    enrolled ? (
+                      <Link href={`/learn/${course.slug}`} className={buttonVariants({ size: 'lg' })}>
+                        Continue
+                      </Link>
+                    ) : (
+                      <EnrollButton courseId={course.documentId} slug={course.slug} label="Enroll now" />
+                    )
+                  ) : (
+                    <Link href={`/courses/${course.slug}`} className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
+                      View details
+                    </Link>
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
-        <ul className="mt-7 space-y-3 text-sm">
-          {included.map((item) => (
-            <li key={item} className="flex gap-3">
-              <Check className="mt-0.5 size-4 shrink-0 text-pine" aria-hidden />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-        <Link href="/register" className={`${buttonVariants({ size: 'lg' })} mt-8 w-full`}>
-          Enroll now
-        </Link>
-      </div>
+      ) : (
+        <p className="mt-12 text-center text-sm text-muted-foreground">No courses are available yet.</p>
+      )}
     </section>
   );
 }

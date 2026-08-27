@@ -3,6 +3,7 @@ import { BookOpen, CircleCheck } from 'lucide-react';
 import { LessonSpine } from './lesson-spine';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { discountedPrice, formatCourseDuration, formatCoursePrice } from '@/lib/course-pricing';
 import type { Course, CourseProgress, Level } from '@/types/lms';
 
 const LEVEL_LABEL: Record<Level, string> = {
@@ -10,15 +11,6 @@ const LEVEL_LABEL: Record<Level, string> = {
   intermediate: 'Intermediate',
   advanced: 'Advanced',
 };
-
-const formatPrice = (price: number) =>
-  price <= 0
-    ? 'Free'
-    : new Intl.NumberFormat('en-BD', {
-        style: 'currency',
-        currency: 'BDT',
-        maximumFractionDigits: Number.isInteger(price) ? 0 : 2,
-      }).format(price);
 
 export function CourseCard({
   course,
@@ -34,6 +26,9 @@ export function CourseCard({
   enrolled?: boolean;
 }) {
   const lessonCount = progress?.total ?? course.lessonCount ?? course.lessons?.length ?? 0;
+  const originalPrice = Number(course.price ?? 0);
+  const discount = Number(course.discountPercent ?? 0);
+  const finalPrice = discountedPrice(originalPrice, discount);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-pine/40">
@@ -71,9 +66,19 @@ export function CourseCard({
             <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
               {LEVEL_LABEL[course.level]}
             </p>
-            <p className="shrink-0 text-sm font-semibold text-pine tabular">
-              {formatPrice(Number(course.price ?? 0))}
-            </p>
+            <div className="flex shrink-0 items-center gap-1.5 tabular">
+              <p className="text-sm font-semibold text-pine">{formatCoursePrice(finalPrice)}</p>
+              {discount > 0 && originalPrice > 0 && (
+                <p className="text-[11px] text-muted-foreground line-through">
+                  {formatCoursePrice(originalPrice)}
+                </p>
+              )}
+              {discount > 0 && originalPrice > 0 && (
+                <span className="rounded bg-pine-wash px-1.5 py-0.5 text-[10px] font-bold uppercase text-pine">
+                  {discount}% off
+                </span>
+              )}
+            </div>
           </div>
           <h3 className="mt-1 font-heading text-base font-semibold leading-snug tracking-tight">
             <Link href={href} className="after:absolute after:inset-0 focus-visible:underline">
@@ -113,6 +118,9 @@ export function CourseCard({
         ) : (
           <p className="text-xs text-muted-foreground tabular">
             {lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}
+            {course.totalDurationMinutes !== undefined && (
+              <> · {formatCourseDuration(course.totalDurationMinutes)}</>
+            )}
           </p>
         )}
 

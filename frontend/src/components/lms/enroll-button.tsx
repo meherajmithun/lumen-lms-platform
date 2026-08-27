@@ -7,7 +7,15 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { enrollAction } from '@/app/actions/enrollment';
 
-export function EnrollButton({ courseId, slug }: { courseId: string; slug: string }) {
+export function EnrollButton({
+  courseId,
+  slug,
+  label = 'Enroll',
+}: {
+  courseId: string;
+  slug: string;
+  label?: string;
+}) {
   const [pending, start] = useTransition();
   const router = useRouter();
 
@@ -30,7 +38,7 @@ export function EnrollButton({ courseId, slug }: { courseId: string; slug: strin
       }
     >
       {pending && <Loader2 className="size-4 animate-spin" aria-hidden />}
-      Enroll
+      {label}
     </Button>
   );
 }

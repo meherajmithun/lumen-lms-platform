@@ -49,7 +49,7 @@ export function CourseForm({
   return (
     <form
       key={course
-        ? `${course.documentId}:${course.title}:${course.level}:${course.price}:${course.isPublished}`
+        ? `${course.documentId}:${course.title}:${course.level}:${course.price}:${course.discountPercent}:${course.isPublished}`
         : 'new-course'}
       onSubmit={onSubmit}
       className="max-w-xl space-y-5"
@@ -137,6 +137,22 @@ export function CourseForm({
           inputMode="decimal"
         />
         <p className="text-xs text-muted-foreground">Enter 0 if this course is free.</p>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="discountPercent">Discount (%)</Label>
+        <Input
+          id="discountPercent"
+          name="discountPercent"
+          type="number"
+          min="0"
+          max="100"
+          step="1"
+          defaultValue={course?.discountPercent ?? 0}
+          required
+          inputMode="numeric"
+        />
+        <p className="text-xs text-muted-foreground">Use 0 for no discount, or up to 100%.</p>
       </div>
 
       <div className="flex items-start gap-3 rounded-lg border border-border p-3">

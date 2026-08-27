@@ -45,6 +45,7 @@ export async function createCourseAction(form: FormData): Promise<ActionResult> 
     coverImageUrl: str(form, 'coverImageUrl'),
     level: str(form, 'level') || 'beginner',
     price: str(form, 'price') || 0,
+    discountPercent: str(form, 'discountPercent') || 0,
     isPublished: form.get('isPublished') === 'on',
     instructorId: str(form, 'instructorId') || undefined,
   });
@@ -80,6 +81,7 @@ export async function updateCourseAction(documentId: string, form: FormData): Pr
     coverImageUrl: str(form, 'coverImageUrl'),
     level: str(form, 'level') || 'beginner',
     price: str(form, 'price') || 0,
+    discountPercent: str(form, 'discountPercent') || 0,
     isPublished: form.get('isPublished') === 'on',
     instructorId: str(form, 'instructorId') || undefined,
   });

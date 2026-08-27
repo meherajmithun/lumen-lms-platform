@@ -38,7 +38,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         filters: ownCoursesOnly ? { instructor: { id: user.id } } : {},
         populate: {
           instructor: { fields: ['id', 'username', 'avatarUrl'] },
-          lessons: { fields: ['documentId'] },
+          lessons: { fields: ['documentId', 'durationMinutes'] },
           enrollments: { fields: ['documentId'] },
         },
         sort: 'createdAt:desc',
@@ -54,10 +54,14 @@ export default factories.createCoreController('api::course.course', ({ strapi })
           coverImageUrl: course.coverImageUrl,
           level: course.level,
           price: course.price,
+          discountPercent: course.discountPercent,
           isPublished: course.isPublished,
           instructor: course.instructor,
           lessons: course.lessons,
           lessonCount: (course.lessons ?? []).length,
+          totalDurationMinutes: (course.lessons ?? []).reduce(
+            (total, lesson) => total + (lesson.durationMinutes ?? 0), 0
+          ),
           enrollments: course.enrollments,
           createdAt: course.createdAt,
         })),
@@ -74,13 +78,15 @@ export default factories.createCoreController('api::course.course', ({ strapi })
     };
     const data = response.data ?? [];
     const documentIds = data.flatMap((course) => course.documentId ? [course.documentId] : []);
-    const [counts, coursesWithInstructors] = await Promise.all([
+    const [lessonSummaries, coursesWithInstructors] = await Promise.all([
       Promise.all(
         data.map((course) => course.documentId
-          ? strapi.documents('api::lesson.lesson').count({
+          ? strapi.documents('api::lesson.lesson').findMany({
               filters: { course: { documentId: course.documentId } },
+              fields: ['durationMinutes'],
+              limit: -1,
             })
-          : 0)
+          : [])
       ),
       documentIds.length > 0
         ? strapi.documents('api::course.course').findMany({
@@ -100,7 +106,10 @@ export default factories.createCoreController('api::course.course', ({ strapi })
       data: data.map((course, index) => ({
         ...course,
         instructor: course.documentId ? instructorByCourse.get(course.documentId) ?? null : null,
-        lessonCount: counts[index],
+        lessonCount: lessonSummaries[index]?.length ?? 0,
+        totalDurationMinutes: (lessonSummaries[index] ?? []).reduce(
+          (total, lesson) => total + (lesson.durationMinutes ?? 0), 0
+        ),
       })),
     };
   },
@@ -135,6 +144,10 @@ export default factories.createCoreController('api::course.course', ({ strapi })
     if (!Number.isFinite(price) || price < 0) {
       return ctx.badRequest('Price must be a positive number or zero');
     }
+    const discountPercent = Number(input.discountPercent ?? 0);
+    if (!Number.isInteger(discountPercent) || discountPercent < 0 || discountPercent > 100) {
+      return ctx.badRequest('Discount must be a whole number from 0 to 100');
+    }
     const slug =
       typeof input.slug === 'string' && input.slug.trim().length > 0
         ? slugify(input.slug)
@@ -158,6 +171,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         slug,
         level,
         price,
+        discountPercent,
         description: typeof input.description === 'string' ? input.description : undefined,
         coverImageUrl: typeof input.coverImageUrl === 'string' ? input.coverImageUrl : undefined,
         isPublished: input.isPublished === true,
@@ -256,6 +270,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         coverImageUrl: course.coverImageUrl,
         level: course.level,
         price: course.price,
+        discountPercent: course.discountPercent,
         isPublished: course.isPublished,
         instructor: course.instructor,
         lessons: course.lessons,
@@ -291,9 +306,13 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         coverImageUrl: course.coverImageUrl,
         level: course.level,
         price: course.price,
+        discountPercent: course.discountPercent,
         isPublished: course.isPublished,
         instructor: course.instructor,
         quizCount: (course.quizzes ?? []).length,
+        totalDurationMinutes: lessons.reduce(
+          (total, lesson) => total + (lesson.durationMinutes ?? 0), 0
+        ),
         // Deliberately no body and no videoUrl.
         syllabus: lessons.map((l) => ({
           documentId: l.documentId,

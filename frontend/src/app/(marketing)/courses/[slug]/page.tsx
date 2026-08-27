@@ -8,6 +8,7 @@ import { getCourseSyllabus, getPublishedCourses } from '@/lib/api/courses';
 import { getMyEnrollmentsOptional } from '@/lib/api/enrollments';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/permissions';
+import { discountedPrice, formatCourseDuration, formatCoursePrice } from '@/lib/course-pricing';
 import type { Level } from '@/types/lms';
 
 const LEVEL_LABEL: Record<Level, string> = {
@@ -67,6 +68,9 @@ export default async function CourseDetailPage({
   }
 
   const lessons = course.syllabus ?? [];
+  const originalPrice = Number(course.price ?? 0);
+  const discount = Number(course.discountPercent ?? 0);
+  const finalPrice = discountedPrice(originalPrice, discount);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-12">
@@ -126,10 +130,25 @@ export default async function CourseDetailPage({
             </div>
 
             <div className="space-y-4 p-5">
+              <div className="flex flex-wrap items-baseline gap-2 border-b border-border pb-4 tabular">
+                <span className="font-heading text-2xl font-semibold">{formatCoursePrice(finalPrice)}</span>
+                {discount > 0 && originalPrice > 0 && (
+                  <>
+                    <span className="text-sm text-muted-foreground line-through">{formatCoursePrice(originalPrice)}</span>
+                    <span className="rounded bg-pine-wash px-2 py-0.5 text-xs font-bold text-pine">{discount}% OFF</span>
+                  </>
+                )}
+              </div>
               <dl className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Lessons</dt>
                   <dd className="font-medium tabular">{lessons.length}</dd>
+                </div>
+                <div className="flex items-center justify-between">
+                  <dt className="text-muted-foreground">Duration</dt>
+                  <dd className="font-medium tabular">
+                    {formatCourseDuration(course.totalDurationMinutes ?? 0)}
+                  </dd>
                 </div>
                 <div className="flex items-center justify-between">
                   <dt className="text-muted-foreground">Quiz</dt>
