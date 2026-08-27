@@ -1,5 +1,5 @@
 import 'server-only';
-import { strapiFetch } from '@/lib/strapi';
+import { resolveStrapiMediaUrl, strapiFetch } from '@/lib/strapi';
 import type { InstructorOption, Paginated, PlatformStats, Role, StrapiUser, UserProfile } from '@/types/lms';
 
 export async function getMyProfile(): Promise<UserProfile> {
@@ -13,6 +13,20 @@ export async function updateMyProfile(data: Pick<UserProfile, 'username' | 'bio'
     body: JSON.stringify(data),
   });
   return response.data;
+}
+
+type UploadedFile = { url?: string };
+
+export async function uploadProfileImage(file: File): Promise<string> {
+  const form = new FormData();
+  form.append('files', file, file.name);
+  const uploaded = await strapiFetch<UploadedFile[]>('/upload', {
+    method: 'POST',
+    body: form,
+  });
+  const url = resolveStrapiMediaUrl(uploaded[0]?.url);
+  if (!url) throw new Error('The image upload did not return a URL.');
+  return url;
 }
 
 export async function listInstructors(): Promise<InstructorOption[]> {

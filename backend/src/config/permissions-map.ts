@@ -21,6 +21,7 @@ const AUTH_ACTIONS = [
 const SELF_ACTIONS = [
   'plugin::users-permissions.user.me',            // GET /users/me
   'plugin::users-permissions.user.updateProfile', // PUT /users/me/profile
+  'plugin::upload.content-api.upload',             // POST /upload (profile image)
 ];
 
 /** Reading published courses and posts is open to everyone, logged in or not. */

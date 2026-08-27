@@ -43,7 +43,7 @@ export async function strapiFetch<T>(path: string, options: FetchOptions = {}): 
   const { auth = true, tags, revalidate, headers, ...init } = options;
 
   const requestHeaders = new Headers(headers);
-  if (!requestHeaders.has('Content-Type') && init.body) {
+  if (!requestHeaders.has('Content-Type') && init.body && !(init.body instanceof FormData)) {
     requestHeaders.set('Content-Type', 'application/json');
   }
 
