@@ -117,7 +117,7 @@ export async function SiteHeader() {
                 Sign in
               </Link>
               <Link href="/register" className={buttonVariants({ size: 'sm' })}>
-                Get started
+                Join Lumen
               </Link>
             </>
           )}
