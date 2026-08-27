@@ -123,6 +123,13 @@ export type Enrollment = {
   progress: CourseProgress;
 };
 
+export type EnrollmentApplication = {
+  documentId: string; name: string; email: string; phone: string; discord?: string; institution?: string;
+  paymentMethod: 'bkash' | 'rocket' | 'nagad'; transactionId: string; totalAmount: number;
+  status: 'pending' | 'approved' | 'rejected'; courseSummary: Array<{ title: string; amount: number }>;
+  createdAt?: string;
+};
+
 export type QuestionOption = { id: string; text: string };
 
 export type Question = {

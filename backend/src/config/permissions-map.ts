@@ -70,9 +70,9 @@ const PROGRESS_OVERSIGHT = [
 ];
 
 const STUDENT_LEARNING = [
+  'api::enrollment-application.enrollment-application.submit',
   'api::lesson.lesson.find',
   'api::lesson.lesson.findOne',
-  'api::enrollment.enrollment.create',
   'api::enrollment.enrollment.mine',
   'api::lesson.lesson.complete',
   'api::lesson.lesson.uncomplete',
@@ -87,6 +87,8 @@ const STUDENT_LEARNING = [
 ];
 
 const ADMIN_ONLY = [
+  'api::enrollment-application.enrollment-application.queue',
+  'api::enrollment-application.enrollment-application.review',
   'plugin::users-permissions.user.find',
   'plugin::users-permissions.user.findOne',
   'plugin::users-permissions.user.updateRole',

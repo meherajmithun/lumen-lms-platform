@@ -30,3 +30,16 @@ export async function enrollInCourse(courseDocumentId: string): Promise<void> {
     body: JSON.stringify({ data: { course: courseDocumentId } }),
   });
 }
+
+export async function submitEnrollmentApplication(data: Record<string, unknown>): Promise<void> {
+  await strapiFetch('/enrollment-applications', { method: 'POST', body: JSON.stringify({ data }) });
+}
+
+export async function getEnrollmentApplications(): Promise<import('@/types/lms').EnrollmentApplication[]> {
+  const res = await strapiFetch<{ data: import('@/types/lms').EnrollmentApplication[] }>('/enrollment-applications');
+  return res.data ?? [];
+}
+
+export async function reviewEnrollmentApplication(id: string, decision: 'approved' | 'rejected') {
+  await strapiFetch(`/enrollment-applications/${id}/review`, { method: 'PUT', body: JSON.stringify({ data: { decision } }) });
+}

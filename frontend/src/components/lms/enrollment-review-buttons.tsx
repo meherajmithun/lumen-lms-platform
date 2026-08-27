@@ -1,0 +1,3 @@
+'use client';
+import { useTransition } from 'react'; import { toast } from 'sonner'; import { Button } from '@/components/ui/button'; import { reviewEnrollmentAction } from '@/app/actions/admin';
+export function EnrollmentReviewButtons({id}:{id:string}){const[pending,start]=useTransition();const act=(decision:'approved'|'rejected')=>start(async()=>{const r=await reviewEnrollmentAction(id,decision);if(r.ok)toast.success(`Application ${decision}`);else toast.error(r.error);});return <div className="flex gap-2"><Button size="sm" disabled={pending} onClick={()=>act('approved')}>Approve</Button><Button size="sm" variant="destructive" disabled={pending} onClick={()=>act('rejected')}>Reject</Button></div>}

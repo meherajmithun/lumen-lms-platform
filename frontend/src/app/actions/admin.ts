@@ -5,6 +5,7 @@ import { requireRole } from '@/lib/auth';
 import { updateUserRole } from '@/lib/api/users';
 import { toUserMessage } from '@/lib/strapi';
 import { ROLES, type Role } from '@/types/lms';
+import { reviewEnrollmentApplication } from '@/lib/api/enrollments';
 
 /**
  * Changing a user's role — the matrix's "Manage users & assign roles" row,
@@ -32,4 +33,10 @@ export async function updateUserRoleAction(
   } catch (error) {
     return { ok: false, error: toUserMessage(error) };
   }
+}
+
+export async function reviewEnrollmentAction(id: string, decision: 'approved' | 'rejected') {
+  await requireRole('admin');
+  try { await reviewEnrollmentApplication(id, decision); revalidatePath('/admin/enrollments'); revalidatePath('/admin'); return { ok: true as const }; }
+  catch (error) { return { ok: false as const, error: toUserMessage(error) }; }
 }

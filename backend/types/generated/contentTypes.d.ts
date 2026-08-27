@@ -520,6 +520,53 @@ export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEnrollmentApplicationEnrollmentApplication
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'enrollment_applications';
+  info: {
+    displayName: 'Enrollment Application';
+    pluralName: 'enrollment-applications';
+    singularName: 'enrollment-application';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    courseIds: Schema.Attribute.JSON & Schema.Attribute.Required;
+    courseSummary: Schema.Attribute.JSON & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discord: Schema.Attribute.String;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    institution: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::enrollment-application.enrollment-application'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    paymentMethod: Schema.Attribute.Enumeration<['bkash', 'rocket', 'nagad']> &
+      Schema.Attribute.Required;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    reviewedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<['pending', 'approved', 'rejected']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    student: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    totalAmount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    transactionId: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiEnrollmentEnrollment extends Struct.CollectionTypeSchema {
   collectionName: 'enrollments';
   info: {
@@ -1421,6 +1468,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::course.course': ApiCourseCourse;
+      'api::enrollment-application.enrollment-application': ApiEnrollmentApplicationEnrollmentApplication;
       'api::enrollment.enrollment': ApiEnrollmentEnrollment;
       'api::learning-session.learning-session': ApiLearningSessionLearningSession;
       'api::lesson-progress.lesson-progress': ApiLessonProgressLessonProgress;

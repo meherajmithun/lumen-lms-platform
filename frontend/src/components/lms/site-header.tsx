@@ -52,7 +52,7 @@ export async function SiteHeader() {
             Pricing
           </Link>
           <Link
-            href="/register"
+            href="/enroll"
             className="hidden rounded-md px-3 py-2 font-semibold italic text-foreground transition-colors hover:bg-muted sm:block"
           >
             Enroll
@@ -79,7 +79,7 @@ export async function SiteHeader() {
                 <CircleDollarSign aria-hidden />
                 Pricing
               </DropdownMenuItem>
-              <DropdownMenuItem className="sm:hidden" render={<Link href="/register" />}>
+              <DropdownMenuItem className="sm:hidden" render={<Link href="/enroll" />}>
                 <UserPlus aria-hidden />
                 Enroll
               </DropdownMenuItem>

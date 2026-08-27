@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/auth';
-import { enrollInCourse } from '@/lib/api/enrollments';
+import { enrollInCourse, submitEnrollmentApplication } from '@/lib/api/enrollments';
 import { toUserMessage } from '@/lib/strapi';
 
 /**
@@ -24,4 +24,10 @@ export async function enrollAction(courseId: string, slug: string) {
   } catch (error) {
     return { ok: false as const, error: toUserMessage(error) };
   }
+}
+
+export async function submitEnrollmentApplicationAction(data: Record<string, unknown>) {
+  await requireRole('student');
+  try { await submitEnrollmentApplication(data); revalidatePath('/admin/enrollments'); return { ok: true as const }; }
+  catch (error) { return { ok: false as const, error: toUserMessage(error) }; }
 }

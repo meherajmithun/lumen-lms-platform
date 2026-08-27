@@ -20,6 +20,7 @@ const NAV: Record<Role, Item[]> = {
   admin: [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
     { href: '/admin/users', label: 'People', icon: Users },
+    { href: '/admin/enrollments', label: 'Enrollment requests', icon: ClipboardList },
     { href: '/teach', label: 'Courses', icon: BookOpen },
     { href: '/blog-admin', label: 'Blog', icon: Newspaper },
   ],
