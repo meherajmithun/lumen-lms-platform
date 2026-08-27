@@ -73,17 +73,35 @@ export default factories.createCoreController('api::course.course', ({ strapi })
       meta?: unknown;
     };
     const data = response.data ?? [];
-    const counts = await Promise.all(
-      data.map((course) => course.documentId
-        ? strapi.documents('api::lesson.lesson').count({
-            filters: { course: { documentId: course.documentId } },
+    const documentIds = data.flatMap((course) => course.documentId ? [course.documentId] : []);
+    const [counts, coursesWithInstructors] = await Promise.all([
+      Promise.all(
+        data.map((course) => course.documentId
+          ? strapi.documents('api::lesson.lesson').count({
+              filters: { course: { documentId: course.documentId } },
+            })
+          : 0)
+      ),
+      documentIds.length > 0
+        ? strapi.documents('api::course.course').findMany({
+            filters: { documentId: { $in: documentIds } },
+            fields: ['documentId'],
+            populate: { instructor: { fields: ['id', 'username', 'avatarUrl'] } },
+            limit: -1,
           })
-        : 0)
+        : [],
+    ]);
+    const instructorByCourse = new Map(
+      coursesWithInstructors.map((course) => [course.documentId, course.instructor ?? null])
     );
 
     return {
       ...response,
-      data: data.map((course, index) => ({ ...course, lessonCount: counts[index] })),
+      data: data.map((course, index) => ({
+        ...course,
+        instructor: course.documentId ? instructorByCourse.get(course.documentId) ?? null : null,
+        lessonCount: counts[index],
+      })),
     };
   },
 
