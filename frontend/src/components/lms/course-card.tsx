@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { BookOpen, CircleCheck } from 'lucide-react';
 import { LessonSpine } from './lesson-spine';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import type { Course, CourseProgress, Level } from '@/types/lms';
 
@@ -9,6 +10,15 @@ const LEVEL_LABEL: Record<Level, string> = {
   intermediate: 'Intermediate',
   advanced: 'Advanced',
 };
+
+const formatPrice = (price: number) =>
+  price <= 0
+    ? 'Free'
+    : new Intl.NumberFormat('en-BD', {
+        style: 'currency',
+        currency: 'BDT',
+        maximumFractionDigits: Number.isInteger(price) ? 0 : 2,
+      }).format(price);
 
 export function CourseCard({
   course,
@@ -57,14 +67,34 @@ export function CourseCard({
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="flex-1">
-          <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
-            {LEVEL_LABEL[course.level]}
-          </p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
+              {LEVEL_LABEL[course.level]}
+            </p>
+            <p className="shrink-0 text-sm font-semibold text-pine tabular">
+              {formatPrice(Number(course.price ?? 0))}
+            </p>
+          </div>
           <h3 className="mt-1 font-heading text-base font-semibold leading-snug tracking-tight">
             <Link href={href} className="after:absolute after:inset-0 focus-visible:underline">
               {course.title}
             </Link>
           </h3>
+          {course.instructor?.username && (
+            <div className="mt-2 flex items-center gap-2">
+              <Avatar size="sm" aria-hidden>
+                {course.instructor.avatarUrl && (
+                  <AvatarImage src={course.instructor.avatarUrl} alt="" />
+                )}
+                <AvatarFallback className="bg-pine-wash font-semibold text-pine">
+                  {course.instructor.username.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <p className="truncate text-xs font-medium text-muted-foreground">
+                {course.instructor.username}
+              </p>
+            </div>
+          )}
           {course.description && (
             <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{course.description}</p>
           )}
@@ -83,7 +113,6 @@ export function CourseCard({
         ) : (
           <p className="text-xs text-muted-foreground tabular">
             {lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}
-            {course.instructor?.username && <> · {course.instructor.username}</>}
           </p>
         )}
 

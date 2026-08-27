@@ -45,6 +45,12 @@
       "default": false,
       "required": true
     },
+    "price": {
+      "type": "decimal",
+      "min": 0,
+      "default": 0,
+      "required": true
+    },
     "instructor": {
       "type": "relation",
       "relation": "manyToOne",

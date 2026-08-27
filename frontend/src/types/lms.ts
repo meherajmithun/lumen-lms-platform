@@ -52,8 +52,9 @@ export type Course = {
   description?: string | null;
   coverImageUrl?: string | null;
   level: Level;
+  price: number;
   isPublished: boolean;
-  instructor?: { id: number; username: string } | null;
+  instructor?: { id: number; username: string; avatarUrl?: string | null } | null;
   /** Safe aggregate returned even when lesson content is not readable. */
   lessonCount?: number;
   lessons?: Lesson[];

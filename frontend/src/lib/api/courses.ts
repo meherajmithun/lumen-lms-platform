@@ -15,6 +15,7 @@ export async function getPublishedCourses(): Promise<Course[]> {
   const res = await strapiFetch<Paginated<Course>>(
     `/courses?${qs({
       'populate[instructor][fields][0]': 'username',
+      'populate[instructor][fields][1]': 'avatarUrl',
       'sort': 'createdAt:desc',
       'pagination[pageSize]': 100,
     })}`,
@@ -47,6 +48,7 @@ export async function getCourseBySlugAuthed(slug: string): Promise<Course | null
     `/courses?${qs({
       'filters[slug][$eq]': slug,
       'populate[instructor][fields][0]': 'username',
+      'populate[instructor][fields][1]': 'avatarUrl',
       'populate[lessons][sort][0]': 'order:asc',
       'populate[quizzes][fields][0]': 'title',
     })}`
@@ -59,6 +61,7 @@ export async function getCourseBySlug(slug: string): Promise<Course | null> {
     `/courses?${qs({
       'filters[slug][$eq]': slug,
       'populate[instructor][fields][0]': 'username',
+      'populate[instructor][fields][1]': 'avatarUrl',
       'populate[lessons][sort][0]': 'order:asc',
       'populate[quizzes][fields][0]': 'title',
     })}`,
@@ -73,6 +76,7 @@ export async function getManagedCourses(scopeMine: boolean): Promise<Course[]> {
     `/courses?${qs({
       scope: scopeMine ? 'mine' : 'manage',
       'populate[instructor][fields][0]': 'username',
+      'populate[instructor][fields][1]': 'avatarUrl',
       'populate[lessons][fields][0]': 'documentId',
       'populate[enrollments][fields][0]': 'documentId',
       'sort': 'createdAt:desc',
@@ -99,6 +103,7 @@ export async function getCourseById(documentId: string): Promise<Course | null> 
   const res = await strapiFetch<{ data: Course }>(
     `/courses/${documentId}?${qs({
       'populate[instructor][fields][0]': 'username',
+      'populate[instructor][fields][1]': 'avatarUrl',
       'populate[lessons][sort][0]': 'order:asc',
       'populate[quizzes][fields][0]': 'title',
     })}`

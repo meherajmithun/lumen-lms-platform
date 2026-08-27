@@ -49,7 +49,7 @@ export function CourseForm({
   return (
     <form
       key={course
-        ? `${course.documentId}:${course.title}:${course.level}:${course.isPublished}`
+        ? `${course.documentId}:${course.title}:${course.level}:${course.price}:${course.isPublished}`
         : 'new-course'}
       onSubmit={onSubmit}
       className="max-w-xl space-y-5"
@@ -121,6 +121,22 @@ export function CourseForm({
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="price">Price (BDT)</Label>
+        <Input
+          id="price"
+          name="price"
+          type="number"
+          min="0"
+          max="10000000"
+          step="0.01"
+          defaultValue={course?.price ?? 0}
+          required
+          inputMode="decimal"
+        />
+        <p className="text-xs text-muted-foreground">Enter 0 if this course is free.</p>
       </div>
 
       <div className="flex items-start gap-3 rounded-lg border border-border p-3">

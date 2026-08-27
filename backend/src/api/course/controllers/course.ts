@@ -37,7 +37,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
       const courses = await strapi.documents('api::course.course').findMany({
         filters: ownCoursesOnly ? { instructor: { id: user.id } } : {},
         populate: {
-          instructor: { fields: ['id', 'username'] },
+          instructor: { fields: ['id', 'username', 'avatarUrl'] },
           lessons: { fields: ['documentId'] },
           enrollments: { fields: ['documentId'] },
         },
@@ -53,6 +53,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
           description: course.description,
           coverImageUrl: course.coverImageUrl,
           level: course.level,
+          price: course.price,
           isPublished: course.isPublished,
           instructor: course.instructor,
           lessons: course.lessons,
@@ -112,6 +113,10 @@ export default factories.createCoreController('api::course.course', ({ strapi })
     if (title.length < 3) return ctx.badRequest('A title of at least 3 characters is required');
 
     const level = LEVELS.includes(input.level as Level) ? (input.level as Level) : 'beginner';
+    const price = Number(input.price ?? 0);
+    if (!Number.isFinite(price) || price < 0) {
+      return ctx.badRequest('Price must be a positive number or zero');
+    }
     const slug =
       typeof input.slug === 'string' && input.slug.trim().length > 0
         ? slugify(input.slug)
@@ -134,12 +139,13 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         title,
         slug,
         level,
+        price,
         description: typeof input.description === 'string' ? input.description : undefined,
         coverImageUrl: typeof input.coverImageUrl === 'string' ? input.coverImageUrl : undefined,
         isPublished: input.isPublished === true,
         instructor: instructorId,
       },
-      populate: { instructor: { fields: ['id', 'username'] } },
+      populate: { instructor: { fields: ['id', 'username', 'avatarUrl'] } },
     });
 
     const sanitized = await strapi.contentAPI.sanitize.output(
@@ -212,7 +218,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
     const course = await strapi.documents('api::course.course').findOne({
       documentId: ctx.params.id,
       populate: {
-        instructor: { fields: ['id', 'username'] },
+        instructor: { fields: ['id', 'username', 'avatarUrl'] },
         lessons: { sort: 'order:asc' },
         // This endpoint is already owner-guarded, so it can return the quiz
         // editor data in the same request. A second /quizzes/:id/manage fetch
@@ -231,6 +237,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         description: course.description,
         coverImageUrl: course.coverImageUrl,
         level: course.level,
+        price: course.price,
         isPublished: course.isPublished,
         instructor: course.instructor,
         lessons: course.lessons,
@@ -244,7 +251,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
     const [course] = await strapi.documents('api::course.course').findMany({
       filters: { slug: ctx.params.slug, isPublished: true },
       populate: {
-        instructor: { fields: ['id', 'username'] },
+        instructor: { fields: ['id', 'username', 'avatarUrl'] },
         lessons: { fields: ['title', 'order', 'contentType', 'durationMinutes'], sort: 'order:asc' },
         quizzes: { fields: ['title'] },
       },
@@ -265,6 +272,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         description: course.description,
         coverImageUrl: course.coverImageUrl,
         level: course.level,
+        price: course.price,
         isPublished: course.isPublished,
         instructor: course.instructor,
         quizCount: (course.quizzes ?? []).length,

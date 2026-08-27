@@ -10,6 +10,7 @@ export const courseSchema = z.object({
   description: z.string().trim().max(2000).optional().or(z.literal('')),
   coverImageUrl: urlish.optional().or(z.literal('')),
   level: z.enum(['beginner', 'intermediate', 'advanced']),
+  price: z.coerce.number().min(0, 'Price cannot be negative').max(10_000_000, 'Price is too large'),
   isPublished: z.boolean(),
   instructorId: z.string().trim().optional(),
 });
