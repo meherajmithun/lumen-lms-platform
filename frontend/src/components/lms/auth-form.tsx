@@ -7,8 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { homeFor } from '@/lib/permissions';
-import type { Role } from '@/types/lms';
 
 type Mode = 'login' | 'register';
 
@@ -41,7 +39,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       body: JSON.stringify(payload),
     });
 
-    const body = (await response.json().catch(() => ({}))) as { error?: string; role?: Role };
+    const body = (await response.json().catch(() => ({}))) as { error?: string };
 
     if (!response.ok) {
       setError(body.error ?? 'Something went wrong. Please try again.');
@@ -50,7 +48,8 @@ export function AuthForm({ mode }: { mode: Mode }) {
     }
 
     const next = params.get('next');
-    router.push(next ?? homeFor((body.role ?? 'student') as Role));
+    const destination = next?.startsWith('/') && !next.startsWith('//') ? next : '/';
+    router.push(destination);
     router.refresh();
   }
 
