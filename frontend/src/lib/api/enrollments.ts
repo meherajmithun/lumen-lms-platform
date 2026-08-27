@@ -1,0 +1,32 @@
+import 'server-only';
+import { strapiFetch } from '@/lib/strapi';
+import type { Enrollment } from '@/types/lms';
+
+export async function getMyEnrollments(): Promise<Enrollment[]> {
+  const res = await strapiFetch<{ data: Enrollment[] }>('/enrollments/mine');
+  return res.data ?? [];
+}
+
+/**
+ * Enrollments for a page that must render whether or not the caller is signed in.
+ *
+ * The two session cookies can diverge: `lms_session` is ours and lasts 7 days,
+ * while `lms_token` is Strapi's JWT and can expire or be revoked first. When that
+ * happens the visitor still looks signed in to us, but Strapi answers 401. On a
+ * public page that is not an error — it just means we cannot personalise the
+ * call to action, so we fall back to the signed-out view rather than crashing.
+ */
+export async function getMyEnrollmentsOptional(): Promise<Enrollment[] | null> {
+  try {
+    return await getMyEnrollments();
+  } catch {
+    return null;
+  }
+}
+
+export async function enrollInCourse(courseDocumentId: string): Promise<void> {
+  await strapiFetch('/enrollments', {
+    method: 'POST',
+    body: JSON.stringify({ data: { course: courseDocumentId } }),
+  });
+}
