@@ -19,14 +19,11 @@ import { UserMenu } from './user-menu';
 import { getCurrentUser } from '@/lib/auth';
 import { homeFor } from '@/lib/permissions';
 import { ROLES } from '@/types/lms';
+import { cn } from '@/lib/utils';
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
-
-  // Authoring roles use the dashboard sidebar. Showing a second, marketing-style
-  // navigation bar while they preview public pages duplicates navigation and
-  // makes the interface look like a student account.
-  if (user && user.role !== ROLES.STUDENT) return null;
+  const showMarketingNav = !user || user.role === ROLES.STUDENT;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 text-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
@@ -40,7 +37,13 @@ export async function SiteHeader() {
           Lumen
         </Link>
 
-        <nav className="flex items-center justify-center gap-1 text-sm text-muted-foreground md:gap-2" aria-label="Main navigation">
+        <nav
+          className={cn(
+            'col-start-2 items-center justify-center gap-1 text-sm text-muted-foreground md:gap-2',
+            showMarketingNav ? 'flex' : 'hidden'
+          )}
+          aria-label="Main navigation"
+        >
           <Link href="/courses" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
             Courses
           </Link>
@@ -84,7 +87,12 @@ export async function SiteHeader() {
           </DropdownMenu>
         </nav>
 
-        <div className="hidden items-center justify-self-end gap-1 border-l border-border pl-4 lg:flex">
+        <div
+          className={cn(
+            'col-start-3 items-center justify-self-end gap-1 border-l border-border pl-4',
+            showMarketingNav ? 'hidden lg:flex' : 'flex'
+          )}
+        >
           <ThemeToggle />
           {user ? (
             <>

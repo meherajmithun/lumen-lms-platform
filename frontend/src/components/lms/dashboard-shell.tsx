@@ -10,6 +10,7 @@ import { RoleBadge } from './role-badge';
 import { ThemeToggle } from './theme-toggle';
 import { SignOutButton } from './sign-out-button';
 import { NavigationIndicator } from './navigation-indicator';
+import { homeFor } from '@/lib/permissions';
 import type { SessionUser } from '@/types/lms';
 
 export function DashboardShell({
@@ -27,7 +28,7 @@ export function DashboardShell({
       <NavigationIndicator />
       <div className="mx-auto flex max-w-[1400px]">
         <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-3 py-4 md:flex">
-          <Link href="/" className="mb-6 flex items-center gap-2 px-3 font-heading text-sm font-semibold">
+          <Link href={homeFor(user.role)} className="mb-6 flex items-center gap-2 px-3 font-heading text-sm font-semibold">
             <GraduationCap className="size-5 text-pine" aria-hidden />
             Lumen
           </Link>
