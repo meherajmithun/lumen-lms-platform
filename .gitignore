@@ -1,0 +1,47 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# environment — NEVER commit these (repo is public)
+.env
+.env.*
+!.env.example
+*.pem
+
+# next.js
+.next/
+out/
+build/
+.vercel
+next-env.d.ts
+*.tsbuildinfo
+
+# strapi
+.tmp/
+.cache/
+backend/build/
+backend/dist/
+backend/.strapi/
+backend/exports/
+backend/.strapi-updater.json
+
+# testing
+coverage/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# local scratch
+NOTES.md
