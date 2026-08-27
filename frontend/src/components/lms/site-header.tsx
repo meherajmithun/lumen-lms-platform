@@ -19,9 +19,15 @@ import { ThemeToggle } from './theme-toggle';
 import { UserMenu } from './user-menu';
 import { getCurrentUser } from '@/lib/auth';
 import { homeFor } from '@/lib/permissions';
+import { ROLES } from '@/types/lms';
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
+
+  // Authoring roles use the dashboard sidebar. Showing a second, marketing-style
+  // navigation bar while they preview public pages duplicates navigation and
+  // makes the interface look like a student account.
+  if (user && user.role !== ROLES.STUDENT) return null;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 text-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
