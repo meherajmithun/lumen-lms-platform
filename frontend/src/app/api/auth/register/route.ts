@@ -16,12 +16,16 @@ export async function POST(request: Request) {
 
   // Strapi re-checks the requested role against its own whitelist, so this
   // request cannot create an admin even if the payload is tampered with.
-  const response = await fetch(`${BASE}/api/auth/local/register`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(parsed.data),
-    cache: 'no-store',
-  });
+  const { role, ...registration } = parsed.data;
+  const response = await fetch(
+    `${BASE}/api/auth/local/register?role=${encodeURIComponent(role)}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registration),
+      cache: 'no-store',
+    }
+  );
 
   if (!response.ok) {
     const body = (await response.json().catch(() => ({}))) as { error?: { message?: string } };

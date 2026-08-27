@@ -39,8 +39,8 @@ export default (plugin: Plugin) => {
    * an existing admin instead.
    */
   plugin.controllers.auth.register = async (ctx: ApiContext) => {
-    const body = (ctx.request.body ?? {}) as Record<string, unknown>;
-    const requested = typeof body.role === 'string' ? (body.role as RoleType) : ROLES.STUDENT;
+    const queryRole = typeof ctx.query.role === 'string' ? ctx.query.role : undefined;
+    const requested = (queryRole ?? ROLES.STUDENT) as RoleType;
 
     if (!SELF_ASSIGNABLE_ROLES.includes(requested)) {
       return ctx.badRequest(
@@ -48,13 +48,9 @@ export default (plugin: Plugin) => {
       );
     }
 
-    // Strapi validates the registration payload with a strict schema. Replacing
-    // the request body is intentional: mutating the object returned by Koa is
-    // not sufficient in every Strapi 5 request-body implementation, and leaves
-    // `role` visible to the stock validator as an invalid parameter.
-    const registrationBody = { ...body };
-    delete registrationBody.role;
-    ctx.request.body = registrationBody;
+    // The role travels in the query string because Strapi validates the request
+    // body with a strict schema before this controller runs. The body therefore
+    // contains only fields supported by the stock registration endpoint.
     await originalRegister(ctx);
 
     const created = (ctx.body ?? {}) as { user?: { id?: number } };
