@@ -128,6 +128,7 @@ export type EnrollmentApplication = {
   paymentMethod: 'bkash' | 'rocket' | 'nagad'; transactionId: string; totalAmount: number;
   status: 'pending' | 'approved' | 'rejected'; courseSummary: Array<{ title: string; amount: number }>;
   createdAt?: string;
+  reviewedAt?: string | null;
 };
 
 export type QuestionOption = { id: string; text: string };

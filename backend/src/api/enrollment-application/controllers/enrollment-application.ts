@@ -17,6 +17,15 @@ export default factories.createCoreController('api::enrollment-application.enrol
     return { data: { documentId: created.documentId, status: created.status, totalAmount } };
   },
   async queue() { return { data: await strapi.documents('api::enrollment-application.enrollment-application').findMany({ populate: { student: { fields: ['id','username','email'] } }, sort: 'createdAt:desc', limit: -1 }) }; },
+  async mine(ctx: ApiContext) {
+    const rows = await strapi.documents('api::enrollment-application.enrollment-application').findMany({
+      filters: { student: { id: ctx.state.user!.id } },
+      fields: ['documentId', 'courseSummary', 'status', 'createdAt', 'reviewedAt'],
+      sort: 'createdAt:desc',
+      limit: 50,
+    });
+    return { data: rows };
+  },
   async review(ctx: ApiContext) {
     const decision = bodyData(ctx).decision;
     if (!['approved','rejected'].includes(decision as string)) return ctx.badRequest('Invalid decision');

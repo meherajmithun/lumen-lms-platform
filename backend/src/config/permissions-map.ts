@@ -71,6 +71,7 @@ const PROGRESS_OVERSIGHT = [
 
 const STUDENT_LEARNING = [
   'api::enrollment-application.enrollment-application.submit',
+  'api::enrollment-application.enrollment-application.mine',
   'api::lesson.lesson.find',
   'api::lesson.lesson.findOne',
   'api::enrollment.enrollment.mine',

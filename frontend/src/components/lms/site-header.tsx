@@ -21,6 +21,7 @@ import { getCurrentUser } from '@/lib/auth';
 import { homeFor } from '@/lib/permissions';
 import { ROLES } from '@/types/lms';
 import { cn } from '@/lib/utils';
+import { NotificationMenu } from './notification-menu';
 
 export async function SiteHeader() {
   const user = await getCurrentUser();
@@ -104,6 +105,7 @@ export async function SiteHeader() {
           <ThemeToggle />
           {user ? (
             <>
+              {user.role === ROLES.STUDENT && <NotificationMenu />}
               <Link href={homeFor(user.role)} className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
                 Dashboard
               </Link>
