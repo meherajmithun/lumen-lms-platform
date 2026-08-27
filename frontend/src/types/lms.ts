@@ -43,6 +43,13 @@ export type InstructorOption = {
   email: string;
 };
 
+export type InstructorProfile = {
+  id: number;
+  username: string;
+  bio: string;
+  avatarUrl: string;
+};
+
 export type Level = 'beginner' | 'intermediate' | 'advanced';
 
 export type Course = {

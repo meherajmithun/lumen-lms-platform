@@ -159,6 +159,25 @@ export default (plugin: Plugin) => {
     };
   };
 
+  /** Public instructor profiles. Never expose email, role metadata, or account state. */
+  plugin.controllers.user.publicInstructors = async (_ctx: ApiContext) => {
+    const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+    const users = await strapi.query('plugin::users-permissions.user').findMany({
+      where: { role: { type: ROLES.INSTRUCTOR }, blocked: false, confirmed: true },
+      select: ['id', 'username', 'bio', 'avatarUrl'],
+      orderBy: { username: 'asc' },
+    });
+
+    return {
+      data: (users as Array<Record<string, unknown>>).map((user) => ({
+        id: user.id,
+        username: user.username,
+        bio: user.bio ?? '',
+        avatarUrl: user.avatarUrl ?? '',
+      })),
+    };
+  };
+
   /** GET /users — admin only, paginated, with role attached. */
   plugin.controllers.user.find = async (ctx: ApiContext) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
@@ -310,6 +329,12 @@ export default (plugin: Plugin) => {
           { name: 'global::has-role', config: { roles: ['admin', 'content_manager', 'instructor'] } },
         ],
       },
+    },
+    {
+      method: 'GET',
+      path: '/instructor-profiles',
+      handler: 'user.publicInstructors',
+      config: { prefix: '', auth: false },
     },
     {
       method: 'PUT',

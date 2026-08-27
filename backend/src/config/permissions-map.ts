@@ -26,6 +26,7 @@ const SELF_ACTIONS = [
 
 /** Reading published courses and posts is open to everyone, logged in or not. */
 const PUBLIC_READ = [
+  'plugin::users-permissions.user.publicInstructors',
   'api::course.course.find',
   'api::course.course.findOne',
   'api::course.course.bySlug',

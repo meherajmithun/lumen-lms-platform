@@ -5,6 +5,7 @@ import {
   CircleDollarSign,
   GraduationCap,
   Home,
+  UsersRound,
   UserPlus,
 } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
@@ -56,6 +57,9 @@ export async function SiteHeader() {
           >
             Enroll
           </Link>
+          <Link href="/instructors" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
+            Instructors
+          </Link>
           <Link href="/blog" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
             Blog
           </Link>
@@ -78,6 +82,10 @@ export async function SiteHeader() {
               <DropdownMenuItem className="sm:hidden" render={<Link href="/register" />}>
                 <UserPlus aria-hidden />
                 Enroll
+              </DropdownMenuItem>
+              <DropdownMenuItem className="sm:hidden" render={<Link href="/instructors" />}>
+                <UsersRound aria-hidden />
+                Instructors
               </DropdownMenuItem>
               <DropdownMenuItem render={<Link href="/" />}>
                 <Home aria-hidden />
