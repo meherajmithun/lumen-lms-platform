@@ -1,0 +1,5 @@
+import { factories } from '@strapi/strapi'; import type { ApiContext } from '../../../utils/context'; import { bodyData } from '../../../utils/request';
+export default factories.createCoreController('api::enrollment-guide.enrollment-guide',({strapi})=>({
+ async current(){const [row]=await strapi.documents('api::enrollment-guide.enrollment-guide').findMany({limit:1,sort:'updatedAt:desc'});return{data:row?{videoUrl:row.videoUrl}:null}},
+ async save(ctx:ApiContext){const value=bodyData(ctx).videoUrl;if(typeof value!=='string')return ctx.badRequest('Video URL is required');let url:string;try{url=new URL(value.trim()).toString();}catch{return ctx.badRequest('Enter a valid video URL');}const [row]=await strapi.documents('api::enrollment-guide.enrollment-guide').findMany({limit:1});if(row)await strapi.documents('api::enrollment-guide.enrollment-guide').update({documentId:row.documentId,data:{videoUrl:url}});else await strapi.documents('api::enrollment-guide.enrollment-guide').create({data:{videoUrl:url}});return{data:{videoUrl:url}}}
+}));

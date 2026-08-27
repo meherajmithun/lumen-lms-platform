@@ -1,0 +1,1 @@
+{"kind":"collectionType","collectionName":"enrollment_guides","info":{"singularName":"enrollment-guide","pluralName":"enrollment-guides","displayName":"Enrollment Guide"},"options":{"draftAndPublish":false},"attributes":{"videoUrl":{"type":"string","required":true}}}

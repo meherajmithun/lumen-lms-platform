@@ -1,0 +1,1 @@
+export default{routes:[{method:'GET',path:'/enrollment-guide',handler:'enrollment-guide.current',config:{auth:false}},{method:'PUT',path:'/enrollment-guide',handler:'enrollment-guide.save',config:{policies:['global::is-authenticated',{name:'global::has-role',config:{roles:['content_manager']}}]}}]};

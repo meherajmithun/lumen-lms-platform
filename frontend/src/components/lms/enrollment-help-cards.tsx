@@ -36,7 +36,7 @@ function Card({ icon: Icon, title, text, children }: {
   );
 }
 
-export function EnrollmentHelpCards() {
+export function EnrollmentHelpCards({ videoUrl }: { videoUrl?: string }) {
   return (
     <section className="my-10 grid gap-5 md:grid-cols-3">
       <Card icon={ScrollText} title="Enrollment guidelines" text="Select courses, pay the exact calculated total, and submit one application.">
@@ -45,7 +45,7 @@ export function EnrollmentHelpCards() {
           <ul className="space-y-3 pl-5 text-sm leading-relaxed">
             {guidelines.map((item) => <li key={item} className="list-disc">{item}</li>)}
             <li className="list-disc">Still have questions? Call us at{' '}
-              <a className="font-semibold text-pine underline" href="tel:+8801996546509">+880 1996 546 509</a>.
+              <a className="font-semibold text-pine underline" href="tel:+8801996546509">01XXXXXXXXXX</a>.
             </li>
             <li className="list-disc">Thank you for choosing us. We look forward to having you in our course!</li>
           </ul>
@@ -55,6 +55,7 @@ export function EnrollmentHelpCards() {
       <Card icon={PlayCircle} title="How to enroll" text="Open the step-by-step enrollment walkthrough.">
         <DialogContent className="sm:max-w-lg">
           <DialogHeader><DialogTitle>How to enroll</DialogTitle><DialogDescription>Course selection and payment walkthrough.</DialogDescription></DialogHeader>
+          {videoUrl ? <iframe src={videoUrl} title="How to enroll video tutorial" className="aspect-video w-full rounded-lg border" allowFullScreen /> : <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">The Content Manager will add the payment video tutorial here soon.</p>}
           <ol className="space-y-3 pl-5 text-sm"><li className="list-decimal">Select one or more courses.</li><li className="list-decimal">Pay the calculated total.</li><li className="list-decimal">Enter the transaction ID and submit.</li><li className="list-decimal">Wait up to 48 hours for Content Manager approval.</li></ol>
         </DialogContent>
       </Card>

@@ -26,6 +26,7 @@ const SELF_ACTIONS = [
 
 /** Reading published courses and posts is open to everyone, logged in or not. */
 const PUBLIC_READ = [
+  'api::enrollment-guide.enrollment-guide.current',
   'plugin::users-permissions.user.publicInstructors',
   'api::course.course.find',
   'api::course.course.findOne',
@@ -95,6 +96,7 @@ const ADMIN_ONLY = [
 ];
 
 const ENROLLMENT_REVIEW = [
+  'api::enrollment-guide.enrollment-guide.save',
   'api::enrollment-application.enrollment-application.queue',
   'api::enrollment-application.enrollment-application.review',
 ];

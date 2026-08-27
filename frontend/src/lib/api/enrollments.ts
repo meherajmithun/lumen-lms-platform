@@ -48,3 +48,5 @@ export async function getMyEnrollmentApplications(): Promise<import('@/types/lms
 export async function reviewEnrollmentApplication(id: string, decision: 'approved' | 'rejected') {
   await strapiFetch(`/enrollment-applications/${id}/review`, { method: 'PUT', body: JSON.stringify({ data: { decision } }) });
 }
+export async function getEnrollmentGuide(): Promise<{ videoUrl: string } | null> { const res = await strapiFetch<{ data: { videoUrl: string } | null }>('/enrollment-guide', { auth: false, revalidate: 60 }); return res.data; }
+export async function saveEnrollmentGuide(videoUrl: string) { await strapiFetch('/enrollment-guide', { method: 'PUT', body: JSON.stringify({ data: { videoUrl } }) }); }

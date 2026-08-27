@@ -537,9 +537,9 @@ export interface ApiEnrollmentApplicationEnrollmentApplication
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    discord: Schema.Attribute.String;
+    discord: Schema.Attribute.String & Schema.Attribute.Required;
     email: Schema.Attribute.Email & Schema.Attribute.Required;
-    institution: Schema.Attribute.String;
+    institution: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -564,6 +564,35 @@ export interface ApiEnrollmentApplicationEnrollmentApplication
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiEnrollmentGuideEnrollmentGuide
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'enrollment_guides';
+  info: {
+    displayName: 'Enrollment Guide';
+    pluralName: 'enrollment-guides';
+    singularName: 'enrollment-guide';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::enrollment-guide.enrollment-guide'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    videoUrl: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -1469,6 +1498,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::course.course': ApiCourseCourse;
       'api::enrollment-application.enrollment-application': ApiEnrollmentApplicationEnrollmentApplication;
+      'api::enrollment-guide.enrollment-guide': ApiEnrollmentGuideEnrollmentGuide;
       'api::enrollment.enrollment': ApiEnrollmentEnrollment;
       'api::learning-session.learning-session': ApiLearningSessionLearningSession;
       'api::lesson-progress.lesson-progress': ApiLessonProgressLessonProgress;

@@ -56,6 +56,10 @@ export function NotificationMenu() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
   }
 
+  if (rows.length === 0) {
+    return <Button variant="ghost" size="icon-sm" aria-label="Notifications"><Bell className="size-4" aria-hidden /></Button>;
+  }
+
   return (
     <DropdownMenu onOpenChange={markSeen}>
       <DropdownMenuTrigger
@@ -65,8 +69,7 @@ export function NotificationMenu() {
         {unread > 0 && <span className="absolute right-0.5 top-0.5 size-2 rounded-full bg-destructive" aria-hidden />}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
-        <DropdownMenuGroup><DropdownMenuLabel>Enrollment notifications</DropdownMenuLabel></DropdownMenuGroup>
-        {rows.length === 0 && <DropdownMenuItem disabled>No enrollment updates yet</DropdownMenuItem>}
+        <DropdownMenuGroup><DropdownMenuLabel>Notifications</DropdownMenuLabel></DropdownMenuGroup>
         {rows.map((row) => (
           <DropdownMenuItem key={row.documentId} disabled className="items-start gap-2 py-2.5 opacity-100">
             {row.status === 'approved' ? <CheckCircle2 className="mt-0.5 text-pine" /> : row.status === 'rejected' ? <XCircle className="mt-0.5 text-destructive" /> : <Bell className="mt-0.5 text-muted-foreground" />}
