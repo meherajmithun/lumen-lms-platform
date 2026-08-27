@@ -40,6 +40,10 @@ export async function POST(request: Request) {
     user: { id: number; username: string; email: string; role?: { type?: string } };
   };
 
+  if (parsed.data.role === 'instructor') {
+    return NextResponse.json({ role: 'instructor', pendingApproval: true });
+  }
+
   await createSession(jwt, {
     id: user.id,
     username: user.username,

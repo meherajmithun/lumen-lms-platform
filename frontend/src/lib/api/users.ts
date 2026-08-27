@@ -1,6 +1,6 @@
 import 'server-only';
 import { resolveStrapiMediaUrl, strapiFetch } from '@/lib/strapi';
-import type { InstructorOption, InstructorProfile, Paginated, PlatformStats, Role, StrapiUser, UserProfile } from '@/types/lms';
+import type { InstructorOption, InstructorProfile, InstructorRequest, Paginated, PlatformStats, Role, StrapiUser, UserProfile } from '@/types/lms';
 
 export async function getMyProfile(): Promise<UserProfile> {
   const profile = await strapiFetch<UserProfile>('/users/me');
@@ -63,3 +63,5 @@ export async function getPlatformStats(): Promise<PlatformStats> {
   const res = await strapiFetch<{ data: PlatformStats }>('/platform-stats');
   return res.data;
 }
+export async function getInstructorRequests():Promise<InstructorRequest[]>{const r=await strapiFetch<{data:InstructorRequest[]}>('/instructor-requests');return r.data??[]}
+export async function approveInstructor(id:number){await strapiFetch(`/instructor-requests/${id}/approve`,{method:'PUT'})}

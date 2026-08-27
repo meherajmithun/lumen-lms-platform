@@ -19,6 +19,7 @@ import type { Role } from '@/types/lms';
 const ALL_ROLES: Role[] = ['admin', 'content_manager', 'instructor', 'student'];
 
 const ROUTE_ROLES: Array<[string, Role[]]> = [
+  ['/dashboard', ALL_ROLES],
   ['/account', ALL_ROLES],
   ['/admin', ['admin']],
   ['/teach', ['admin', 'content_manager', 'instructor']],
@@ -52,6 +53,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     '/account/:path*',
+    '/dashboard/:path*',
     '/admin/:path*',
     '/teach/:path*',
     '/blog-admin/:path*',

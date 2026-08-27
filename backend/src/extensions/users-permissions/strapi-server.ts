@@ -67,9 +67,35 @@ export default (plugin: Plugin) => {
           .service('user')
           .edit(created.user.id, { role: role.id });
         (created.user as Record<string, unknown>).role = { id: role.id, type: role.type, name: role.name };
+        if (requested === ROLES.INSTRUCTOR) {
+          await strapi.query('plugin::users-permissions.user').update({
+            where: { id: created.user.id },
+            data: { blocked: true },
+          });
+          (created.user as Record<string, unknown>).blocked = true;
+        }
       }
     }
     return ctx.body;
+  };
+
+  plugin.controllers.user.instructorRequests = async (_ctx: ApiContext) => {
+    const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+    const users = await strapi.query('plugin::users-permissions.user').findMany({
+      where: { role: { type: ROLES.INSTRUCTOR }, blocked: true },
+      select: ['id', 'username', 'email', 'createdAt'],
+      orderBy: { createdAt: 'asc' },
+    });
+    return { data: users };
+  };
+
+  plugin.controllers.user.approveInstructor = async (ctx: ApiContext) => {
+    const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+    const id = Number(ctx.params.id);
+    const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
+    if (!user || user.role?.type !== ROLES.INSTRUCTOR) return ctx.notFound('Instructor request not found');
+    const updated = await strapi.query('plugin::users-permissions.user').update({ where: { id }, data: { blocked: false } });
+    return { data: { id: updated.id, username: updated.username, blocked: updated.blocked } };
   };
 
   /**
@@ -312,6 +338,8 @@ export default (plugin: Plugin) => {
   };
 
   plugin.routes['content-api'].routes.push(
+    { method: 'GET', path: '/instructor-requests', handler: 'user.instructorRequests', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
+    { method: 'PUT', path: '/instructor-requests/:id/approve', handler: 'user.approveInstructor', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
     {
       method: 'PUT',
       path: '/users/me/profile',

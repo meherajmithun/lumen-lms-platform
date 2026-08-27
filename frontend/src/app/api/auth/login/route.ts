@@ -27,6 +27,13 @@ export async function POST(request: Request) {
   });
 
   if (!authResponse.ok) {
+    const payload = await authResponse.json().catch(() => null) as { error?: { message?: string } } | null;
+    if (payload?.error?.message?.toLowerCase().includes('blocked')) {
+      return NextResponse.json(
+        { error: 'Your instructor account is waiting for Admin approval.' },
+        { status: 403 }
+      );
+    }
     return NextResponse.json({ error: 'That email and password do not match.' }, { status: 401 });
   }
 

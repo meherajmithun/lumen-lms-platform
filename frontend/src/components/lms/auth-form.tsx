@@ -14,6 +14,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [approvalPending, setApprovalPending] = useState(false);
   const [role, setRole] = useState<'student' | 'instructor'>('student');
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -38,18 +39,20 @@ export function AuthForm({ mode }: { mode: Mode }) {
       body: JSON.stringify(payload),
     });
 
-    const body = (await response.json().catch(() => ({}))) as { error?: string };
+    const body = (await response.json().catch(() => ({}))) as { error?: string; pendingApproval?: boolean };
 
     if (!response.ok) {
       setError(body.error ?? 'Something went wrong. Please try again.');
       setPending(false);
       return;
     }
+    if (body.pendingApproval) { setPending(false); setApprovalPending(true); return; }
 
     router.push('/');
     router.refresh();
   }
 
+  if (approvalPending) return <div role="status" className="rounded-xl border border-pine/30 bg-pine-wash p-6 text-center"><h2 className="font-semibold">Instructor request sent</h2><p className="mt-2 text-sm text-muted-foreground">An Admin must approve your instructor account before you can sign in.</p></div>;
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       {mode === 'register' && (

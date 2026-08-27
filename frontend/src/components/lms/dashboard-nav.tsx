@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   BookMarked, BookOpen, ClipboardList, LayoutDashboard,
-  MessageSquareQuote, Newspaper, PenSquare, User, Users,
+  MessageSquareQuote, Newspaper, PenSquare, User, UserPlus, Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Role } from '@/types/lms';
@@ -20,6 +20,7 @@ const NAV: Record<Role, Item[]> = {
   admin: [
     { href: '/admin', label: 'Overview', icon: LayoutDashboard },
     { href: '/admin/users', label: 'People', icon: Users },
+    { href: '/admin/instructor-requests', label: 'Instructor requests', icon: UserPlus },
     { href: '/teach', label: 'Courses', icon: BookOpen },
     { href: '/blog-admin', label: 'Blog', icon: Newspaper },
   ],

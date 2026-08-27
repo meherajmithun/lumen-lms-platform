@@ -42,6 +42,7 @@ export type InstructorOption = {
   username: string;
   email: string;
 };
+export type InstructorRequest={id:number;username:string;email:string;createdAt?:string};
 
 export type InstructorProfile = {
   id: number;
