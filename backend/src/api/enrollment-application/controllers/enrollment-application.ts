@@ -7,7 +7,7 @@ export default factories.createCoreController('api::enrollment-application.enrol
     const input = bodyData(ctx); const user = ctx.state.user!;
     const ids = Array.isArray(input.courseIds) ? [...new Set(input.courseIds.filter((v): v is string => typeof v === 'string'))] : [];
     if (!ids.length) return ctx.badRequest('Select at least one course');
-    for (const key of ['name','email','phone','paymentMethod','transactionId']) if (typeof input[key] !== 'string' || !(input[key] as string).trim()) return ctx.badRequest(`${key} is required`);
+    for (const key of ['name','email','phone','discord','institution','paymentMethod','transactionId']) if (typeof input[key] !== 'string' || !(input[key] as string).trim()) return ctx.badRequest(`${key} is required`);
     if (!['bkash','rocket','nagad'].includes(input.paymentMethod as string)) return ctx.badRequest('Invalid payment method');
     const courses = await strapi.documents('api::course.course').findMany({ filters: { documentId: { $in: ids }, isPublished: true }, fields: ['documentId','title','price','discountPercent'], limit: -1 });
     if (courses.length !== ids.length) return ctx.badRequest('A selected course is unavailable');

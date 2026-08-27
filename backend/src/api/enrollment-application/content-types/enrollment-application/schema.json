@@ -1,1 +1,21 @@
-{"kind":"collectionType","collectionName":"enrollment_applications","info":{"singularName":"enrollment-application","pluralName":"enrollment-applications","displayName":"Enrollment Application"},"options":{"draftAndPublish":false},"attributes":{"student":{"type":"relation","relation":"manyToOne","target":"plugin::users-permissions.user"},"courseIds":{"type":"json","required":true},"courseSummary":{"type":"json","required":true},"name":{"type":"string","required":true},"email":{"type":"email","required":true},"phone":{"type":"string","required":true},"discord":{"type":"string"},"institution":{"type":"string"},"paymentMethod":{"type":"enumeration","enum":["bkash","rocket","nagad"],"required":true},"transactionId":{"type":"string","required":true},"totalAmount":{"type":"decimal","required":true},"status":{"type":"enumeration","enum":["pending","approved","rejected"],"default":"pending","required":true},"reviewedAt":{"type":"datetime"}}}
+{
+  "kind": "collectionType",
+  "collectionName": "enrollment_applications",
+  "info": { "singularName": "enrollment-application", "pluralName": "enrollment-applications", "displayName": "Enrollment Application" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "student": { "type": "relation", "relation": "manyToOne", "target": "plugin::users-permissions.user" },
+    "courseIds": { "type": "json", "required": true },
+    "courseSummary": { "type": "json", "required": true },
+    "name": { "type": "string", "required": true },
+    "email": { "type": "email", "required": true },
+    "phone": { "type": "string", "required": true },
+    "discord": { "type": "string", "required": true },
+    "institution": { "type": "string", "required": true },
+    "paymentMethod": { "type": "enumeration", "enum": ["bkash", "rocket", "nagad"], "required": true },
+    "transactionId": { "type": "string", "required": true },
+    "totalAmount": { "type": "decimal", "required": true },
+    "status": { "type": "enumeration", "enum": ["pending", "approved", "rejected"], "default": "pending", "required": true },
+    "reviewedAt": { "type": "datetime" }
+  }
+}
