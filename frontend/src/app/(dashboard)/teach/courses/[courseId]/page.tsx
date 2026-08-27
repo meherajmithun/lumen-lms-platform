@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ChevronLeft, ExternalLink, Pencil } from 'lucide-react';
+import { ChevronLeft, ExternalLink } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { buttonVariants } from '@/components/ui/button';
 import { CourseForm } from '@/components/lms/course-form';
 import { LessonManager } from '@/components/lms/lesson-manager';
 import { QuizManager } from '@/components/lms/quiz-manager';
@@ -16,17 +15,11 @@ import { listInstructors } from '@/lib/api/users';
 
 export default async function CourseEditorPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ courseId: string }>;
-  searchParams: Promise<{ tab?: string }>;
 }) {
   const user = await requireRole('admin', 'content_manager', 'instructor');
   const { courseId } = await params;
-  const { tab } = await searchParams;
-  const activeTab = ['lessons', 'quiz', 'students', 'details'].includes(tab ?? '')
-    ? tab!
-    : 'lessons';
 
   // This endpoint is ownership-guarded in Strapi, so a null here means either
   // "no such course" or "not yours". Either way the editor must not open.
@@ -83,19 +76,10 @@ export default async function CourseEditorPage({
             )}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href={`/teach/courses/${course.documentId}?tab=details`}
-            className={buttonVariants({ variant: 'outline', size: 'sm' })}
-          >
-            <Pencil className="size-3.5" aria-hidden />
-            Edit details &amp; status
-          </Link>
-          <DeleteCourseButton courseId={course.documentId} title={course.title} />
-        </div>
+        <DeleteCourseButton courseId={course.documentId} title={course.title} />
       </div>
 
-      <Tabs key={activeTab} defaultValue={activeTab}>
+      <Tabs defaultValue="lessons">
         <TabsList>
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="quiz">Quiz</TabsTrigger>
