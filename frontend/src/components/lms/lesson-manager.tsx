@@ -78,11 +78,11 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
         <p className="text-sm text-muted-foreground tabular">
           {ordered.length} {ordered.length === 1 ? 'lesson' : 'lessons'} · students work through them in this order
         </p>
-        <Button size="sm" onClick={openCreate}>
+        <Button className="w-full sm:w-auto" size="sm" onClick={openCreate}>
           <Plus className="size-4" aria-hidden />
           Add lesson
         </Button>
@@ -225,7 +225,7 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 min-[380px]:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="lesson-order">Position</Label>
                 <Input

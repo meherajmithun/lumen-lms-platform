@@ -169,7 +169,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply min-w-0 overflow-x-clip bg-background text-foreground;
   }
   html {
     @apply font-sans;
@@ -204,6 +204,12 @@
   .prose-lesson li { margin-bottom: .35rem; }
   .prose-lesson strong { font-weight: 600; }
   .prose-lesson a { color: var(--pine); text-decoration: underline; text-underline-offset: 3px; }
+  .prose-lesson img,
+  .prose-lesson video,
+  .prose-lesson iframe { max-width: 100%; height: auto; }
+  .prose-lesson pre { max-width: 100%; overflow-x: auto; }
+  .prose-lesson p,
+  .prose-lesson li { overflow-wrap: anywhere; }
 
   .tabular { font-variant-numeric: tabular-nums; }
 

@@ -7,6 +7,7 @@ import {
   Home,
   Mail,
   MessageSquareQuote,
+  Newspaper,
   UsersRound,
   UserPlus,
 } from 'lucide-react';
@@ -31,7 +32,7 @@ export async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 text-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6">
+      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:gap-3 sm:px-6">
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-lg"
@@ -43,27 +44,27 @@ export async function SiteHeader() {
 
         <nav
           className={cn(
-            'col-start-2 items-center justify-center gap-1 text-sm text-muted-foreground md:gap-2',
+            'min-w-0 items-center justify-center gap-1 text-sm text-muted-foreground md:gap-2',
             showMarketingNav ? 'flex' : 'hidden'
           )}
           aria-label="Main navigation"
         >
-          <Link href="/courses" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
+          <Link href="/courses" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Courses
           </Link>
-          <Link href="/pricing" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
+          <Link href="/pricing" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Pricing
           </Link>
           <Link
             href="/enroll"
-            className="hidden rounded-md px-3 py-2 font-semibold italic text-foreground transition-colors hover:bg-muted sm:block"
+            className="hidden rounded-md px-3 py-2 font-semibold italic text-foreground transition-colors hover:bg-muted lg:block"
           >
             Enroll
           </Link>
-          <Link href="/instructors" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
+          <Link href="/instructors" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Instructors
           </Link>
-          <Link href="/blog" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground sm:block">
+          <Link href="/blog" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Blog
           </Link>
           <DropdownMenu>
@@ -74,21 +75,25 @@ export async function SiteHeader() {
               <ChevronDown className="size-3.5" aria-hidden />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem className="sm:hidden" render={<Link href="/courses" />}>
+              <DropdownMenuItem className="lg:hidden" render={<Link href="/courses" />}>
                 <BookOpen aria-hidden />
                 Courses
               </DropdownMenuItem>
-              <DropdownMenuItem className="sm:hidden" render={<Link href="/pricing" />}>
+              <DropdownMenuItem className="lg:hidden" render={<Link href="/pricing" />}>
                 <CircleDollarSign aria-hidden />
                 Pricing
               </DropdownMenuItem>
-              <DropdownMenuItem className="sm:hidden" render={<Link href="/enroll" />}>
+              <DropdownMenuItem className="lg:hidden" render={<Link href="/enroll" />}>
                 <UserPlus aria-hidden />
                 Enroll
               </DropdownMenuItem>
-              <DropdownMenuItem className="sm:hidden" render={<Link href="/instructors" />}>
+              <DropdownMenuItem className="lg:hidden" render={<Link href="/instructors" />}>
                 <UsersRound aria-hidden />
                 Instructors
+              </DropdownMenuItem>
+              <DropdownMenuItem className="lg:hidden" render={<Link href="/blog" />}>
+                <Newspaper aria-hidden />
+                Blog
               </DropdownMenuItem>
               <DropdownMenuItem render={<Link href="/" />}>
                 <Home aria-hidden />
@@ -106,22 +111,22 @@ export async function SiteHeader() {
 
         <div
           className={cn(
-            'col-start-3 items-center justify-self-end gap-1 border-l border-border pl-4',
-            showMarketingNav ? 'hidden lg:flex' : 'flex'
+            'min-w-0 items-center justify-self-end gap-1 border-l border-border pl-2 sm:pl-3',
+            'flex'
           )}
         >
-          <ThemeToggle />
+          <span className={showMarketingNav ? 'hidden lg:inline-flex' : 'inline-flex'}><ThemeToggle /></span>
           {user ? (
             <>
               {user.role === ROLES.STUDENT && <NotificationMenu />}
-              <Link href={homeFor(user.role)} className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+              <Link href={homeFor(user.role)} className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden lg:inline-flex')}>
                 Dashboard
               </Link>
               <UserMenu user={user} />
             </>
           ) : (
             <>
-              <Link href="/login" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+              <Link href="/login" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden lg:inline-flex')}>
                 Sign in
               </Link>
               <Link href="/register" className={buttonVariants({ size: 'sm' })}>
