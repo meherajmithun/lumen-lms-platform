@@ -45,7 +45,7 @@ export async function SiteHeader() {
 
         <nav
           className={cn(
-            'min-w-0 items-center justify-center gap-1 text-sm text-muted-foreground md:gap-2',
+            'min-w-0 items-center justify-center justify-self-end gap-1 text-sm text-muted-foreground md:gap-2 lg:justify-self-auto',
             showMarketingNav ? 'flex' : 'hidden'
           )}
           aria-label="Main navigation"
