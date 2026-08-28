@@ -1,8 +1,8 @@
 export type ComboTier = { courseCount: number; discountAmount: number };
 
 export const DEFAULT_COMBO_TIERS: ComboTier[] = [
-  { courseCount: 2, discountAmount: 1000 },
-  { courseCount: 3, discountAmount: 2500 },
+  { courseCount: 2, discountAmount: 500 },
+  { courseCount: 3, discountAmount: 1000 },
 ];
 
 export function normalizeComboTiers(value: unknown): ComboTier[] {
