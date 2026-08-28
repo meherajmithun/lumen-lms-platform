@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { BookOpen, CircleCheck, UsersRound } from 'lucide-react';
+import { BookOpen, CircleCheck } from 'lucide-react';
 import { LessonSpine } from './lesson-spine';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
-import { discountedPrice, formatCourseDuration, formatCoursePrice } from '@/lib/course-pricing';
+import { discountedPrice, formatCoursePrice } from '@/lib/course-pricing';
 import type { Course, CourseProgress, Level } from '@/types/lms';
 
 const LEVEL_LABEL: Record<Level, string> = {
@@ -25,7 +25,6 @@ export function CourseCard({
   footer?: React.ReactNode;
   enrolled?: boolean;
 }) {
-  const lessonCount = progress?.total ?? course.lessonCount ?? course.lessons?.length ?? 0;
   const originalPrice = Number(course.price ?? 0);
   const discount = Number(course.discountPercent ?? 0);
   const finalPrice = discountedPrice(originalPrice, discount);
@@ -115,20 +114,7 @@ export function CourseCard({
               lessons · {progress.percent}%
             </p>
           </div>
-        ) : (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground tabular">
-            <p>
-              {lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}
-              {course.totalDurationMinutes !== undefined && (
-                <> · {formatCourseDuration(course.totalDurationMinutes)}</>
-              )}
-            </p>
-            <p className="flex items-center gap-1">
-              <UsersRound className="size-3.5" aria-hidden />
-              {course.enrollmentCount ?? 0} {(course.enrollmentCount ?? 0) === 1 ? 'student' : 'students'} enrolled
-            </p>
-          </div>
-        )}
+        ) : null}
 
         {footer}
       </div>
