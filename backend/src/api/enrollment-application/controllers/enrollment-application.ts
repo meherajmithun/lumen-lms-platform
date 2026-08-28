@@ -1,6 +1,7 @@
 import { factories } from '@strapi/strapi';
 import type { ApiContext } from '../../../utils/context';
 import { bodyData } from '../../../utils/request';
+import { comboDiscountFor, DEFAULT_COMBO_TIERS, normalizeComboTiers } from '../../../utils/combo-discount';
 const finalPrice = (p: number, d: number) => Math.round(p * (1 - Math.min(100, Math.max(0, d)) / 100) * 100) / 100;
 export default factories.createCoreController('api::enrollment-application.enrollment-application', ({ strapi }) => ({
   async submit(ctx: ApiContext) {
@@ -12,9 +13,13 @@ export default factories.createCoreController('api::enrollment-application.enrol
     const courses = await strapi.documents('api::course.course').findMany({ filters: { documentId: { $in: ids }, isPublished: true }, fields: ['documentId','title','price','discountPercent'], limit: -1 });
     if (courses.length !== ids.length) return ctx.badRequest('A selected course is unavailable');
     const summary = courses.map(c => ({ documentId: c.documentId, title: String(c.title ?? 'Course'), amount: finalPrice(Number(c.price), Number(c.discountPercent ?? 0)) }));
-    const totalAmount = summary.reduce((sum, c) => sum + c.amount, 0);
-    const created = await strapi.documents('api::enrollment-application.enrollment-application').create({ data: { student: user.id, courseIds: ids, courseSummary: summary, name: (input.name as string).trim(), email: (input.email as string).trim(), phone: (input.phone as string).trim(), discord: String(input.discord ?? '').trim(), institution: String(input.institution ?? '').trim(), paymentMethod: input.paymentMethod as 'bkash'|'rocket'|'nagad', transactionId: (input.transactionId as string).trim(), totalAmount, status: 'pending' } });
-    return { data: { documentId: created.documentId, status: created.status, totalAmount } };
+    const subtotal = summary.reduce((sum, c) => sum + c.amount, 0);
+    const [offer] = await strapi.documents('api::combo-offer.combo-offer').findMany({ fields: ['tiers','isActive'], limit: 1, sort: 'updatedAt:desc' });
+    const tiers = offer ? normalizeComboTiers(offer.tiers) : DEFAULT_COMBO_TIERS;
+    const comboDiscount = offer?.isActive === false ? 0 : Math.min(subtotal, comboDiscountFor(ids.length, tiers));
+    const totalAmount = Math.max(0, subtotal - comboDiscount);
+    const created = await strapi.documents('api::enrollment-application.enrollment-application').create({ data: { student: user.id, courseIds: ids, courseSummary: summary, name: (input.name as string).trim(), email: (input.email as string).trim(), phone: (input.phone as string).trim(), discord: String(input.discord ?? '').trim(), institution: String(input.institution ?? '').trim(), paymentMethod: input.paymentMethod as 'bkash'|'rocket'|'nagad', transactionId: (input.transactionId as string).trim(), comboDiscount, totalAmount, status: 'pending' } });
+    return { data: { documentId: created.documentId, status: created.status, comboDiscount, totalAmount } };
   },
   async queue() { return { data: await strapi.documents('api::enrollment-application.enrollment-application').findMany({ populate: { student: { fields: ['id','username','email'] } }, sort: 'createdAt:desc', limit: -1 }) }; },
   async mine(ctx: ApiContext) {

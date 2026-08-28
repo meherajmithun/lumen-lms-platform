@@ -17,8 +17,9 @@ import {
 } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { EnrollButton } from '@/components/lms/enroll-button';
+import { ComboOfferDialog } from '@/components/lms/combo-offer-dialog';
 import { getCourseSyllabus, getPublishedCourses } from '@/lib/api/courses';
-import { getMyEnrollmentsOptional } from '@/lib/api/enrollments';
+import { getComboOffer, getMyEnrollmentsOptional } from '@/lib/api/enrollments';
 import { getCurrentUser } from '@/lib/auth';
 import { can } from '@/lib/permissions';
 import { discountedPrice, formatCourseDuration, formatCoursePrice } from '@/lib/course-pricing';
@@ -67,6 +68,7 @@ export default async function CourseDetailPage({
   const { slug } = await params;
   const course = await getCourseSyllabus(slug);
   if (!course) notFound();
+  const comboOffer = await getComboOffer().catch(() => null);
 
   const user = await getCurrentUser();
 
@@ -185,6 +187,7 @@ export default async function CourseDetailPage({
                   </>
                 )}
               </div>
+              {comboOffer && <ComboOfferDialog offer={comboOffer} />}
               {!user && (
                 <Link
                   href={`/login?next=/courses/${course.slug}`}

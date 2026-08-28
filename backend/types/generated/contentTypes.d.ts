@@ -443,6 +443,39 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiComboOfferComboOffer extends Struct.CollectionTypeSchema {
+  collectionName: 'combo_offers';
+  info: {
+    displayName: 'Combo Offer';
+    pluralName: 'combo-offers';
+    singularName: 'combo-offer';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text & Schema.Attribute.Required;
+    isActive: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::combo-offer.combo-offer'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    tiers: Schema.Attribute.JSON & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCourseCourse extends Struct.CollectionTypeSchema {
   collectionName: 'courses';
   info: {
@@ -532,6 +565,9 @@ export interface ApiEnrollmentApplicationEnrollmentApplication
     draftAndPublish: false;
   };
   attributes: {
+    comboDiscount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     courseIds: Schema.Attribute.JSON & Schema.Attribute.Required;
     courseSummary: Schema.Attribute.JSON & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
@@ -1543,6 +1579,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::combo-offer.combo-offer': ApiComboOfferComboOffer;
       'api::course.course': ApiCourseCourse;
       'api::enrollment-application.enrollment-application': ApiEnrollmentApplicationEnrollmentApplication;
       'api::enrollment-guide.enrollment-guide': ApiEnrollmentGuideEnrollmentGuide;

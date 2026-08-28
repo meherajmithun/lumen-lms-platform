@@ -1,6 +1,7 @@
 import 'server-only';
 import { strapiFetch } from '@/lib/strapi';
 import type { Enrollment } from '@/types/lms';
+import type { ComboOffer } from '@/types/lms';
 
 export async function getMyEnrollments(): Promise<Enrollment[]> {
   const res = await strapiFetch<{ data: Enrollment[] }>('/enrollments/mine');
@@ -50,3 +51,5 @@ export async function reviewEnrollmentApplication(id: string, decision: 'approve
 }
 export async function getEnrollmentGuide(): Promise<{ videoUrl: string } | null> { const res = await strapiFetch<{ data: { videoUrl: string } | null }>('/enrollment-guide', { auth: false, revalidate: 60 }); return res.data; }
 export async function saveEnrollmentGuide(videoUrl: string) { await strapiFetch('/enrollment-guide', { method: 'PUT', body: JSON.stringify({ data: { videoUrl } }) }); }
+export async function getComboOffer(): Promise<ComboOffer | null> { const res = await strapiFetch<{ data: ComboOffer | null }>('/combo-offer', { auth: false, revalidate: 0 }); return res.data; }
+export async function saveComboOffer(data: ComboOffer): Promise<void> { await strapiFetch('/combo-offer', { method: 'PUT', body: JSON.stringify({ data }) }); }

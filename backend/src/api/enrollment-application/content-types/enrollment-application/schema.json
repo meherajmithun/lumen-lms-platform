@@ -15,6 +15,7 @@
     "paymentMethod": { "type": "enumeration", "enum": ["bkash", "rocket", "nagad"], "required": true },
     "transactionId": { "type": "string", "required": true },
     "totalAmount": { "type": "decimal", "required": true },
+    "comboDiscount": { "type": "decimal", "required": true, "default": 0 },
     "status": { "type": "enumeration", "enum": ["pending", "approved", "rejected"], "default": "pending", "required": true },
     "reviewedAt": { "type": "datetime" }
   }

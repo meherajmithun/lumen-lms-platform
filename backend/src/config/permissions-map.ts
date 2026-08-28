@@ -28,6 +28,7 @@ const SELF_ACTIONS = [
 const PUBLIC_READ = [
   'api::student-story.student-story.approved',
   'api::enrollment-guide.enrollment-guide.current',
+  'api::combo-offer.combo-offer.current',
   'plugin::users-permissions.user.publicInstructors',
   'api::course.course.find',
   'api::course.course.findOne',
@@ -103,6 +104,7 @@ const ENROLLMENT_REVIEW = [
   'api::student-story.student-story.queue',
   'api::student-story.student-story.review',
   'api::enrollment-guide.enrollment-guide.save',
+  'api::combo-offer.combo-offer.save',
   'api::enrollment-application.enrollment-application.queue',
   'api::enrollment-application.enrollment-application.review',
 ];

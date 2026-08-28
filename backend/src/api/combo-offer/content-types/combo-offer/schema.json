@@ -1,0 +1,12 @@
+{
+  "kind": "collectionType",
+  "collectionName": "combo_offers",
+  "info": { "singularName": "combo-offer", "pluralName": "combo-offers", "displayName": "Combo Offer" },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "title": { "type": "string", "required": true },
+    "description": { "type": "text", "required": true },
+    "tiers": { "type": "json", "required": true },
+    "isActive": { "type": "boolean", "required": true, "default": true }
+  }
+}
