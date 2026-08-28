@@ -1,4 +1,5 @@
 import { factories } from '@strapi/strapi';
+import { lessonDurationSeconds, utcDate } from '../../../utils/learning-time';
 
 export default factories.createCoreService('api::lesson.lesson', ({ strapi }) => ({
   /**
@@ -21,17 +22,41 @@ export default factories.createCoreService('api::lesson.lesson', ({ strapi }) =>
 
     const [existing] = await strapi.documents('api::lesson-progress.lesson-progress').findMany({
       filters: { student: { id: userId }, lesson: { documentId: lessonDocumentId } },
-      fields: ['documentId'],
+      fields: ['documentId', 'completedAt'],
       limit: 1,
     });
 
+    let progressRow = existing;
     if (!existing) {
-      await strapi.documents('api::lesson-progress.lesson-progress').create({
+      progressRow = await strapi.documents('api::lesson-progress.lesson-progress').create({
         data: {
           student: userId,
           lesson: lessonDocumentId,
           course: course.documentId,
           completedAt: new Date(),
+        },
+      });
+    }
+
+    const durationSeconds = lessonDurationSeconds(lesson.durationMinutes);
+    const completionSessionKey = `completion:${progressRow!.documentId}`;
+    const [durationCredit] = await strapi.documents('api::learning-session.learning-session').findMany({
+      filters: { student: { id: userId }, sessionKey: completionSessionKey },
+      fields: ['documentId'],
+      limit: 1,
+    });
+    if (!durationCredit && durationSeconds > 0) {
+      const completedAt = new Date(progressRow!.completedAt ?? Date.now());
+      await strapi.documents('api::learning-session.learning-session').create({
+        data: {
+          student: userId,
+          course: course.documentId,
+          lesson: lessonDocumentId,
+          sessionKey: completionSessionKey,
+          activityDate: utcDate(completedAt),
+          activeSeconds: durationSeconds,
+          lastSequence: 0,
+          lastHeartbeatAt: completedAt,
         },
       });
     }
@@ -60,6 +85,14 @@ export default factories.createCoreService('api::lesson.lesson', ({ strapi }) =>
       limit: 1,
     });
     if (existing) {
+      const durationCredits = await strapi.documents('api::learning-session.learning-session').findMany({
+        filters: { student: { id: userId }, sessionKey: `completion:${existing.documentId}` },
+        fields: ['documentId'],
+        limit: -1,
+      });
+      await Promise.all(durationCredits.map((row) =>
+        strapi.documents('api::learning-session.learning-session').delete({ documentId: row.documentId })
+      ));
       await strapi
         .documents('api::lesson-progress.lesson-progress')
         .delete({ documentId: existing.documentId });

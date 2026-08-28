@@ -1,6 +1,6 @@
 'use client';
 
-import { useOptimistic, useRef, useState, useTransition } from 'react';
+import { useOptimistic, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Check, ChevronLeft, ChevronRight, CircleCheck, FileQuestion, Loader2 } from 'lucide-react';
@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { LessonSpine } from './lesson-spine';
 import { VideoEmbed } from './video-embed';
-import { LearningTimeTracker } from './learning-time-tracker';
 import { markLessonComplete, markLessonIncomplete } from '@/app/actions/progress';
 import { cn } from '@/lib/utils';
 import type { CourseProgress, Lesson } from '@/types/lms';
@@ -35,9 +34,6 @@ export function LessonPlayer({
   const router = useRouter();
   const [pending, start] = useTransition();
   const [outlineOpen, setOutlineOpen] = useState(false);
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const videoPlayingRef = useRef(false);
-  const flushLearningTime = useRef<(() => Promise<void>) | null>(null);
 
   /**
    * The tick and the spine move immediately, then reconcile with what the server
@@ -61,7 +57,6 @@ export function LessonPlayer({
       : Math.min(total, optimistic.progress.completed + 1);
 
     start(async () => {
-      await flushLearningTime.current?.().catch(() => undefined);
       setOptimistic({
         done: isComplete
           ? optimistic.done.filter((id) => id !== lesson.documentId)
@@ -87,12 +82,6 @@ export function LessonPlayer({
 
   return (
     <div className="mx-auto max-w-6xl">
-      <LearningTimeTracker
-        lessonId={lesson.documentId}
-        mode={lesson.contentType}
-        videoPlaying={videoPlaying}
-        flushRef={flushLearningTime}
-      />
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <Link
           href={`/learn/${slug}`}
@@ -177,17 +166,7 @@ export function LessonPlayer({
 
           <div className="mt-7">
             {lesson.contentType === 'video' && lesson.videoUrl ? (
-              <VideoEmbed
-                url={lesson.videoUrl}
-                title={lesson.title}
-                onPlaybackChange={(playing) => {
-                  if (videoPlayingRef.current && !playing) {
-                    void flushLearningTime.current?.().catch(() => undefined);
-                  }
-                  videoPlayingRef.current = playing;
-                  setVideoPlaying(playing);
-                }}
-              />
+              <VideoEmbed url={lesson.videoUrl} title={lesson.title} />
             ) : (
               <div className="prose-lesson">
                 {(lesson.body ?? '').split('\n\n').map((block, i) =>

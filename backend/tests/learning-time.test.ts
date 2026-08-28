@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { buildLearningHistory, heartbeatIncrement } from '../src/utils/learning-time';
+import { buildLearningHistory, heartbeatIncrement, lessonDurationSeconds } from '../src/utils/learning-time';
+
+describe('lessonDurationSeconds', () => {
+  it('converts a configured lesson duration to seconds', () => {
+    expect(lessonDurationSeconds(5)).toBe(300);
+    expect(lessonDurationSeconds('10')).toBe(600);
+  });
+
+  it('does not credit missing or invalid durations', () => {
+    expect(lessonDurationSeconds(null)).toBe(0);
+    expect(lessonDurationSeconds(-2)).toBe(0);
+  });
+});
 
 describe('heartbeatIncrement', () => {
   it('uses server elapsed time', () => {

@@ -25,6 +25,7 @@ export async function markLessonComplete(lessonId: string, slug: string): Promis
     const { progress } = await completeLesson(lessonId);
     revalidatePath(`/learn/${slug}`, 'layout');
     revalidatePath('/my-courses');
+    revalidatePath('/account');
     return { ok: true, progress };
   } catch (error) {
     return { ok: false, error: toUserMessage(error) };
@@ -39,6 +40,7 @@ export async function markLessonIncomplete(lessonId: string, slug: string): Prom
     const { progress } = await uncompleteLesson(lessonId);
     revalidatePath(`/learn/${slug}`, 'layout');
     revalidatePath('/my-courses');
+    revalidatePath('/account');
     return { ok: true, progress };
   } catch (error) {
     return { ok: false, error: toUserMessage(error) };

@@ -9,6 +9,12 @@ export function heartbeatIncrement(lastHeartbeatAt: Date, now: Date): number {
   return Math.min(20, Math.max(0, elapsed));
 }
 
+export function lessonDurationSeconds(durationMinutes: unknown): number {
+  const minutes = Number(durationMinutes);
+  if (!Number.isFinite(minutes) || minutes <= 0) return 0;
+  return Math.round(minutes * 60);
+}
+
 export function buildLearningHistory(
   rows: DailyLearning[],
   days: number,

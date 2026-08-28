@@ -2,7 +2,7 @@ import type { LearningHistory } from '@/types/lms';
 
 function duration(seconds: number) {
   if (seconds <= 0) return '0 min';
-  if (seconds < 60) return '<1 min';
+  if (seconds < 60) return `${seconds} sec`;
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes} min`;
   const hours = Math.floor(minutes / 60);
@@ -25,7 +25,7 @@ export function LearningConsistencyChart({ history }: { history: LearningHistory
           <h2 id="consistency-title" className="mt-1 font-heading text-lg font-semibold tracking-tight">
             Learning time
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">Active reading and video time over the last 14 days.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Completed lesson time over the last 14 days.</p>
         </div>
         <p className="text-right text-sm text-muted-foreground">
           <span className="block font-heading text-2xl font-semibold text-foreground tabular">
