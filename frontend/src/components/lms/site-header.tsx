@@ -6,6 +6,7 @@ import {
   GraduationCap,
   Home,
   Mail,
+  Menu,
   MessageSquareQuote,
   Newspaper,
   UsersRound,
@@ -69,10 +70,12 @@ export async function SiteHeader() {
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="flex items-center gap-1 rounded-md px-2 py-2 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:px-3"
+              aria-label="Open navigation menu"
+              className="flex size-10 items-center justify-center rounded-md transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring lg:h-auto lg:w-auto lg:gap-1 lg:px-3 lg:py-2"
             >
-              More
-              <ChevronDown className="size-3.5" aria-hidden />
+              <Menu className="size-5 lg:hidden" aria-hidden />
+              <span className="hidden lg:inline">More</span>
+              <ChevronDown className="hidden size-3.5 lg:block" aria-hidden />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
               <DropdownMenuItem className="lg:hidden" render={<Link href="/courses" />}>
