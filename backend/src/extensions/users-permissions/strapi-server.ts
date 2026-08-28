@@ -137,14 +137,15 @@ export default (plugin: Plugin) => {
       select: ['userId', 'username', 'email', 'createdAt'],
       orderBy: { createdAt: 'asc' },
     });
-    return {
-      data: requests.map(({ userId, username, email, createdAt }) => ({
-        id: userId,
-        username,
-        email,
-        createdAt,
-      })),
-    };
+    const data = [];
+    for (const { userId, username, email, createdAt } of requests) {
+      const user = await strapi.query('plugin::users-permissions.user').findOne({
+        where: { id: userId },
+        populate: { role: true },
+      });
+      if (user?.role?.type === ROLES.INSTRUCTOR) data.push({ id: userId, username, email, createdAt });
+    }
+    return { data };
   };
 
   plugin.controllers.user.approveInstructor = async (ctx: ApiContext) => {
