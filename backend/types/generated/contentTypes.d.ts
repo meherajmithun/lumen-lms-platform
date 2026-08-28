@@ -682,6 +682,49 @@ export interface ApiEnrollmentEnrollment extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiInstructorRequestInstructorRequest
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'instructor_requests';
+  info: {
+    displayName: 'Instructor Request';
+    pluralName: 'instructor-requests';
+    singularName: 'instructor-request';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::instructor-request.instructor-request'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    reviewedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<['pending', 'approved']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    userId: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    username: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ApiLearningSessionLearningSession
   extends Struct.CollectionTypeSchema {
   collectionName: 'learning_sessions';
@@ -1599,6 +1642,7 @@ declare module '@strapi/strapi' {
       'api::enrollment-application.enrollment-application': ApiEnrollmentApplicationEnrollmentApplication;
       'api::enrollment-guide.enrollment-guide': ApiEnrollmentGuideEnrollmentGuide;
       'api::enrollment.enrollment': ApiEnrollmentEnrollment;
+      'api::instructor-request.instructor-request': ApiInstructorRequestInstructorRequest;
       'api::learning-session.learning-session': ApiLearningSessionLearningSession;
       'api::lesson-progress.lesson-progress': ApiLessonProgressLessonProgress;
       'api::lesson.lesson': ApiLessonLesson;

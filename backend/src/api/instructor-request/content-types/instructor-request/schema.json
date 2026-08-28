@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "instructor_requests",
+  "info": {
+    "singularName": "instructor-request",
+    "pluralName": "instructor-requests",
+    "displayName": "Instructor Request"
+  },
+  "options": { "draftAndPublish": false },
+  "attributes": {
+    "userId": { "type": "integer", "required": true, "unique": true, "min": 1 },
+    "username": { "type": "string", "required": true },
+    "email": { "type": "email", "required": true },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending", "approved"],
+      "required": true,
+      "default": "pending"
+    },
+    "reviewedAt": { "type": "datetime" }
+  }
+}

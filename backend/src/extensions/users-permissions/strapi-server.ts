@@ -22,6 +22,8 @@ type Plugin = {
   };
 };
 
+const INSTRUCTOR_REQUEST_UID = 'api::instructor-request.instructor-request' as const;
+
 export default (plugin: Plugin) => {
   // Plugin content types must be extended programmatically: a partial schema.json
   // would replace, rather than safely merge with, the users-permissions schema.
@@ -84,6 +86,23 @@ export default (plugin: Plugin) => {
             where: { id: createdUserId },
             data: { blocked: true, instructorApprovalPending: true },
           });
+          const registeredUser = await strapi.query('plugin::users-permissions.user').findOne({
+            where: { id: createdUserId },
+            select: ['id', 'username', 'email'],
+          });
+          if (!registeredUser) throw new Error('Registered instructor account could not be loaded');
+
+          // Keep approval requests in their own table. Deriving the queue from
+          // user fields made requests disappear whenever a plugin service
+          // sanitised or rewrote those fields during role assignment.
+          await strapi.db.query(INSTRUCTOR_REQUEST_UID).create({
+            data: {
+              userId: registeredUser.id,
+              username: registeredUser.username,
+              email: registeredUser.email,
+              status: 'pending',
+            },
+          });
           if (created.user) {
             (created.user as Record<string, unknown>).blocked = true;
             (created.user as Record<string, unknown>).instructorApprovalPending = true;
@@ -101,27 +120,38 @@ export default (plugin: Plugin) => {
 
   plugin.controllers.user.instructorRequests = async (_ctx: ApiContext) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
-    const blockedUsers = await strapi.query('plugin::users-permissions.user').findMany({
-      where: { blocked: true },
-      select: ['id', 'username', 'email', 'createdAt', 'instructorApprovalPending'],
-      populate: { role: true },
+    const requests = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findMany({
+      where: { status: 'pending' },
+      select: ['userId', 'username', 'email', 'createdAt'],
       orderBy: { createdAt: 'asc' },
     });
     return {
-      data: blockedUsers
-        .filter((user) => user.instructorApprovalPending === true || user.role?.type === ROLES.INSTRUCTOR)
-        .map(({ id, username, email, createdAt }) => ({ id, username, email, createdAt })),
+      data: requests.map(({ userId, username, email, createdAt }) => ({
+        id: userId,
+        username,
+        email,
+        createdAt,
+      })),
     };
   };
 
   plugin.controllers.user.approveInstructor = async (ctx: ApiContext) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
     const id = Number(ctx.params.id);
+    if (!Number.isInteger(id) || id < 1) return ctx.badRequest('Invalid instructor request');
+    const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({
+      where: { userId: id, status: 'pending' },
+    });
+    if (!request) return ctx.notFound('Instructor request not found');
     const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
     if (!user || user.role?.type !== ROLES.INSTRUCTOR) return ctx.notFound('Instructor request not found');
     const updated = await strapi.query('plugin::users-permissions.user').update({
       where: { id },
       data: { blocked: false, instructorApprovalPending: false },
+    });
+    await strapi.db.query(INSTRUCTOR_REQUEST_UID).update({
+      where: { id: request.id },
+      data: { status: 'approved', reviewedAt: new Date().toISOString() },
     });
     return { data: { id: updated.id, username: updated.username, blocked: updated.blocked } };
   };
