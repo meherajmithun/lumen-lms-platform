@@ -27,6 +27,7 @@ export default (plugin: Plugin) => {
   // would replace, rather than safely merge with, the users-permissions schema.
   plugin.contentTypes.user.schema.attributes.bio = { type: 'text', maxLength: 280 };
   plugin.contentTypes.user.schema.attributes.avatarUrl = { type: 'string', maxLength: 500 };
+  plugin.contentTypes.user.schema.attributes.instructorApprovalPending = { type: 'boolean', default: false };
   plugin.contentTypes.user.schema.info.mainField = 'username';
 
   const originalRegister = plugin.controllers.auth.register as (ctx: ApiContext) => Promise<unknown>;
@@ -54,8 +55,15 @@ export default (plugin: Plugin) => {
     await originalRegister(ctx);
 
     const created = (ctx.body ?? {}) as { user?: { id?: number } };
-    if (created.user?.id) {
-      const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+    const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+    const registeredEmail = typeof ctx.request.body === 'object' && ctx.request.body
+      ? String((ctx.request.body as Record<string, unknown>).email ?? '').trim().toLowerCase()
+      : '';
+    const fallbackUser = !created.user?.id && registeredEmail
+      ? await strapi.query('plugin::users-permissions.user').findOne({ where: { email: registeredEmail } })
+      : null;
+    const createdUserId = created.user?.id ?? fallbackUser?.id;
+    if (createdUserId) {
       const role = await strapi
         .query('plugin::users-permissions.role')
         .findOne({ where: { type: requested } });
@@ -65,14 +73,18 @@ export default (plugin: Plugin) => {
         await strapi
           .plugin('users-permissions')
           .service('user')
-          .edit(created.user.id, { role: role.id });
-        (created.user as Record<string, unknown>).role = { id: role.id, type: role.type, name: role.name };
-        if (requested === ROLES.INSTRUCTOR) {
-          await strapi.query('plugin::users-permissions.user').update({
-            where: { id: created.user.id },
-            data: { blocked: true },
+          .edit(createdUserId, {
+            role: role.id,
+            ...(requested === ROLES.INSTRUCTOR
+              ? { blocked: true, instructorApprovalPending: true }
+              : { instructorApprovalPending: false }),
           });
-          (created.user as Record<string, unknown>).blocked = true;
+        if (created.user) (created.user as Record<string, unknown>).role = { id: role.id, type: role.type, name: role.name };
+        if (requested === ROLES.INSTRUCTOR) {
+          if (created.user) {
+            (created.user as Record<string, unknown>).blocked = true;
+            (created.user as Record<string, unknown>).instructorApprovalPending = true;
+          }
         }
       }
     }
@@ -81,12 +93,17 @@ export default (plugin: Plugin) => {
 
   plugin.controllers.user.instructorRequests = async (_ctx: ApiContext) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
-    const users = await strapi.query('plugin::users-permissions.user').findMany({
-      where: { role: { type: ROLES.INSTRUCTOR }, blocked: true },
-      select: ['id', 'username', 'email', 'createdAt'],
+    const blockedUsers = await strapi.query('plugin::users-permissions.user').findMany({
+      where: { blocked: true },
+      select: ['id', 'username', 'email', 'createdAt', 'instructorApprovalPending'],
+      populate: { role: true },
       orderBy: { createdAt: 'asc' },
     });
-    return { data: users };
+    return {
+      data: blockedUsers
+        .filter((user) => user.instructorApprovalPending === true || user.role?.type === ROLES.INSTRUCTOR)
+        .map(({ id, username, email, createdAt }) => ({ id, username, email, createdAt })),
+    };
   };
 
   plugin.controllers.user.approveInstructor = async (ctx: ApiContext) => {
@@ -94,7 +111,10 @@ export default (plugin: Plugin) => {
     const id = Number(ctx.params.id);
     const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
     if (!user || user.role?.type !== ROLES.INSTRUCTOR) return ctx.notFound('Instructor request not found');
-    const updated = await strapi.query('plugin::users-permissions.user').update({ where: { id }, data: { blocked: false } });
+    const updated = await strapi.query('plugin::users-permissions.user').update({
+      where: { id },
+      data: { blocked: false, instructorApprovalPending: false },
+    });
     return { data: { id: updated.id, username: updated.username, blocked: updated.blocked } };
   };
 
