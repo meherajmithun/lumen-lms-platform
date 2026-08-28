@@ -65,3 +65,4 @@ export async function getPlatformStats(): Promise<PlatformStats> {
 }
 export async function getInstructorRequests():Promise<InstructorRequest[]>{const r=await strapiFetch<{data:InstructorRequest[]}>('/instructor-requests');return r.data??[]}
 export async function approveInstructor(id:number){await strapiFetch(`/instructor-requests/${id}/approve`,{method:'PUT'})}
+export async function rejectInstructor(id:number){await strapiFetch(`/instructor-requests/${id}/reject`,{method:'PUT'})}

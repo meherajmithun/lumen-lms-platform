@@ -94,6 +94,7 @@ const STUDENT_LEARNING = [
 const ADMIN_ONLY = [
   'plugin::users-permissions.user.instructorRequests',
   'plugin::users-permissions.user.approveInstructor',
+  'plugin::users-permissions.user.rejectInstructor',
   'plugin::users-permissions.user.find',
   'plugin::users-permissions.user.findOne',
   'plugin::users-permissions.user.updateRole',

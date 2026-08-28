@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ApproveInstructorButton } from '@/components/lms/approve-instructor-button';
+import { InstructorReviewButtons } from '@/components/lms/approve-instructor-button';
 import { PageHeader } from '@/components/lms/page-header';
 import { getInstructorRequests } from '@/lib/api/users';
 import { requireRole } from '@/lib/auth';
@@ -27,7 +27,7 @@ export default async function InstructorRequestsPage() {
               <p className="truncate font-medium">{request.username}</p>
               <p className="truncate text-sm text-muted-foreground">{request.email}</p>
             </div>
-            <ApproveInstructorButton userId={request.id} />
+            <InstructorReviewButtons userId={request.id} />
           </div>
         ))}
       </div>

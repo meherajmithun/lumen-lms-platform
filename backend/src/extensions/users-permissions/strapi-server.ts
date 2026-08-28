@@ -168,6 +168,27 @@ export default (plugin: Plugin) => {
     return { data: { id: updated.id, username: updated.username, blocked: updated.blocked } };
   };
 
+  plugin.controllers.user.rejectInstructor = async (ctx: ApiContext) => {
+    const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+    const id = Number(ctx.params.id);
+    if (!Number.isInteger(id) || id < 1) return ctx.badRequest('Invalid instructor request');
+    const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({
+      where: { userId: id, approvalStatus: 'pending' },
+    });
+    if (!request) return ctx.notFound('Instructor request not found');
+    const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
+    if (!user || user.role?.type !== ROLES.INSTRUCTOR) return ctx.notFound('Instructor request not found');
+    const updated = await strapi.query('plugin::users-permissions.user').update({
+      where: { id },
+      data: { blocked: true, instructorApprovalPending: false },
+    });
+    await strapi.db.query(INSTRUCTOR_REQUEST_UID).update({
+      where: { id: request.id },
+      data: { approvalStatus: 'rejected', reviewedAt: new Date().toISOString() },
+    });
+    return { data: { id: updated.id, username: updated.username, blocked: updated.blocked } };
+  };
+
   /**
    * GET /users/me — the signed-in user, with their role.
    *
@@ -411,6 +432,7 @@ export default (plugin: Plugin) => {
     { method: 'POST', path: '/register-with-role', handler: 'user.registerWithRole', config: { prefix: '', auth: false } },
     { method: 'GET', path: '/instructor-requests', handler: 'user.instructorRequests', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
     { method: 'PUT', path: '/instructor-requests/:id/approve', handler: 'user.approveInstructor', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
+    { method: 'PUT', path: '/instructor-requests/:id/reject', handler: 'user.rejectInstructor', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
     {
       method: 'PUT',
       path: '/users/me/profile',

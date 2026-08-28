@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireRole } from '@/lib/auth';
-import { approveInstructor, updateUserRole } from '@/lib/api/users';
+import { approveInstructor, rejectInstructor, updateUserRole } from '@/lib/api/users';
 import { toUserMessage } from '@/lib/strapi';
 import { ROLES, type Role } from '@/types/lms';
 import { reviewEnrollmentApplication, saveComboOffer, saveEnrollmentGuide } from '@/lib/api/enrollments';
@@ -40,6 +40,17 @@ export async function approveInstructorAction(userId: number) {
   await requireRole('admin');
   try {
     await approveInstructor(userId);
+    revalidatePath('/admin/instructor-requests');
+    return { ok: true as const };
+  } catch (error) {
+    return { ok: false as const, error: toUserMessage(error) };
+  }
+}
+
+export async function rejectInstructorAction(userId: number) {
+  await requireRole('admin');
+  try {
+    await rejectInstructor(userId);
     revalidatePath('/admin/instructor-requests');
     return { ok: true as const };
   } catch (error) {
