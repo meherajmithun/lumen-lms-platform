@@ -48,7 +48,7 @@ export async function approveInstructorAction(userId: number) {
 
 export async function reviewEnrollmentAction(id: string, decision: 'approved' | 'rejected') {
   await requireRole('content_manager');
-  try { await reviewEnrollmentApplication(id, decision); revalidatePath('/enrollment-requests'); return { ok: true as const }; }
+  try { await reviewEnrollmentApplication(id, decision); revalidatePath('/enrollment-requests'); revalidatePath('/courses'); return { ok: true as const }; }
   catch (error) { return { ok: false as const, error: toUserMessage(error) }; }
 }
 export async function saveEnrollmentVideoAction(videoUrl:string){await requireRole('content_manager');try{await saveEnrollmentGuide(videoUrl);revalidatePath('/enrollment-requests');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}

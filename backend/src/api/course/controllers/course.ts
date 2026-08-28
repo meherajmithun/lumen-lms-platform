@@ -78,7 +78,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
     };
     const data = response.data ?? [];
     const documentIds = data.flatMap((course) => course.documentId ? [course.documentId] : []);
-    const [lessonSummaries, coursesWithInstructors] = await Promise.all([
+    const [lessonSummaries, coursesWithDetails] = await Promise.all([
       Promise.all(
         data.map((course) => course.documentId
           ? strapi.documents('api::lesson.lesson').findMany({
@@ -92,13 +92,19 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         ? strapi.documents('api::course.course').findMany({
             filters: { documentId: { $in: documentIds } },
             fields: ['documentId'],
-            populate: { instructor: { fields: ['id', 'username', 'avatarUrl'] } },
+            populate: {
+              instructor: { fields: ['id', 'username', 'avatarUrl'] },
+              enrollments: { fields: ['documentId'] },
+            },
             limit: -1,
           })
         : [],
     ]);
     const instructorByCourse = new Map(
-      coursesWithInstructors.map((course) => [course.documentId, course.instructor ?? null])
+      coursesWithDetails.map((course) => [course.documentId, course.instructor ?? null])
+    );
+    const enrollmentCountByCourse = new Map(
+      coursesWithDetails.map((course) => [course.documentId, (course.enrollments ?? []).length])
     );
 
     return {
@@ -106,6 +112,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
       data: data.map((course, index) => ({
         ...course,
         instructor: course.documentId ? instructorByCourse.get(course.documentId) ?? null : null,
+        enrollmentCount: course.documentId ? enrollmentCountByCourse.get(course.documentId) ?? 0 : 0,
         lessonCount: lessonSummaries[index]?.length ?? 0,
         totalDurationMinutes: (lessonSummaries[index] ?? []).reduce(
           (total, lesson) => total + (lesson.durationMinutes ?? 0), 0

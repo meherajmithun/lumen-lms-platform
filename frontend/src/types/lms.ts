@@ -67,6 +67,7 @@ export type Course = {
   /** Safe aggregate returned even when lesson content is not readable. */
   lessonCount?: number;
   totalDurationMinutes?: number;
+  enrollmentCount?: number;
   lessons?: Lesson[];
   quizzes?: Quiz[];
   enrollments?: Array<{ documentId: string }>;

@@ -19,6 +19,7 @@ export async function enrollAction(courseId: string, slug: string) {
   try {
     await enrollInCourse(courseId);
     revalidatePath('/my-courses');
+    revalidatePath('/courses');
     revalidatePath(`/courses/${slug}`);
     return { ok: true as const };
   } catch (error) {

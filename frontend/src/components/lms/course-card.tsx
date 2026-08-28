@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, CircleCheck } from 'lucide-react';
+import { BookOpen, CircleCheck, UsersRound } from 'lucide-react';
 import { LessonSpine } from './lesson-spine';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -116,12 +116,18 @@ export function CourseCard({
             </p>
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground tabular">
-            {lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}
-            {course.totalDurationMinutes !== undefined && (
-              <> · {formatCourseDuration(course.totalDurationMinutes)}</>
-            )}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground tabular">
+            <p>
+              {lessonCount} {lessonCount === 1 ? 'lesson' : 'lessons'}
+              {course.totalDurationMinutes !== undefined && (
+                <> · {formatCourseDuration(course.totalDurationMinutes)}</>
+              )}
+            </p>
+            <p className="flex items-center gap-1">
+              <UsersRound className="size-3.5" aria-hidden />
+              {course.enrollmentCount ?? 0} {(course.enrollmentCount ?? 0) === 1 ? 'student' : 'students'} enrolled
+            </p>
+          </div>
         )}
 
         {footer}
