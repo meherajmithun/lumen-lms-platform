@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   // request cannot create an admin even if the payload is tampered with.
   const { role, ...registration } = parsed.data;
   const response = await fetch(
-    `${BASE}/api/auth/local/register?role=${encodeURIComponent(role)}`,
+    `${BASE}/api/register-with-role?role=${encodeURIComponent(role)}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

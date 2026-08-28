@@ -11,7 +11,7 @@
     "userId": { "type": "integer", "required": true, "unique": true, "min": 1 },
     "username": { "type": "string", "required": true },
     "email": { "type": "email", "required": true },
-    "status": {
+    "approvalStatus": {
       "type": "enumeration",
       "enum": ["pending", "approved"],
       "required": true,

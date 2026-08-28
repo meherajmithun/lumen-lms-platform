@@ -32,7 +32,13 @@ export default (plugin: Plugin) => {
   plugin.contentTypes.user.schema.attributes.instructorApprovalPending = { type: 'boolean', default: false };
   plugin.contentTypes.user.schema.info.mainField = 'username';
 
-  const originalRegister = plugin.controllers.auth.register as (ctx: ApiContext) => Promise<unknown>;
+  // Plugin controllers are factories. Reading `.register` directly from the
+  // factory returns undefined and was why the custom signup path could not run.
+  const authControllerFactory = plugin.controllers.auth as unknown as (args: { strapi: Core.Strapi }) => {
+    register: (ctx: ApiContext) => Promise<unknown>;
+  };
+  const extensionStrapi = (global as unknown as { strapi: Core.Strapi }).strapi;
+  const originalRegister = authControllerFactory({ strapi: extensionStrapi }).register;
 
   /**
    * Sign-up accepts a role, but only Student or Instructor.
@@ -41,7 +47,7 @@ export default (plugin: Plugin) => {
    * one-request privilege escalation. Admin and Content Manager are assigned by
    * an existing admin instead.
    */
-  plugin.controllers.auth.register = async (ctx: ApiContext) => {
+  const registerWithRole = async (ctx: ApiContext) => {
     const queryRole = typeof ctx.query.role === 'string' ? ctx.query.role : undefined;
     const requested = (queryRole ?? ROLES.STUDENT) as RoleType;
 
@@ -100,7 +106,7 @@ export default (plugin: Plugin) => {
               userId: registeredUser.id,
               username: registeredUser.username,
               email: registeredUser.email,
-              status: 'pending',
+              approvalStatus: 'pending',
             },
           });
           if (created.user) {
@@ -118,10 +124,16 @@ export default (plugin: Plugin) => {
     return ctx.body;
   };
 
+  // Strapi resolves the stock registration route before plugin extensions are
+  // applied, so replacing `auth.register` alone does not reliably replace its
+  // already-bound handler. Give the application an explicit route/controller
+  // pair and have the frontend call that endpoint.
+  plugin.controllers.user.registerWithRole = registerWithRole;
+
   plugin.controllers.user.instructorRequests = async (_ctx: ApiContext) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
     const requests = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findMany({
-      where: { status: 'pending' },
+      where: { approvalStatus: 'pending' },
       select: ['userId', 'username', 'email', 'createdAt'],
       orderBy: { createdAt: 'asc' },
     });
@@ -140,7 +152,7 @@ export default (plugin: Plugin) => {
     const id = Number(ctx.params.id);
     if (!Number.isInteger(id) || id < 1) return ctx.badRequest('Invalid instructor request');
     const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({
-      where: { userId: id, status: 'pending' },
+      where: { userId: id, approvalStatus: 'pending' },
     });
     if (!request) return ctx.notFound('Instructor request not found');
     const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
@@ -151,7 +163,7 @@ export default (plugin: Plugin) => {
     });
     await strapi.db.query(INSTRUCTOR_REQUEST_UID).update({
       where: { id: request.id },
-      data: { status: 'approved', reviewedAt: new Date().toISOString() },
+      data: { approvalStatus: 'approved', reviewedAt: new Date().toISOString() },
     });
     return { data: { id: updated.id, username: updated.username, blocked: updated.blocked } };
   };
@@ -396,6 +408,7 @@ export default (plugin: Plugin) => {
   };
 
   plugin.routes['content-api'].routes.push(
+    { method: 'POST', path: '/register-with-role', handler: 'user.registerWithRole', config: { prefix: '', auth: false } },
     { method: 'GET', path: '/instructor-requests', handler: 'user.instructorRequests', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
     { method: 'PUT', path: '/instructor-requests/:id/approve', handler: 'user.approveInstructor', config: { prefix: '', policies: ['global::is-authenticated', 'global::is-admin'] } },
     {

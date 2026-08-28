@@ -694,6 +694,9 @@ export interface ApiInstructorRequestInstructorRequest
     draftAndPublish: false;
   };
   attributes: {
+    approvalStatus: Schema.Attribute.Enumeration<['pending', 'approved']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -706,9 +709,6 @@ export interface ApiInstructorRequestInstructorRequest
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     reviewedAt: Schema.Attribute.DateTime;
-    status: Schema.Attribute.Enumeration<['pending', 'approved']> &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'pending'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
