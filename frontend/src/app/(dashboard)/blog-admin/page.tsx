@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/lms/empty-state';
 import { PageHeader } from '@/components/lms/page-header';
 import { getManagedPosts } from '@/lib/api/posts';
 import { requireRole } from '@/lib/auth';
-import { ROLES, type Post } from '@/types/lms';
+import type { Post } from '@/types/lms';
 
 export const metadata: Metadata = { title: 'Blog' };
 
@@ -49,11 +49,10 @@ function PostList({ posts, empty }: { posts: Post[]; empty: string }) {
 }
 
 export default async function BlogAdminPage() {
-  const user = await requireRole('admin', 'content_manager');
+  await requireRole('admin', 'content_manager');
 
-  // An Admin manages every post including other people's; a Content Manager
-  // manages their own. Strapi's owns-post policy enforces the same split.
-  const posts = await getManagedPosts(user.role === ROLES.CONTENT_MANAGER);
+  // Admins and Content Managers share full blog management access.
+  const posts = await getManagedPosts();
 
   const drafts = posts.filter((p) => !p.publishedAt);
   const published = posts.filter((p) => p.publishedAt);
@@ -63,11 +62,7 @@ export default async function BlogAdminPage() {
       <PageHeader
         eyebrow="Writing"
         title="Blog"
-        description={
-          user.role === ROLES.ADMIN
-            ? 'Every post on the platform, including other authors’.'
-            : 'Posts you have written.'
-        }
+        description="Create, edit, publish, or return any blog post to draft."
         action={
           <Link href="/blog-admin/new" className={buttonVariants()}>
             <Plus className="size-4" aria-hidden />

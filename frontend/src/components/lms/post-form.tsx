@@ -69,11 +69,11 @@ export function PostForm({ post }: { post?: Post }) {
           <p className="min-w-0 flex-1 text-xs text-muted-foreground">
             {isPublished
               ? 'Anyone can read this on the public blog.'
-              : 'Only you and admins can see this. It is not on the public blog.'}
+              : 'Only Admins and Content Managers can see this. It is not on the public blog.'}
           </p>
           <Button type="button" variant="outline" size="sm" onClick={togglePublished} disabled={pending}>
             {isPublished ? <EyeOff className="size-3.5" aria-hidden /> : <Eye className="size-3.5" aria-hidden />}
-            {isPublished ? 'Unpublish' : 'Publish'}
+            {isPublished ? 'Move to draft' : 'Publish'}
           </Button>
         </div>
       )}

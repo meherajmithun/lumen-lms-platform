@@ -68,7 +68,7 @@ export default async function AccountPage() {
       ? getManagedCourses(user.role === ROLES.INSTRUCTOR).catch(() => [])
       : Promise.resolve([]),
     isBlogAuthor && user.role !== ROLES.ADMIN
-      ? getManagedPosts(user.role === ROLES.CONTENT_MANAGER).catch(() => [])
+      ? getManagedPosts().catch(() => [])
       : Promise.resolve([]),
     user.role === ROLES.ADMIN ? getPlatformStats().catch(() => null) : Promise.resolve(null),
     isStudent ? getMyLearningHistory(14).catch(() => null) : Promise.resolve(null),

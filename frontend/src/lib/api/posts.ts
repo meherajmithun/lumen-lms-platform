@@ -20,11 +20,9 @@ export async function getPublishedPostBySlug(slug: string): Promise<Post | null>
 }
 
 /** Authoring view — includes drafts, and only for Admin/Content Manager. */
-export async function getManagedPosts(scopeMine: boolean): Promise<Post[]> {
+export async function getManagedPosts(): Promise<Post[]> {
   const res = await strapiFetch<Paginated<Post>>(
-    `/posts?status=draft&populate[author][fields][0]=username&sort=updatedAt:desc&pagination[pageSize]=100${
-      scopeMine ? '&scope=mine' : ''
-    }`
+    '/posts?status=draft&scope=managed&populate[author][fields][0]=username&sort=updatedAt:desc&pagination[pageSize]=100'
   );
   return res.data ?? [];
 }
