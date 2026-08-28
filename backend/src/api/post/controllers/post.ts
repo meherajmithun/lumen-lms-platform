@@ -83,8 +83,37 @@ export default factories.createCoreController('api::post.post', ({ strapi }) => 
   async findOne(ctx: ApiContext) {
     if (!canSeeDrafts(ctx)) {
       ctx.query = { ...ctx.query, status: 'published' };
+      return super.findOne(ctx);
     }
-    return super.findOne(ctx);
+
+    const [draft, published] = await Promise.all([
+      strapi.documents('api::post.post').findOne({
+        documentId: ctx.params.id,
+        status: 'draft',
+        populate: { author: { fields: ['id', 'username'] } },
+      }),
+      strapi.documents('api::post.post').findOne({
+        documentId: ctx.params.id,
+        status: 'published',
+        fields: ['publishedAt'],
+      }),
+    ]);
+    if (!draft) return ctx.notFound('Post not found');
+
+    return {
+      data: {
+        documentId: draft.documentId,
+        title: draft.title,
+        slug: draft.slug,
+        excerpt: draft.excerpt,
+        body: draft.body,
+        coverImageUrl: draft.coverImageUrl,
+        publishedAt: published?.publishedAt ?? null,
+        updatedAt: draft.updatedAt,
+        createdAt: draft.createdAt,
+        author: draft.author,
+      },
+    };
   },
 
   /**
