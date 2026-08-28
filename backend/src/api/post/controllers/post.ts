@@ -24,7 +24,7 @@ export default factories.createCoreController('api::post.post', ({ strapi }) => 
    * because they have no permission to read users.
    */
   async find(ctx: ApiContext) {
-    if (ctx.query.scope === 'mine') {
+    if (ctx.query.scope === 'mine' || ctx.query.scope === 'managed') {
       const user = ctx.state.user;
       if (!user) return ctx.forbidden('Authentication required');
       if (!canSeeDrafts(ctx)) return ctx.forbidden('Not permitted');
