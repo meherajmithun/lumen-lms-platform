@@ -185,29 +185,6 @@ export default async function CourseDetailPage({
                   </>
                 )}
               </div>
-              <dl className="space-y-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Lessons</dt>
-                  <dd className="font-medium tabular">{lessons.length}</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Duration</dt>
-                  <dd className="font-medium tabular">
-                    {formatCourseDuration(course.totalDurationMinutes ?? 0)}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Quiz</dt>
-                  <dd className="font-medium">
-                    {course.quizCount > 0 ? 'Included' : 'None yet'}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Level</dt>
-                  <dd className="font-medium">{LEVEL_LABEL[course.level]}</dd>
-                </div>
-              </dl>
-
               {!user && (
                 <Link
                   href={`/login?next=/courses/${course.slug}`}
