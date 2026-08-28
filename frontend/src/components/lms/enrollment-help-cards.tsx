@@ -4,6 +4,7 @@ import { CreditCard, PlayCircle, ScrollText } from 'lucide-react';
 import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
+import { VideoEmbed } from '@/components/lms/video-embed';
 
 const guidelines = [
   'Make sure you are logged in to the email account where you would like to receive access to the course materials.',
@@ -55,7 +56,7 @@ export function EnrollmentHelpCards({ videoUrl }: { videoUrl?: string }) {
       <Card icon={PlayCircle} title="How to enroll" text="Open the step-by-step enrollment walkthrough.">
         <DialogContent className="sm:max-w-lg">
           <DialogHeader><DialogTitle>How to enroll</DialogTitle><DialogDescription>Course selection and payment walkthrough.</DialogDescription></DialogHeader>
-          {videoUrl ? <iframe src={videoUrl} title="How to enroll video tutorial" className="aspect-video w-full rounded-lg border" allowFullScreen /> : <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">The Content Manager will add the payment video tutorial here soon.</p>}
+          {videoUrl ? <VideoEmbed url={videoUrl} title="How to enroll video tutorial" /> : <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">The Content Manager will add the payment video tutorial here soon.</p>}
           <ol className="space-y-3 pl-5 text-sm"><li className="list-decimal">Select one or more courses.</li><li className="list-decimal">Pay the calculated total.</li><li className="list-decimal">Enter the transaction ID and submit.</li><li className="list-decimal">Wait up to 48 hours for Content Manager approval.</li></ol>
         </DialogContent>
       </Card>

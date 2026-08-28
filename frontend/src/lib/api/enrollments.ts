@@ -58,7 +58,7 @@ export async function getMyEnrollmentApplications(): Promise<import('@/types/lms
 export async function reviewEnrollmentApplication(id: string, decision: 'approved' | 'rejected') {
   await strapiFetch(`/enrollment-applications/${id}/review`, { method: 'PUT', body: JSON.stringify({ data: { decision } }) });
 }
-export async function getEnrollmentGuide(): Promise<{ videoUrl: string } | null> { const res = await strapiFetch<{ data: { videoUrl: string } | null }>('/enrollment-guide', { auth: false, revalidate: 60 }); return res.data; }
+export async function getEnrollmentGuide(): Promise<{ videoUrl: string } | null> { const res = await strapiFetch<{ data: { videoUrl: string } | null }>('/enrollment-guide', { auth: false, tags: ['enrollment-guide'], revalidate: 60 }); return res.data ? { videoUrl: resolveStrapiMediaUrl(res.data.videoUrl) ?? res.data.videoUrl } : null; }
 export async function saveEnrollmentGuide(videoUrl: string) { await strapiFetch('/enrollment-guide', { method: 'PUT', body: JSON.stringify({ data: { videoUrl } }) }); }
-export async function getComboOffer(): Promise<ComboOffer | null> { const res = await strapiFetch<{ data: ComboOffer | null }>('/combo-offer', { auth: false, revalidate: 0 }); return res.data; }
+export async function getComboOffer(): Promise<ComboOffer | null> { const res = await strapiFetch<{ data: ComboOffer | null }>('/combo-offer', { auth: false, tags: ['combo-offer'], revalidate: 60 }); return res.data; }
 export async function saveComboOffer(data: ComboOffer): Promise<void> { await strapiFetch('/combo-offer', { method: 'PUT', body: JSON.stringify({ data }) }); }

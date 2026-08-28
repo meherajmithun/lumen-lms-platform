@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { requireRole } from '@/lib/auth';
 import { approveInstructor, rejectInstructor, updateUserRole } from '@/lib/api/users';
 import { toUserMessage } from '@/lib/strapi';
@@ -63,5 +63,5 @@ export async function reviewEnrollmentAction(id: string, decision: 'approved' | 
   try { await reviewEnrollmentApplication(id, decision); revalidatePath('/enrollment-requests'); revalidatePath('/courses'); return { ok: true as const }; }
   catch (error) { return { ok: false as const, error: toUserMessage(error) }; }
 }
-export async function saveEnrollmentVideoAction(videoUrl:string){await requireRole('content_manager');try{await saveEnrollmentGuide(videoUrl);revalidatePath('/enrollment-requests');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}
-export async function saveComboOfferAction(data: ComboOffer){await requireRole('content_manager');try{await saveComboOffer(data);revalidatePath('/enrollment-requests');revalidatePath('/courses');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}
+export async function saveEnrollmentVideoAction(videoUrl:string){await requireRole('content_manager');try{await saveEnrollmentGuide(videoUrl);updateTag('enrollment-guide');revalidatePath('/enrollment-requests');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}
+export async function saveComboOfferAction(data: ComboOffer){await requireRole('content_manager');try{await saveComboOffer(data);updateTag('combo-offer');revalidatePath('/enrollment-requests');revalidatePath('/courses');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}
