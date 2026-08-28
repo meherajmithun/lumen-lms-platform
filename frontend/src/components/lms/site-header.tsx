@@ -36,7 +36,7 @@ export async function SiteHeader() {
       <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:gap-3 sm:px-6">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-lg lg:ml-4"
+          className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-lg lg:ml-14"
           aria-label="Lumen home"
         >
           <GraduationCap className="size-6 text-pine" aria-hidden />
