@@ -110,7 +110,7 @@ export default async function CourseDetailPage({
           <section className="mt-10" aria-labelledby="course-stats-title">
             <p className="text-xs font-medium uppercase tracking-[0.12em] text-pine">Course stats</p>
             <h2 id="course-stats-title" className="mt-1 font-heading text-2xl font-semibold tracking-tight">
-              Everything at a glance
+              Course Insights
             </h2>
             <dl className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {[
