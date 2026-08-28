@@ -1,5 +1,5 @@
 import 'server-only';
-import { strapiFetch } from '@/lib/strapi';
+import { resolveStrapiMediaUrl, strapiFetch } from '@/lib/strapi';
 import type { Enrollment } from '@/types/lms';
 import type { ComboOffer } from '@/types/lms';
 
@@ -34,6 +34,15 @@ export async function enrollInCourse(courseDocumentId: string): Promise<void> {
 
 export async function submitEnrollmentApplication(data: Record<string, unknown>): Promise<void> {
   await strapiFetch('/enrollment-applications', { method: 'POST', body: JSON.stringify({ data }) });
+}
+
+export async function uploadPaymentProof(file: File): Promise<string> {
+  const form = new FormData();
+  form.append('files', file, file.name);
+  const uploaded = await strapiFetch<Array<{ url?: string }>>('/upload', { method: 'POST', body: form });
+  const url = resolveStrapiMediaUrl(uploaded[0]?.url);
+  if (!url) throw new Error('The payment image upload did not return a URL.');
+  return url;
 }
 
 export async function getEnrollmentApplications(): Promise<import('@/types/lms').EnrollmentApplication[]> {

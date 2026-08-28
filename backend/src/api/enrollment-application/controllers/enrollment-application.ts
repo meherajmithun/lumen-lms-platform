@@ -8,7 +8,14 @@ export default factories.createCoreController('api::enrollment-application.enrol
     const input = bodyData(ctx); const user = ctx.state.user!;
     const ids = Array.isArray(input.courseIds) ? [...new Set(input.courseIds.filter((v): v is string => typeof v === 'string'))] : [];
     if (!ids.length) return ctx.badRequest('Select at least one course');
-    for (const key of ['name','email','phone','discord','institution','paymentMethod','transactionId']) if (typeof input[key] !== 'string' || !(input[key] as string).trim()) return ctx.badRequest(`${key} is required`);
+    for (const key of ['name','email','phone','discord','institution','paymentMethod','paymentProofUrl']) if (typeof input[key] !== 'string' || !(input[key] as string).trim()) return ctx.badRequest(`${key} is required`);
+    let proofPath = '';
+    try { proofPath = new URL(input.paymentProofUrl as string).pathname; }
+    catch { return ctx.badRequest('Payment proof must be an uploaded image'); }
+    const proof = await strapi.db.query('plugin::upload.file').findOne({ where: { url: proofPath } });
+    if (!proof || !String(proof.mime ?? '').startsWith('image/') || Number(proof.size ?? 0) > 5120) {
+      return ctx.badRequest('Payment proof must be an uploaded image of 5 MB or smaller');
+    }
     if (!['bkash','rocket','nagad'].includes(input.paymentMethod as string)) return ctx.badRequest('Invalid payment method');
     const courses = await strapi.documents('api::course.course').findMany({ filters: { documentId: { $in: ids }, isPublished: true }, fields: ['documentId','title','price','discountPercent'], limit: -1 });
     if (courses.length !== ids.length) return ctx.badRequest('A selected course is unavailable');
@@ -23,7 +30,7 @@ export default factories.createCoreController('api::enrollment-application.enrol
     const configuredLoyaltyDiscount = offer ? Number(offer.loyaltyDiscount ?? 300) : 300;
     const loyaltyDiscount = offer?.isActive === false || priorEnrollments.length === 0 ? 0 : Math.min(subtotal - comboDiscount, configuredLoyaltyDiscount);
     const totalAmount = Math.max(0, subtotal - comboDiscount - loyaltyDiscount);
-    const created = await strapi.documents('api::enrollment-application.enrollment-application').create({ data: { student: user.id, courseIds: ids, courseSummary: summary, name: (input.name as string).trim(), email: (input.email as string).trim(), phone: (input.phone as string).trim(), discord: String(input.discord ?? '').trim(), institution: String(input.institution ?? '').trim(), paymentMethod: input.paymentMethod as 'bkash'|'rocket'|'nagad', transactionId: (input.transactionId as string).trim(), comboDiscount, loyaltyDiscount, totalAmount, status: 'pending' } });
+    const created = await strapi.documents('api::enrollment-application.enrollment-application').create({ data: { student: user.id, courseIds: ids, courseSummary: summary, name: (input.name as string).trim(), email: (input.email as string).trim(), phone: (input.phone as string).trim(), discord: String(input.discord ?? '').trim(), institution: String(input.institution ?? '').trim(), paymentMethod: input.paymentMethod as 'bkash'|'rocket'|'nagad', paymentProofUrl: (input.paymentProofUrl as string).trim(), comboDiscount, loyaltyDiscount, totalAmount, status: 'pending' } });
     return { data: { documentId: created.documentId, status: created.status, comboDiscount, loyaltyDiscount, totalAmount } };
   },
   async queue() { return { data: await strapi.documents('api::enrollment-application.enrollment-application').findMany({ populate: { student: { fields: ['id','username','email'] } }, sort: 'createdAt:desc', limit: -1 }) }; },

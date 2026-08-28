@@ -127,7 +127,7 @@ export type Enrollment = {
 
 export type EnrollmentApplication = {
   documentId: string; name: string; email: string; phone: string; discord?: string; institution?: string;
-  paymentMethod: 'bkash' | 'rocket' | 'nagad'; transactionId: string; totalAmount: number;
+  paymentMethod: 'bkash' | 'rocket' | 'nagad'; transactionId?: string; paymentProofUrl?: string; totalAmount: number;
   comboDiscount?: number;
   loyaltyDiscount?: number;
   status: 'pending' | 'approved' | 'rejected'; courseSummary: Array<{ title: string; amount: number }>;

@@ -597,6 +597,7 @@ export interface ApiEnrollmentApplicationEnrollmentApplication
     name: Schema.Attribute.String & Schema.Attribute.Required;
     paymentMethod: Schema.Attribute.Enumeration<['bkash', 'rocket', 'nagad']> &
       Schema.Attribute.Required;
+    paymentProofUrl: Schema.Attribute.String;
     phone: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     reviewedAt: Schema.Attribute.DateTime;
@@ -608,7 +609,7 @@ export interface ApiEnrollmentApplicationEnrollmentApplication
       'plugin::users-permissions.user'
     >;
     totalAmount: Schema.Attribute.Decimal & Schema.Attribute.Required;
-    transactionId: Schema.Attribute.String & Schema.Attribute.Required;
+    transactionId: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
