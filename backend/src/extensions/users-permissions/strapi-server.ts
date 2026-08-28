@@ -73,18 +73,26 @@ export default (plugin: Plugin) => {
         await strapi
           .plugin('users-permissions')
           .service('user')
-          .edit(createdUserId, {
-            role: role.id,
-            ...(requested === ROLES.INSTRUCTOR
-              ? { blocked: true, instructorApprovalPending: true }
-              : { instructorApprovalPending: false }),
-          });
+          .edit(createdUserId, { role: role.id });
         if (created.user) (created.user as Record<string, unknown>).role = { id: role.id, type: role.type, name: role.name };
         if (requested === ROLES.INSTRUCTOR) {
+          // The users-permissions service reliably updates role relations, but
+          // sanitises plugin-extension fields such as this pending flag. Persist
+          // approval state explicitly after the role write so the admin queue
+          // cannot lose a successfully registered instructor.
+          await strapi.query('plugin::users-permissions.user').update({
+            where: { id: createdUserId },
+            data: { blocked: true, instructorApprovalPending: true },
+          });
           if (created.user) {
             (created.user as Record<string, unknown>).blocked = true;
             (created.user as Record<string, unknown>).instructorApprovalPending = true;
           }
+        } else {
+          await strapi.query('plugin::users-permissions.user').update({
+            where: { id: createdUserId },
+            data: { instructorApprovalPending: false },
+          });
         }
       }
     }
