@@ -43,16 +43,17 @@ export default async function CoursesPage({ searchParams }: { searchParams: Cour
   const isFiltered = Boolean(query || level);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12">
+    <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
       <PageHeader
         eyebrow="Catalogue"
         title="Courses"
         description="Every course is a set of ordered lessons with a quiz at the end."
+        variant="marketing"
       />
 
       <form
         action="/courses"
-        className="mb-8 grid gap-3 rounded-xl border border-border bg-card p-4 sm:grid-cols-[minmax(0,1fr)_12rem_auto]"
+        className="mb-10 grid gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-[var(--shadow-raised)] sm:grid-cols-[minmax(0,1fr)_12rem_auto] sm:p-5"
         role="search"
       >
         <div className="relative">

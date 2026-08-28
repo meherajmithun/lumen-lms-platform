@@ -25,10 +25,12 @@ export function DashboardShell({
   return (
     <div className="min-h-dvh bg-background">
       <NavigationIndicator />
-      <div className="mx-auto flex max-w-[1400px]">
-        <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar px-3 py-4 md:flex">
-          <Link href="/" className="mb-6 flex items-center gap-2 px-3 font-heading text-sm font-semibold">
-            <GraduationCap className="size-5 text-pine" aria-hidden />
+      <div className="mx-auto flex max-w-[1440px]">
+        <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 px-4 py-5 md:flex">
+          <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 font-heading text-sm font-bold tracking-tight">
+            <span className="flex size-8 items-center justify-center rounded-lg bg-pine text-primary-foreground shadow-[var(--shadow-raised)]">
+              <GraduationCap className="size-4.5" aria-hidden />
+            </span>
             Lumen
           </Link>
           <DashboardNav role={user.role} />
@@ -50,7 +52,7 @@ export function DashboardShell({
         </aside>
 
         <div className="min-w-0 flex-1">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-background/85 px-4 backdrop-blur sm:px-6">
+          <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border/80 bg-background/82 px-4 shadow-[0_8px_30px_-26px_color-mix(in_oklch,var(--foreground)_32%,transparent)] backdrop-blur-xl sm:px-6 lg:px-8">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger
                 render={
@@ -94,7 +96,7 @@ export function DashboardShell({
             </div>
           </header>
 
-          <main className="px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+          <main className="px-4 py-8 sm:px-6 sm:py-10 lg:px-10 lg:py-12">{children}</main>
         </div>
       </div>
     </div>

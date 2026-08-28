@@ -91,13 +91,13 @@ export default async function CourseDetailPage({
   const finalPrice = discountedPrice(originalPrice, discount);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12">
-      <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-start">
+    <div className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
+      <div className="grid gap-12 lg:grid-cols-[1.55fr_0.9fr] lg:items-start">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.12em] text-pine">
             {LEVEL_LABEL[course.level]}
           </p>
-          <h1 className="mt-2 font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+          <h1 className="mt-3 font-display text-[clamp(2.55rem,5vw,4rem)] font-bold leading-[1.07] tracking-[-0.05em] text-balance">
             {course.title}
           </h1>
           {course.instructor?.username && (
@@ -106,15 +106,15 @@ export default async function CourseDetailPage({
             </p>
           )}
           {course.description && (
-            <p className="prose-lesson mt-6 text-foreground">{course.description}</p>
+            <p className="prose-lesson mt-7 text-foreground/90">{course.description}</p>
           )}
 
           <section className="mt-10" aria-labelledby="course-stats-title">
             <p className="text-xs font-medium uppercase tracking-[0.12em] text-pine">Course stats</p>
-            <h2 id="course-stats-title" className="mt-1 font-heading text-2xl font-semibold tracking-tight">
+            <h2 id="course-stats-title" className="mt-2 font-display text-3xl font-bold tracking-[-0.035em]">
               Course Insights
             </h2>
-            <dl className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <dl className="mt-5 grid gap-1 rounded-2xl border border-border/80 bg-card p-2 shadow-[var(--shadow-raised)] sm:grid-cols-2 xl:grid-cols-3">
               {[
                 { label: 'Students enrolled', value: String(course.enrollmentCount ?? 0), icon: UsersRound },
                 { label: 'Course duration', value: formatCourseDuration(course.totalDurationMinutes ?? 0), icon: Clock3 },
@@ -126,7 +126,7 @@ export default async function CourseDetailPage({
                 { label: 'Quizzes', value: String(course.quizCount), icon: FileQuestion },
                 { label: 'Level', value: LEVEL_LABEL[course.level], icon: Gauge },
               ].map(({ label, value, icon: Icon }) => (
-                <div key={label} className="rounded-xl border border-border bg-card p-4">
+                <div key={label} className="rounded-xl p-4 transition-colors hover:bg-muted/50">
                   <dt className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span className="flex size-8 items-center justify-center rounded-lg bg-pine-wash text-pine">
                       <Icon className="size-4" aria-hidden />
@@ -139,12 +139,12 @@ export default async function CourseDetailPage({
             </dl>
           </section>
 
-          <h2 className="mt-10 font-heading text-lg font-semibold tracking-tight">
+          <h2 className="mt-12 font-display text-2xl font-bold tracking-[-0.03em]">
             What you&apos;ll work through
           </h2>
-          <ol className="mt-4 divide-y divide-border rounded-xl border border-border">
+          <ol className="mt-5 divide-y divide-border overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[var(--shadow-raised)]">
             {lessons.map((lesson, index) => (
-              <li key={lesson.documentId} className="flex items-center gap-3 px-4 py-3">
+              <li key={lesson.documentId} className="flex items-center gap-3 px-5 py-4">
                 <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium tabular">
                   {index + 1}
                 </span>
@@ -165,7 +165,7 @@ export default async function CourseDetailPage({
         </div>
 
         <aside className="lg:sticky lg:top-20">
-          <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[var(--shadow-float)]">
             <div className="aspect-[16/9] bg-muted">
               {course.coverImageUrl ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
@@ -177,9 +177,9 @@ export default async function CourseDetailPage({
               )}
             </div>
 
-            <div className="space-y-4 p-5">
+            <div className="space-y-5 p-6">
               <div className="flex flex-wrap items-baseline gap-2 border-b border-border pb-4 tabular">
-                <span className="font-heading text-2xl font-semibold">{formatCoursePrice(finalPrice)}</span>
+                <span className="font-display text-4xl font-bold tracking-[-0.045em]">{formatCoursePrice(finalPrice)}</span>
                 {discount > 0 && originalPrice > 0 && (
                   <>
                     <span className="text-sm text-muted-foreground line-through">{formatCoursePrice(originalPrice)}</span>

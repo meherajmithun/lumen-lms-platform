@@ -32,46 +32,48 @@ export async function SiteHeader() {
   const showMarketingNav = !user || user.role === ROLES.STUDENT;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 text-foreground shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/85">
-      <div className="mx-auto grid h-16 max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-2 px-3 sm:gap-3 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-border/90 bg-card/92 text-foreground shadow-[0_10px_36px_-26px_rgb(7_47_37_/_0.42)] backdrop-blur-xl supports-[backdrop-filter]:bg-card/82 dark:shadow-[0_14px_44px_-28px_rgb(0_0_0_/_0.9)]">
+      <div className="mx-auto grid h-[4.5rem] max-w-6xl grid-cols-[auto_1fr_auto] items-center gap-2 px-4 sm:gap-4 sm:px-5">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 font-heading text-base font-semibold tracking-tight transition-opacity hover:opacity-80 sm:text-lg lg:ml-14"
+          className="group flex shrink-0 items-center gap-2.5 font-heading text-base font-bold tracking-[-0.025em] sm:text-lg"
           aria-label="Lumen home"
         >
-          <GraduationCap className="size-6 text-pine" aria-hidden />
+          <span className="flex size-9 items-center justify-center rounded-xl bg-pine text-primary-foreground shadow-[var(--shadow-raised)] transition-transform duration-200 group-hover:-rotate-3">
+            <GraduationCap className="size-5" aria-hidden />
+          </span>
           Lumen
         </Link>
 
         <nav
           className={cn(
-            'min-w-0 items-center justify-center justify-self-end gap-1 text-sm text-muted-foreground md:gap-2 lg:justify-self-auto',
+            'min-w-0 items-center justify-center justify-self-end gap-0.5 text-[0.82rem] font-medium text-muted-foreground md:gap-1 lg:justify-self-center',
             showMarketingNav ? 'flex' : 'hidden'
           )}
           aria-label="Main navigation"
         >
-          <Link href="/courses" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
+          <Link href="/courses" className="hidden rounded-lg px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Courses
           </Link>
-          <Link href="/pricing" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
+          <Link href="/pricing" className="hidden rounded-lg px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Pricing
           </Link>
           <Link
             href="/enroll"
-            className="hidden rounded-md px-3 py-2 font-semibold italic text-foreground transition-colors hover:bg-muted lg:block"
+            className="hidden rounded-lg px-3 py-2 font-semibold text-pine transition-colors hover:bg-pine-wash lg:block"
           >
             Enroll
           </Link>
-          <Link href="/instructors" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
+          <Link href="/instructors" className="hidden rounded-lg px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Instructors
           </Link>
-          <Link href="/blog" className="hidden rounded-md px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
+          <Link href="/blog" className="hidden rounded-lg px-3 py-2 transition-colors hover:bg-muted hover:text-foreground lg:block">
             Blog
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger
               aria-label="Open navigation menu"
-              className="flex size-10 items-center justify-center rounded-md transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring lg:h-auto lg:w-auto lg:gap-1 lg:px-3 lg:py-2"
+              className="flex size-10 items-center justify-center rounded-lg transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring lg:h-auto lg:w-auto lg:gap-1 lg:px-3 lg:py-2"
             >
               <Menu className="size-5 lg:hidden" aria-hidden />
               <span className="hidden lg:inline">More</span>
@@ -114,7 +116,7 @@ export async function SiteHeader() {
 
         <div
           className={cn(
-            'min-w-0 items-center justify-self-end gap-1 border-l border-border pl-2 sm:pl-3',
+            'min-w-0 items-center justify-self-end gap-1.5 border-l border-border/80 pl-2.5 sm:pl-4',
             'flex'
           )}
         >

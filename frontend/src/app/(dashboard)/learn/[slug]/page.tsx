@@ -33,10 +33,10 @@ export default async function CourseOutlinePage({
   const quiz = course.quizzes?.[0];
 
   return (
-    <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-4xl">
       <PageHeader eyebrow="Course" title={course.title} description={course.description ?? undefined} />
 
-      <div className="mb-8 rounded-xl border border-border bg-card p-5">
+      <div className="mb-8 rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)] sm:p-6">
         <LessonSpine
           total={lessons.length}
           completed={progress.completed}
@@ -61,14 +61,14 @@ export default async function CourseOutlinePage({
         </div>
       </div>
 
-      <ol className="divide-y divide-border overflow-hidden rounded-xl border border-border">
+      <ol className="divide-y divide-border overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[var(--shadow-raised)]">
         {lessons.map((lesson, index) => {
           const complete = done.has(lesson.documentId);
           return (
             <li key={lesson.documentId}>
               <Link
                 href={`/learn/${slug}/lessons/${lesson.documentId}`}
-                className="flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-muted/60"
+                className="flex items-center gap-3 px-4 py-4 transition-colors hover:bg-muted/60 sm:px-5"
               >
                 {complete ? (
                   <CircleCheck className="size-5 shrink-0 text-pine" aria-label="Complete" />
@@ -98,7 +98,7 @@ export default async function CourseOutlinePage({
       {quiz && (
         <Link
           href={`/learn/${slug}/quiz/${quiz.documentId}`}
-          className="mt-5 flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-4 transition-colors hover:border-pine/40"
+          className="mt-6 flex items-center gap-3 rounded-2xl border border-border/80 bg-card px-5 py-5 shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-pine/40 hover:shadow-[var(--shadow-float)]"
         >
           <FileQuestion className="size-5 shrink-0 text-clay" aria-hidden />
           <span className="min-w-0 flex-1">

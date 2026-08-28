@@ -30,15 +30,15 @@ export function CourseCard({
   const finalPrice = discountedPrice(originalPrice, discount);
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-colors hover:border-pine/40">
+    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-pine/35 hover:shadow-[var(--shadow-float)]">
       <Link href={href} className="block focus-visible:outline-none">
-        <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+        <div className="relative aspect-[16/10] overflow-hidden bg-muted">
           {course.coverImageUrl ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={course.coverImageUrl}
               alt=""
-              className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               loading="lazy"
             />
           ) : (
@@ -52,14 +52,14 @@ export function CourseCard({
             </span>
           )}
           {enrolled && (
-            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-pine px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
+            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-pine px-2.5 py-1 text-xs font-semibold text-primary-foreground shadow-sm dark:ring-1 dark:ring-black/20">
               <CircleCheck className="size-3.5" aria-hidden /> Enrolled
             </span>
           )}
         </div>
       </Link>
 
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex flex-1 flex-col gap-4 p-5">
         <div className="flex-1">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">
@@ -79,7 +79,7 @@ export function CourseCard({
               )}
             </div>
           </div>
-          <h3 className="mt-1 font-heading text-base font-semibold leading-snug tracking-tight">
+          <h3 className="mt-2 font-display text-[1.3rem] font-bold leading-[1.18] tracking-[-0.03em]">
             <Link href={href} className="after:absolute after:inset-0 focus-visible:underline">
               {course.title}
             </Link>
@@ -100,7 +100,7 @@ export function CourseCard({
             </div>
           )}
           {course.description && (
-            <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{course.description}</p>
+            <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">{course.description}</p>
           )}
         </div>
 
@@ -124,6 +124,6 @@ export function CourseCard({
 
 export function CourseGrid({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('grid gap-5 sm:grid-cols-2 lg:grid-cols-3', className)}>{children}</div>
+    <div className={cn('grid gap-6 sm:grid-cols-2 lg:grid-cols-3', className)}>{children}</div>
   );
 }

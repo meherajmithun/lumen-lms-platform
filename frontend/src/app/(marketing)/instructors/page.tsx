@@ -1,5 +1,6 @@
 import { UserRound } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PageHeader } from '@/components/lms/page-header';
 import { getPublicInstructorProfiles } from '@/lib/api/users';
 
 export const metadata = {
@@ -12,31 +13,28 @@ export default async function InstructorsPage() {
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-14 sm:py-20">
-      <div className="max-w-2xl">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-pine">Our instructors</p>
-        <h1 className="mt-3 font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-          Learn from people who teach by doing.
-        </h1>
-        <p className="mt-4 text-base text-muted-foreground">
-          Meet the instructors behind Lumen&apos;s courses and explore their teaching backgrounds.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Our instructors"
+        title="Learn from people who teach by doing."
+        description="Meet the instructors behind Lumen's courses and explore their teaching backgrounds."
+        variant="marketing"
+      />
 
       {instructors.length > 0 ? (
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {instructors.map((instructor) => (
-            <article key={instructor.id} className="rounded-xl border border-border bg-card p-6 shadow-sm">
-              <Avatar size="lg" className="size-14">
+            <article key={instructor.id} className="rounded-2xl border border-border/80 bg-card p-6 shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-pine/35 hover:shadow-[var(--shadow-float)]">
+              <Avatar size="lg" className="size-16">
                 {instructor.avatarUrl && <AvatarImage src={instructor.avatarUrl} alt={instructor.username} />}
                 <AvatarFallback className="bg-pine-wash font-semibold text-pine">
                   {instructor.username.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <h2 className="mt-4 font-heading text-lg font-semibold">{instructor.username}</h2>
+              <h2 className="mt-5 font-display text-2xl font-bold tracking-[-0.03em]">{instructor.username}</h2>
               <p className="mt-1 flex items-center gap-1.5 text-xs font-medium uppercase tracking-[0.1em] text-pine">
                 <UserRound className="size-3.5" aria-hidden /> Instructor
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-5 text-sm leading-7 text-muted-foreground">
                 {instructor.bio || 'This instructor has not added a profile introduction yet.'}
               </p>
             </article>

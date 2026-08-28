@@ -6,7 +6,7 @@ import { approveInstructor, rejectInstructor, updateUserRole } from '@/lib/api/u
 import { toUserMessage } from '@/lib/strapi';
 import { ROLES, type Role } from '@/types/lms';
 import { reviewEnrollmentApplication, saveComboOffer, saveEnrollmentGuide } from '@/lib/api/enrollments';
-import type { ComboOffer } from '@/types/lms';
+import type { ComboOffer, EnrollmentGuide } from '@/types/lms';
 
 /**
  * Changing a user's role — the matrix's "Manage users & assign roles" row,
@@ -63,5 +63,43 @@ export async function reviewEnrollmentAction(id: string, decision: 'approved' | 
   try { await reviewEnrollmentApplication(id, decision); revalidatePath('/enrollment-requests'); revalidatePath('/courses'); return { ok: true as const }; }
   catch (error) { return { ok: false as const, error: toUserMessage(error) }; }
 }
-export async function saveEnrollmentVideoAction(videoUrl:string){await requireRole('content_manager');try{await saveEnrollmentGuide(videoUrl);updateTag('enrollment-guide');revalidatePath('/enrollment-requests');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}
-export async function saveComboOfferAction(data: ComboOffer){await requireRole('content_manager');try{await saveComboOffer(data);updateTag('combo-offer');revalidatePath('/enrollment-requests');revalidatePath('/courses');revalidatePath('/enroll');return{ok:true as const};}catch(error){return{ok:false as const,error:toUserMessage(error)}}}
+export async function saveEnrollmentGuideAction(data: EnrollmentGuide) {
+  await requireRole('content_manager');
+  try {
+    await saveEnrollmentGuide(data);
+    updateTag('enrollment-guide');
+    revalidatePath('/enrollment-management');
+    revalidatePath('/enroll');
+    return { ok: true as const };
+  } catch (error) {
+    return { ok: false as const, error: toUserMessage(error) };
+  }
+}
+
+/** Kept for compatibility with the original focused video editor. */
+export async function saveEnrollmentVideoAction(videoUrl: string) {
+  await requireRole('content_manager');
+  try {
+    await saveEnrollmentGuide({ videoUrl });
+    updateTag('enrollment-guide');
+    revalidatePath('/enrollment-management');
+    revalidatePath('/enroll');
+    return { ok: true as const };
+  } catch (error) {
+    return { ok: false as const, error: toUserMessage(error) };
+  }
+}
+
+export async function saveComboOfferAction(data: ComboOffer) {
+  await requireRole('content_manager');
+  try {
+    await saveComboOffer(data);
+    updateTag('combo-offer');
+    revalidatePath('/enrollment-management');
+    revalidatePath('/courses');
+    revalidatePath('/enroll');
+    return { ok: true as const };
+  } catch (error) {
+    return { ok: false as const, error: toUserMessage(error) };
+  }
+}

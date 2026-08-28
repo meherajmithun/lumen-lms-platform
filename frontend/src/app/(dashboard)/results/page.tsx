@@ -43,7 +43,7 @@ export default async function ResultsPage() {
           }
         />
       ) : (
-        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border">
+        <ul className="divide-y divide-border overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[var(--shadow-raised)]">
           {attempts.map((attempt) => (
             <li key={attempt.documentId} className="flex items-center gap-4 px-4 py-3.5">
               <span

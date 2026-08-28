@@ -136,6 +136,23 @@ export type EnrollmentApplication = {
 };
 export type ComboTier = { courseCount: number; discountAmount: number };
 export type ComboOffer = { title: string; description: string; tiers: ComboTier[]; loyaltyDiscount: number; isActive: boolean };
+export type EnrollmentPaymentMethod = { name: string; accountNumber: string };
+export type EnrollmentGuide = {
+  guidelinesTitle: string;
+  guidelinesSummary: string;
+  guidelinesDescription: string;
+  guidelines: string[];
+  supportPhone: string;
+  enrollmentTitle: string;
+  enrollmentSummary: string;
+  enrollmentDescription: string;
+  enrollmentSteps: string[];
+  videoUrl: string;
+  paymentTitle: string;
+  paymentSummary: string;
+  paymentDescription: string;
+  paymentMethods: EnrollmentPaymentMethod[];
+};
 export type StudentStory={documentId:string;studentName:string;title:string;body:string;status?:'pending'|'approved'|'rejected';createdAt?:string};
 
 export type QuestionOption = { id: string; text: string };

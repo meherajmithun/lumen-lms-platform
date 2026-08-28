@@ -43,7 +43,7 @@ export default async function MyCoursesPage() {
       ) : (
         <div className="space-y-10">
           <section>
-            <h2 className="mb-4 font-heading text-sm font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+            <h2 className="mb-5 flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground before:h-px before:w-7 before:bg-pine">
               In progress
             </h2>
             {inProgress.length > 0 ? (
@@ -66,7 +66,7 @@ export default async function MyCoursesPage() {
 
           {finished.length > 0 && (
             <section>
-              <h2 className="mb-4 font-heading text-sm font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+              <h2 className="mb-5 flex items-center gap-3 font-heading text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground before:h-px before:w-7 before:bg-pine">
                 Completed
               </h2>
               <CourseGrid>

@@ -18,7 +18,7 @@ export function LearningConsistencyChart({ history }: { history: LearningHistory
   }).format(new Date(`${date}T00:00:00Z`));
 
   return (
-    <section className="mb-10 rounded-xl border border-border bg-card p-5" aria-labelledby="consistency-title">
+    <section className="mb-10 rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)] sm:p-6" aria-labelledby="consistency-title">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-xs font-medium uppercase tracking-[0.1em] text-pine">Consistency</p>

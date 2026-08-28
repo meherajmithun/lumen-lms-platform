@@ -82,7 +82,7 @@ export function LessonPlayer({
 
   return (
     <div className="mx-auto max-w-6xl">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <Link
           href={`/learn/${slug}`}
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -103,8 +103,8 @@ export function LessonPlayer({
         </div>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
-        <aside className="lg:sticky lg:top-20 lg:self-start">
+      <div className="grid gap-8 lg:grid-cols-[240px_1fr] lg:gap-10">
+        <aside className="lg:sticky lg:top-24 lg:self-start lg:rounded-2xl lg:border lg:border-border/80 lg:bg-card lg:p-2 lg:shadow-[var(--shadow-raised)]">
           <Button
             variant="outline"
             size="sm"
@@ -115,7 +115,7 @@ export function LessonPlayer({
             {outlineOpen ? 'Hide' : 'Show'} lessons ({index + 1} of {lessons.length})
           </Button>
 
-          <ol className={cn('space-y-0.5', !outlineOpen && 'hidden lg:block')}>
+          <ol className={cn('space-y-1', !outlineOpen && 'hidden lg:block')}>
             {lessons.map((item, i) => {
               const done = optimistic.done.includes(item.documentId);
               const current = item.documentId === lesson.documentId;
@@ -125,7 +125,7 @@ export function LessonPlayer({
                     href={`/learn/${slug}/lessons/${item.documentId}`}
                     aria-current={current ? 'step' : undefined}
                     className={cn(
-                      'flex items-start gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors',
+                      'flex items-start gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors',
                       current
                         ? 'bg-clay-wash font-medium text-clay'
                         : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
@@ -148,7 +148,7 @@ export function LessonPlayer({
           {quizId && (
             <Link
               href={`/learn/${slug}/quiz/${quizId}`}
-              className="mt-3 flex items-center gap-2 rounded-lg border border-border px-2.5 py-2 text-sm text-muted-foreground transition-colors hover:border-clay/50 hover:text-foreground"
+              className="mt-3 flex items-center gap-2 rounded-xl border border-border px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:border-clay/50 hover:text-foreground"
             >
               <FileQuestion className="size-4 shrink-0" aria-hidden />
               Take the quiz
@@ -156,15 +156,15 @@ export function LessonPlayer({
           )}
         </aside>
 
-        <article className="min-w-0">
+        <article className="min-w-0 lg:pr-4">
           <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground tabular">
             Lesson {index + 1} of {lessons.length}
           </p>
-          <h1 className="mt-1.5 font-heading text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+          <h1 className="mt-2 font-display text-3xl font-bold leading-tight tracking-[-0.04em] text-balance sm:text-4xl">
             {lesson.title}
           </h1>
 
-          <div className="mt-7">
+          <div className="mt-8">
             {lesson.contentType === 'video' && lesson.videoUrl ? (
               <VideoEmbed url={lesson.videoUrl} title={lesson.title} />
             ) : (
@@ -186,7 +186,7 @@ export function LessonPlayer({
             )}
           </div>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3 border-t border-border pt-6">
+          <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-border pt-7">
             <Button onClick={toggle} disabled={pending} variant={isComplete ? 'outline' : 'default'}>
               {pending ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden />

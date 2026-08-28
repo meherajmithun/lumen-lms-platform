@@ -5,18 +5,7 @@ import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger,
 } from '@/components/ui/dialog';
 import { VideoEmbed } from '@/components/lms/video-embed';
-
-const guidelines = [
-  'Make sure you are logged in to the email account where you would like to receive access to the course materials.',
-  'Fill out the enrollment form using your correct information.',
-  'Select the course you wish to enroll in.',
-  'Choose your preferred payment method. Currently, we accept bKash, Nagad, and Rocket.',
-  'Complete the payment using the instructions and payment number provided in the enrollment form.',
-  'After making the payment, collect your Transaction ID and enter it correctly in the form.',
-  'Review your information carefully and submit the enrollment form.',
-  'Once confirmed, you will receive access to the course materials. Confirmation may take up to 48 hours.',
-  'If you have questions or need assistance, contact us at any time.',
-];
+import type { EnrollmentGuide } from '@/types/lms';
 
 function Card({ icon: Icon, title, text, children }: {
   icon: React.ComponentType<{ className?: string }>;
@@ -26,7 +15,7 @@ function Card({ icon: Icon, title, text, children }: {
 }) {
   return (
     <Dialog>
-      <DialogTrigger className="rounded-xl border border-border bg-card p-5 text-left transition-colors hover:border-pine/50 hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+      <DialogTrigger className="rounded-2xl border border-border/80 bg-card p-5 text-left shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-pine/45 hover:shadow-[var(--shadow-float)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
         <Icon className="size-5 text-pine" aria-hidden />
         <span className="mt-3 block font-semibold">{title}</span>
         <span className="mt-2 block text-sm text-muted-foreground">{text}</span>
@@ -37,34 +26,64 @@ function Card({ icon: Icon, title, text, children }: {
   );
 }
 
-export function EnrollmentHelpCards({ videoUrl }: { videoUrl?: string }) {
+export function EnrollmentHelpCards({ guide }: { guide: EnrollmentGuide }) {
+  const supportPhoneHref = `tel:${guide.supportPhone.replace(/[^\d+]/g, '')}`;
+
   return (
     <section className="my-10 grid gap-5 md:grid-cols-3">
-      <Card icon={ScrollText} title="Enrollment guidelines" text="Select courses, pay the exact calculated total, and submit one application.">
+      <Card icon={ScrollText} title={guide.guidelinesTitle} text={guide.guidelinesSummary}>
         <DialogContent className="max-h-[85dvh] overflow-y-auto sm:max-w-2xl">
-          <DialogHeader><DialogTitle>How to Enroll</DialogTitle><DialogDescription>Follow these steps carefully.</DialogDescription></DialogHeader>
+          <DialogHeader>
+            <DialogTitle>{guide.guidelinesTitle}</DialogTitle>
+            <DialogDescription>{guide.guidelinesDescription}</DialogDescription>
+          </DialogHeader>
           <ul className="space-y-3 pl-5 text-sm leading-relaxed">
-            {guidelines.map((item) => <li key={item} className="list-disc">{item}</li>)}
-            <li className="list-disc">Still have questions? Call us at{' '}
-              <a className="font-semibold text-pine underline" href="tel:+8801996546509">01XXXXXXXXXX</a>.
+            {guide.guidelines.map((item) => <li key={item} className="list-disc">{item}</li>)}
+            <li className="list-disc">
+              Still have questions? Call us at{' '}
+              <a className="font-semibold text-pine underline" href={supportPhoneHref}>
+                {guide.supportPhone}
+              </a>.
             </li>
-            <li className="list-disc">Thank you for choosing us. We look forward to having you in our course!</li>
           </ul>
         </DialogContent>
       </Card>
 
-      <Card icon={PlayCircle} title="How to enroll" text="Open the step-by-step enrollment walkthrough.">
+      <Card icon={PlayCircle} title={guide.enrollmentTitle} text={guide.enrollmentSummary}>
         <DialogContent className="sm:max-w-lg">
-          <DialogHeader><DialogTitle>How to enroll</DialogTitle><DialogDescription>Course selection and payment walkthrough.</DialogDescription></DialogHeader>
-          {videoUrl ? <VideoEmbed url={videoUrl} title="How to enroll video tutorial" /> : <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">The Content Manager will add the payment video tutorial here soon.</p>}
-          <ol className="space-y-3 pl-5 text-sm"><li className="list-decimal">Select one or more courses.</li><li className="list-decimal">Pay the calculated total.</li><li className="list-decimal">Enter the transaction ID and submit.</li><li className="list-decimal">Wait up to 48 hours for Content Manager approval.</li></ol>
+          <DialogHeader>
+            <DialogTitle>{guide.enrollmentTitle}</DialogTitle>
+            <DialogDescription>{guide.enrollmentDescription}</DialogDescription>
+          </DialogHeader>
+          {guide.videoUrl ? (
+            <VideoEmbed url={guide.videoUrl} title={`${guide.enrollmentTitle} video tutorial`} />
+          ) : (
+            <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">
+              The Content Manager will add the enrollment video tutorial here soon.
+            </p>
+          )}
+          <ol className="space-y-3 pl-5 text-sm">
+            {guide.enrollmentSteps.map((step) => (
+              <li key={step} className="list-decimal">{step}</li>
+            ))}
+          </ol>
         </DialogContent>
       </Card>
 
-      <Card icon={CreditCard} title="Payment methods" text="bKash, Rocket, or Nagad: 01XXXXXXXXXX (personal account).">
+      <Card icon={CreditCard} title={guide.paymentTitle} text={guide.paymentSummary}>
         <DialogContent className="sm:max-w-lg">
-          <DialogHeader><DialogTitle>Payment methods</DialogTitle><DialogDescription>Send Money or Cash In using a personal account.</DialogDescription></DialogHeader>
-          <div className="space-y-3 text-sm">{['bKash', 'Rocket', 'Nagad'].map(method => <div key={method} className="flex justify-between rounded-lg bg-muted p-3"><span>{method}</span><strong>01XXXXXXXXXX</strong></div>)}</div>
+          <DialogHeader>
+            <DialogTitle>{guide.paymentTitle}</DialogTitle>
+            <DialogDescription>{guide.paymentDescription}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 text-sm">
+            {guide.paymentMethods.map((method) => (
+              <div key={`${method.name}-${method.accountNumber}`} className="flex justify-between gap-4 rounded-lg bg-muted p-3">
+                <span>{method.name}</span>
+                <strong>{method.accountNumber}</strong>
+              </div>
+            ))}
+          </div>
         </DialogContent>
       </Card>
     </section>

@@ -17,18 +17,19 @@ export default async function BlogIndexPage() {
   const posts = await getPublishedPosts().catch(() => []);
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12">
+    <div className="mx-auto max-w-3xl px-5 py-14 sm:py-20">
       <PageHeader
         eyebrow="Writing"
         title="Blog"
         description="Only published posts appear here — drafts are never served to the public."
+        variant="marketing"
       />
 
       {posts.length > 0 ? (
-        <div className="divide-y divide-border border-t border-border">
+        <div className="divide-y divide-border border-y border-border">
           {posts.map((post) => (
-            <article key={post.documentId} className="py-7">
-              <h2 className="font-heading text-xl font-semibold tracking-tight">
+            <article key={post.documentId} className="py-8 sm:py-10">
+              <h2 className="font-display text-2xl font-bold leading-tight tracking-[-0.035em] sm:text-3xl">
                 <Link href={`/blog/${post.slug}`} className="hover:text-pine">
                   {post.title}
                 </Link>
@@ -38,7 +39,7 @@ export default async function BlogIndexPage() {
                 {post.author?.username && <> · {post.author.username}</>}
               </p>
               {post.excerpt && (
-                <p className="prose-lesson mt-3 text-muted-foreground">{post.excerpt}</p>
+                <p className="prose-lesson mt-4 text-muted-foreground">{post.excerpt}</p>
               )}
               <Link
                 href={`/blog/${post.slug}`}

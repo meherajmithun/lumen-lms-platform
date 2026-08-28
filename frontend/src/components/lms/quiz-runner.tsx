@@ -48,11 +48,11 @@ export function QuizRunner({ quiz, slug }: { quiz: Quiz; slug: string }) {
       <div className="mx-auto max-w-2xl">
         <div
           className={cn(
-            'rounded-xl border p-6 text-center',
+            'rounded-2xl border p-7 text-center shadow-[var(--shadow-raised)]',
             result.passed ? 'border-pine/40 bg-pine-wash' : 'border-clay/40 bg-clay-wash'
           )}
         >
-          <p className="font-heading text-5xl font-semibold tracking-tight tabular">
+          <p className="font-display text-6xl font-bold tracking-[-0.045em] tabular">
             {result.score}%
           </p>
           <p className="mt-2 text-sm font-medium">
@@ -69,7 +69,7 @@ export function QuizRunner({ quiz, slug }: { quiz: Quiz; slug: string }) {
             const graded = byQuestion.get(question.documentId);
             const chosen = graded?.selectedOptionId ?? null;
             return (
-              <li key={question.documentId} className="rounded-xl border border-border p-4">
+              <li key={question.documentId} className="rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)]">
                 <div className="flex items-start gap-2.5">
                   {graded?.correct ? (
                     <Check className="mt-0.5 size-4 shrink-0 text-pine" aria-label="Correct" />
@@ -135,7 +135,7 @@ export function QuizRunner({ quiz, slug }: { quiz: Quiz; slug: string }) {
 
   return (
     <div className="mx-auto max-w-2xl pb-24">
-      <h1 className="font-heading text-2xl font-semibold tracking-tight">{quiz.title}</h1>
+      <h1 className="font-display text-4xl font-bold leading-tight tracking-[-0.045em]">{quiz.title}</h1>
       {quiz.description && <p className="mt-1.5 text-sm text-muted-foreground">{quiz.description}</p>}
       <p className="mt-1 text-xs text-muted-foreground tabular">
         {questions.length} questions · pass mark {quiz.passingScore}%
@@ -144,7 +144,7 @@ export function QuizRunner({ quiz, slug }: { quiz: Quiz; slug: string }) {
       <ol className="mt-8 space-y-5">
         {questions.map((question, index) => (
           <li key={question.documentId}>
-            <fieldset className="rounded-xl border border-border p-4">
+            <fieldset className="rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)]">
               <legend className="px-1 text-sm font-medium">
                 <span className="text-muted-foreground tabular">{index + 1}. </span>
                 {question.prompt}

@@ -52,7 +52,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!post) notFound();
 
   return (
-    <article className="mx-auto max-w-2xl px-5 py-12">
+    <article className="mx-auto max-w-2xl px-5 py-14 sm:py-20">
       <Link
         href="/blog"
         className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -61,7 +61,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         All posts
       </Link>
 
-      <h1 className="mt-6 font-heading text-3xl font-semibold leading-tight tracking-tight text-balance sm:text-4xl">
+      <h1 className="mt-6 font-display text-[clamp(2.5rem,5vw,3.9rem)] font-bold leading-[1.08] tracking-[-0.05em] text-balance">
         {post.title}
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
@@ -80,7 +80,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
       {/* Rendered as plain paragraphs rather than raw HTML — nothing from the
           editor is injected into the page as markup. */}
-      <div className="prose-lesson mt-8">
+      <div className="prose-lesson mt-10">
         {post.body.split('\n\n').map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
         ))}

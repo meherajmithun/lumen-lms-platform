@@ -39,7 +39,7 @@ function Stat({
     </>
   );
   const className =
-    'rounded-xl border border-border bg-card p-4 transition-colors' + (href ? ' hover:border-pine/40' : '');
+    'rounded-2xl border border-border/80 bg-card p-4 shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform]' + (href ? ' hover:-translate-y-0.5 hover:border-pine/40 hover:shadow-[var(--shadow-float)]' : '');
   return href ? <Link href={href} className={className}>{inner}</Link> : <div className={className}>{inner}</div>;
 }
 
@@ -82,7 +82,7 @@ export default async function AccountPage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader eyebrow="Account" title="Your profile" />
 
-      <section className="rounded-xl border border-border bg-card p-5">
+      <section className="rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)] sm:p-6">
         <div className="flex flex-wrap items-start gap-4">
           <span aria-hidden className="flex size-14 shrink-0 overflow-hidden items-center justify-center rounded-full bg-pine-wash font-heading text-lg font-semibold text-pine">
             {profile.avatarUrl ? (
@@ -186,7 +186,7 @@ export default async function AccountPage() {
         </section>
       )}
 
-      <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border p-5">
+      <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)]">
         <div>
           <p className="text-sm font-medium">Signed in as {user.email}</p>
           <p className="mt-0.5 text-xs text-muted-foreground">

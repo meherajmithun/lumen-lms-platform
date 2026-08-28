@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { BadgePercent, BookOpen, Clock } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { EnrollButton } from '@/components/lms/enroll-button';
+import { PageHeader } from '@/components/lms/page-header';
 import { getPublishedCourses } from '@/lib/api/courses';
 import { getMyEnrollmentsOptional } from '@/lib/api/enrollments';
 import { getCurrentUser } from '@/lib/auth';
@@ -25,18 +26,16 @@ export default async function PricingPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-5 py-14 sm:py-20">
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-pine">Course pricing</p>
-        <h1 className="mt-3 font-heading text-4xl font-semibold tracking-tight sm:text-5xl">
-          Choose what you want to learn next.
-        </h1>
-        <p className="mt-4 text-base text-muted-foreground">
-          Compare course prices, current discounts, and total learning time.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Course pricing"
+        title="Choose what you want to learn next."
+        description="Compare course prices, current discounts, and total learning time."
+        variant="marketing"
+        align="center"
+      />
 
       {courses.length > 0 ? (
-        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {courses.filter((course) => course.isPublished).map((course) => {
             const originalPrice = Number(course.price ?? 0);
             const discount = Number(course.discountPercent ?? 0);
@@ -44,9 +43,9 @@ export default async function PricingPage() {
             const enrolled = enrolledIds.has(course.documentId);
 
             return (
-              <article key={course.documentId} className="flex min-h-80 flex-col rounded-xl border border-border bg-card p-6 shadow-sm">
+              <article key={course.documentId} className="flex min-h-80 flex-col rounded-2xl border border-border/80 bg-card p-6 shadow-[var(--shadow-raised)] transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-pine/35 hover:shadow-[var(--shadow-float)]">
                 <div className="flex min-h-12 items-start justify-between gap-3">
-                  <h2 className="font-heading text-lg font-semibold leading-snug">{course.title}</h2>
+                  <h2 className="font-display text-2xl font-bold leading-tight tracking-[-0.03em]">{course.title}</h2>
                   {discount > 0 && originalPrice > 0 && (
                     <span className="flex shrink-0 items-center gap-1 rounded-md bg-pine-wash px-2 py-1 text-xs font-bold text-pine">
                       <BadgePercent className="size-3.5" aria-hidden />
@@ -56,7 +55,7 @@ export default async function PricingPage() {
                 </div>
 
                 <div className="mt-7 flex items-baseline gap-2 tabular">
-                  <p className="font-heading text-3xl font-semibold">{formatCoursePrice(finalPrice)}</p>
+                  <p className="font-display text-4xl font-bold tracking-[-0.045em]">{formatCoursePrice(finalPrice)}</p>
                   {discount > 0 && originalPrice > 0 && (
                     <p className="text-sm text-muted-foreground line-through">{formatCoursePrice(originalPrice)}</p>
                   )}

@@ -1,1 +1,28 @@
-{"kind":"collectionType","collectionName":"enrollment_guides","info":{"singularName":"enrollment-guide","pluralName":"enrollment-guides","displayName":"Enrollment Guide"},"options":{"draftAndPublish":false},"attributes":{"videoUrl":{"type":"string","required":true}}}
+{
+  "kind": "collectionType",
+  "collectionName": "enrollment_guides",
+  "info": {
+    "singularName": "enrollment-guide",
+    "pluralName": "enrollment-guides",
+    "displayName": "Enrollment Guide"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "guidelinesTitle": { "type": "string" },
+    "guidelinesSummary": { "type": "text" },
+    "guidelinesDescription": { "type": "text" },
+    "guidelines": { "type": "json" },
+    "supportPhone": { "type": "string" },
+    "enrollmentTitle": { "type": "string" },
+    "enrollmentSummary": { "type": "text" },
+    "enrollmentDescription": { "type": "text" },
+    "enrollmentSteps": { "type": "json" },
+    "videoUrl": { "type": "string" },
+    "paymentTitle": { "type": "string" },
+    "paymentSummary": { "type": "text" },
+    "paymentDescription": { "type": "text" },
+    "paymentMethods": { "type": "json" }
+  }
+}

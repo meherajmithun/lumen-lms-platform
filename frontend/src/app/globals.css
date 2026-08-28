@@ -7,9 +7,11 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-reading: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -56,46 +58,49 @@
    Neutrals carry a faint green bias rather than being flat grey.
    --------------------------------------------------------------------------- */
 :root {
-  --radius: 0.5rem;
-  --font-familjen: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-source-serif: Georgia, Cambria, "Times New Roman", serif;
+  --radius: 0.625rem;
 
-  --background: oklch(0.977 0.005 150);
-  --foreground: oklch(0.205 0.018 158);
+  --background: #eef4f0;
+  --foreground: #10251f;
 
-  --card: oklch(1 0 0);
+  --card: #fdfffe;
   --card-foreground: var(--foreground);
-  --popover: oklch(1 0 0);
+  --popover: #fdfffe;
   --popover-foreground: var(--foreground);
 
   /* pine */
-  --primary: oklch(0.428 0.079 164);
-  --primary-foreground: oklch(0.985 0.004 150);
+  --primary: #0d6248;
+  --primary-foreground: #f7fcf9;
 
-  --secondary: oklch(0.945 0.011 155);
-  --secondary-foreground: oklch(0.315 0.032 160);
+  --secondary: #dcebe2;
+  --secondary-foreground: #17392e;
 
-  --muted: oklch(0.951 0.008 155);
-  --muted-foreground: oklch(0.525 0.021 158);
+  --muted: #e3ede7;
+  --muted-foreground: #566c63;
 
   /* clay */
-  --accent: oklch(0.935 0.028 62);
-  --accent-foreground: oklch(0.455 0.117 47);
+  --accent: #f0dbc5;
+  --accent-foreground: #7c3f1f;
 
-  --destructive: oklch(0.523 0.163 27);
-  --destructive-foreground: oklch(0.985 0.004 150);
+  --destructive: #b42332;
+  --destructive-foreground: #fff8f8;
 
-  --border: oklch(0.899 0.012 155);
-  --input: oklch(0.899 0.012 155);
-  --ring: oklch(0.428 0.079 164);
+  --border: #cbdcd3;
+  --input: #bfd3c8;
+  --ring: #0d7654;
 
   /* Named roles used directly by app components */
-  --pine: oklch(0.428 0.079 164);
-  --pine-strong: oklch(0.352 0.075 164);
-  --pine-wash: oklch(0.948 0.026 160);
-  --clay: oklch(0.532 0.128 47);
-  --clay-wash: oklch(0.955 0.028 62);
-  --spine-empty: oklch(0.888 0.012 155);
+  --pine: #0d6248;
+  --pine-strong: #083e30;
+  --pine-wash: #d4ecdf;
+  --clay: #b35f2e;
+  --clay-wash: #f5dfcc;
+  --spine-empty: #c4d7cd;
+
+  --hero: #073c2e;
+  --hero-foreground: #f5fbf7;
+  --hero-muted: #bad2c6;
+  --hero-panel: #f9fcfa;
 
   --chart-1: oklch(0.428 0.079 164);
   --chart-2: oklch(0.532 0.128 47);
@@ -103,50 +108,70 @@
   --chart-4: oklch(0.640 0.095 120);
   --chart-5: oklch(0.480 0.090 300);
 
-  --sidebar: oklch(0.962 0.008 155);
+  --sidebar: #e4efe8;
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--pine);
-  --sidebar-primary-foreground: oklch(0.985 0.004 150);
-  --sidebar-accent: oklch(0.935 0.018 158);
+  --sidebar-primary-foreground: #f7fcf9;
+  --sidebar-accent: #d2e5da;
   --sidebar-accent-foreground: var(--pine-strong);
-  --sidebar-border: oklch(0.893 0.012 155);
+  --sidebar-border: #c2d6cb;
   --sidebar-ring: var(--pine);
+
+  /* Surface and rhythm roles. These remain presentation-only and derive from
+     the existing palette rather than introducing a parallel colour system. */
+  --surface-flat: var(--card);
+  --surface-raised: var(--card);
+  --surface-interactive: var(--card);
+  --shadow-raised: 0 1px 2px rgb(7 60 46 / 0.08), 0 18px 48px -28px rgb(7 47 37 / 0.38);
+  --shadow-float: 0 4px 10px rgb(7 60 46 / 0.09), 0 28px 72px -30px rgb(7 47 37 / 0.5);
+  --content-public: 72rem;
+  --content-reading: 68ch;
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+  --ease-lumen: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .dark {
-  --background: oklch(0.176 0.014 160);
-  --foreground: oklch(0.925 0.011 152);
+  /* Black spruce base, jade surfaces, and a restrained bronze accent. The
+     wider tonal spacing keeps dark mode dimensional without turning it grey. */
+  --background: #050f0c;
+  --foreground: #edf6f1;
 
-  --card: oklch(0.221 0.016 160);
+  --card: #0c2019;
   --card-foreground: var(--foreground);
-  --popover: oklch(0.221 0.016 160);
+  --popover: #10271f;
   --popover-foreground: var(--foreground);
 
-  --primary: oklch(0.706 0.109 164);
-  --primary-foreground: oklch(0.176 0.014 160);
+  --primary: #83d9b0;
+  --primary-foreground: #04110d;
 
-  --secondary: oklch(0.262 0.017 160);
-  --secondary-foreground: oklch(0.905 0.012 152);
+  --secondary: #122b22;
+  --secondary-foreground: #deece5;
 
-  --muted: oklch(0.262 0.017 160);
-  --muted-foreground: oklch(0.672 0.018 155);
+  --muted: #142820;
+  --muted-foreground: #9eb3aa;
 
-  --accent: oklch(0.312 0.037 55);
-  --accent-foreground: oklch(0.812 0.086 62);
+  --accent: #452d20;
+  --accent-foreground: #f0bd91;
 
-  --destructive: oklch(0.665 0.152 25);
-  --destructive-foreground: oklch(0.176 0.014 160);
+  --destructive: #ee7a86;
+  --destructive-foreground: #24070b;
 
-  --border: oklch(0.302 0.018 158);
-  --input: oklch(0.318 0.019 158);
-  --ring: oklch(0.706 0.109 164);
+  --border: #223d32;
+  --input: #2b4a3d;
+  --ring: #83d9b0;
 
-  --pine: oklch(0.706 0.109 164);
-  --pine-strong: oklch(0.792 0.106 164);
-  --pine-wash: oklch(0.272 0.032 164);
-  --clay: oklch(0.741 0.108 55);
-  --clay-wash: oklch(0.298 0.040 55);
-  --spine-empty: oklch(0.322 0.018 158);
+  --pine: #83d9b0;
+  --pine-strong: #b1ecd0;
+  --pine-wash: #123629;
+  --clay: #e5a16f;
+  --clay-wash: #3b281e;
+  --spine-empty: #29483b;
+
+  --hero: #03150f;
+  --hero-foreground: #f1f8f4;
+  --hero-muted: #a7c9b9;
+  --hero-panel: #0b211a;
 
   --chart-1: oklch(0.706 0.109 164);
   --chart-2: oklch(0.741 0.108 55);
@@ -154,14 +179,26 @@
   --chart-4: oklch(0.760 0.095 120);
   --chart-5: oklch(0.680 0.090 300);
 
-  --sidebar: oklch(0.205 0.016 160);
+  --sidebar: #091d17;
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--pine);
-  --sidebar-primary-foreground: oklch(0.176 0.014 160);
-  --sidebar-accent: oklch(0.272 0.026 162);
+  --sidebar-primary-foreground: #04110d;
+  --sidebar-accent: #123328;
   --sidebar-accent-foreground: var(--pine-strong);
-  --sidebar-border: oklch(0.298 0.018 158);
+  --sidebar-border: #213c31;
   --sidebar-ring: var(--pine);
+
+  --surface-flat: var(--card);
+  --surface-raised: var(--card);
+  --surface-interactive: var(--card);
+  --shadow-raised:
+    inset 0 1px 0 rgb(255 255 255 / 0.035),
+    0 1px 2px rgb(0 0 0 / 0.3),
+    0 22px 54px -34px rgb(0 0 0 / 0.92);
+  --shadow-float:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    0 4px 12px rgb(0 0 0 / 0.28),
+    0 30px 76px -34px rgb(0 0 0 / 0.96);
 }
 
 @layer base {
@@ -170,6 +207,25 @@
   }
   body {
     @apply min-w-0 overflow-x-clip bg-background text-foreground;
+    background-image:
+      radial-gradient(circle at 8% -10%, rgb(13 118 84 / 0.1), transparent 32rem),
+      radial-gradient(circle at 100% 12%, rgb(179 95 46 / 0.07), transparent 26rem);
+    background-attachment: fixed;
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+  }
+  .dark body {
+    background-image:
+      radial-gradient(ellipse at 8% -8%, rgb(67 139 106 / 0.16), transparent 36rem),
+      radial-gradient(ellipse at 100% 18%, rgb(156 91 53 / 0.09), transparent 30rem),
+      linear-gradient(180deg, #050f0c 0%, #071510 100%);
+  }
+  .dark .home-hero {
+    background-image:
+      radial-gradient(circle at 82% 12%, rgb(131 217 176 / 0.12), transparent 30rem),
+      radial-gradient(circle at 8% 92%, rgb(229 161 111 / 0.07), transparent 28rem),
+      linear-gradient(128deg, #02100c 0%, #062119 52%, #0a3024 100%);
+    box-shadow: inset 0 -1px 0 rgb(167 201 185 / 0.1);
   }
   html {
     @apply font-sans;
@@ -183,19 +239,24 @@
   --color-clay: var(--clay);
   --color-clay-wash: var(--clay-wash);
   --color-spine-empty: var(--spine-empty);
-  --font-sans: var(--font-familjen), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-familjen), ui-sans-serif, system-ui, sans-serif;
-  --font-reading: var(--font-source-serif), Georgia, "Times New Roman", serif;
+  --color-hero: var(--hero);
+  --color-hero-foreground: var(--hero-foreground);
+  --color-hero-muted: var(--hero-muted);
+  --color-hero-panel: var(--hero-panel);
+  --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-reading: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
-  /* Interface chrome is sans. Learning material is serif — the distinction is
-     the point, not decoration. */
+  /* Open Sans carries every role; weight, width, scale, and rhythm distinguish
+     focused reading from interface chrome. */
   .prose-lesson {
     font-family: var(--font-reading);
     font-size: 1.0625rem;
     line-height: 1.75;
-    max-width: 68ch;
+    max-width: var(--content-reading);
   }
   .prose-lesson h2 { font-family: var(--font-sans); font-weight: 600; font-size: 1.35rem; margin: 2rem 0 .6rem; letter-spacing: -0.01em; }
   .prose-lesson h3 { font-family: var(--font-sans); font-weight: 600; font-size: 1.1rem; margin: 1.5rem 0 .4rem; }
@@ -212,6 +273,25 @@
   .prose-lesson li { overflow-wrap: anywhere; }
 
   .tabular { font-variant-numeric: tabular-nums; }
+
+  ::selection {
+    background: var(--pine-wash);
+    color: var(--foreground);
+  }
+
+  @keyframes lumen-spine-in {
+    from { opacity: 0; transform: scaleX(0.72); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  .spine-reveal > * {
+    animation: lumen-spine-in 700ms var(--ease-lumen) both;
+    transform-origin: left center;
+  }
+
+  .spine-reveal > *:nth-child(2) { animation-delay: 90ms; }
+  .spine-reveal > *:nth-child(3) { animation-delay: 180ms; }
+  .spine-reveal > *:nth-child(4) { animation-delay: 270ms; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

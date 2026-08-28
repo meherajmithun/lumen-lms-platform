@@ -631,17 +631,30 @@ export interface ApiEnrollmentGuideEnrollmentGuide
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    enrollmentDescription: Schema.Attribute.Text;
+    enrollmentSteps: Schema.Attribute.JSON;
+    enrollmentSummary: Schema.Attribute.Text;
+    enrollmentTitle: Schema.Attribute.String;
+    guidelines: Schema.Attribute.JSON;
+    guidelinesDescription: Schema.Attribute.Text;
+    guidelinesSummary: Schema.Attribute.Text;
+    guidelinesTitle: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::enrollment-guide.enrollment-guide'
     > &
       Schema.Attribute.Private;
+    paymentDescription: Schema.Attribute.Text;
+    paymentMethods: Schema.Attribute.JSON;
+    paymentSummary: Schema.Attribute.Text;
+    paymentTitle: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    supportPhone: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    videoUrl: Schema.Attribute.String & Schema.Attribute.Required;
+    videoUrl: Schema.Attribute.String;
   };
 }
 

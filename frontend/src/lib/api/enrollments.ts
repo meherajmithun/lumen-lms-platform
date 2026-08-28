@@ -1,7 +1,60 @@
 import 'server-only';
 import { resolveStrapiMediaUrl, strapiFetch } from '@/lib/strapi';
-import type { Enrollment } from '@/types/lms';
-import type { ComboOffer } from '@/types/lms';
+import type { ComboOffer, Enrollment, EnrollmentGuide } from '@/types/lms';
+
+export const DEFAULT_ENROLLMENT_GUIDE: EnrollmentGuide = {
+  guidelinesTitle: 'Enrollment guidelines',
+  guidelinesSummary: 'Select courses, pay the exact calculated total, and submit one application.',
+  guidelinesDescription: 'Follow these steps carefully.',
+  guidelines: [
+    'Make sure you are logged in to the email account where you would like to receive access to the course materials.',
+    'Fill out the enrollment form using your correct information.',
+    'Select the course you wish to enroll in.',
+    'Choose your preferred payment method. Currently, we accept bKash, Nagad, and Rocket.',
+    'Complete the payment using the instructions and payment number provided in the enrollment form.',
+    'After making the payment, collect your Transaction ID and enter it correctly in the form.',
+    'Review your information carefully and submit the enrollment form.',
+    'Once confirmed, you will receive access to the course materials. Confirmation may take up to 48 hours.',
+    'If you have questions or need assistance, contact us at any time.',
+  ],
+  supportPhone: '01XXXXXXXXXX',
+  enrollmentTitle: 'How to enroll',
+  enrollmentSummary: 'Open the step-by-step enrollment walkthrough.',
+  enrollmentDescription: 'Course selection and payment walkthrough.',
+  enrollmentSteps: [
+    'Select one or more courses.',
+    'Pay the calculated total.',
+    'Enter the transaction ID and submit.',
+    'Wait up to 48 hours for Content Manager approval.',
+  ],
+  videoUrl: '',
+  paymentTitle: 'Payment methods',
+  paymentSummary: 'bKash, Rocket, or Nagad: 01XXXXXXXXXX (personal account).',
+  paymentDescription: 'Send Money or Cash In using a personal account.',
+  paymentMethods: [
+    { name: 'bKash', accountNumber: '01XXXXXXXXXX' },
+    { name: 'Rocket', accountNumber: '01XXXXXXXXXX' },
+    { name: 'Nagad', accountNumber: '01XXXXXXXXXX' },
+  ],
+};
+
+function normalizeGuide(value: Partial<EnrollmentGuide> | null): EnrollmentGuide {
+  return {
+    ...DEFAULT_ENROLLMENT_GUIDE,
+    ...value,
+    guidelines: Array.isArray(value?.guidelines)
+      ? value.guidelines.filter((item): item is string => typeof item === 'string')
+      : DEFAULT_ENROLLMENT_GUIDE.guidelines,
+    enrollmentSteps: Array.isArray(value?.enrollmentSteps)
+      ? value.enrollmentSteps.filter((item): item is string => typeof item === 'string')
+      : DEFAULT_ENROLLMENT_GUIDE.enrollmentSteps,
+    paymentMethods: Array.isArray(value?.paymentMethods)
+      ? value.paymentMethods.filter(
+          (item) => item && typeof item.name === 'string' && typeof item.accountNumber === 'string'
+        )
+      : DEFAULT_ENROLLMENT_GUIDE.paymentMethods,
+  };
+}
 
 export async function getMyEnrollments(): Promise<Enrollment[]> {
   const res = await strapiFetch<{ data: Enrollment[] }>('/enrollments/mine');
@@ -58,7 +111,24 @@ export async function getMyEnrollmentApplications(): Promise<import('@/types/lms
 export async function reviewEnrollmentApplication(id: string, decision: 'approved' | 'rejected') {
   await strapiFetch(`/enrollment-applications/${id}/review`, { method: 'PUT', body: JSON.stringify({ data: { decision } }) });
 }
-export async function getEnrollmentGuide(): Promise<{ videoUrl: string } | null> { const res = await strapiFetch<{ data: { videoUrl: string } | null }>('/enrollment-guide', { auth: false, tags: ['enrollment-guide'], revalidate: 60 }); return res.data ? { videoUrl: resolveStrapiMediaUrl(res.data.videoUrl) ?? res.data.videoUrl } : null; }
-export async function saveEnrollmentGuide(videoUrl: string) { await strapiFetch('/enrollment-guide', { method: 'PUT', body: JSON.stringify({ data: { videoUrl } }) }); }
-export async function getComboOffer(): Promise<ComboOffer | null> { const res = await strapiFetch<{ data: ComboOffer | null }>('/combo-offer', { auth: false, tags: ['combo-offer'], revalidate: 60 }); return res.data; }
+export async function getEnrollmentGuide(): Promise<EnrollmentGuide> {
+  const response = await strapiFetch<{ data: Partial<EnrollmentGuide> | null }>('/enrollment-guide', {
+    auth: false,
+    tags: ['enrollment-guide'],
+    revalidate: 0,
+  });
+  const guide = normalizeGuide(response.data);
+  return {
+    ...guide,
+    videoUrl: resolveStrapiMediaUrl(guide.videoUrl) ?? guide.videoUrl,
+  };
+}
+
+export async function saveEnrollmentGuide(data: Partial<EnrollmentGuide>): Promise<void> {
+  await strapiFetch('/enrollment-guide', {
+    method: 'PUT',
+    body: JSON.stringify({ data }),
+  });
+}
+export async function getComboOffer(): Promise<ComboOffer | null> { const res = await strapiFetch<{ data: ComboOffer | null }>('/combo-offer', { auth: false, tags: ['combo-offer'], revalidate: 0 }); return res.data; }
 export async function saveComboOffer(data: ComboOffer): Promise<void> { await strapiFetch('/combo-offer', { method: 'PUT', body: JSON.stringify({ data }) }); }

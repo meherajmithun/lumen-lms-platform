@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   BookMarked, BookOpen, ClipboardList, LayoutDashboard,
-  MessageSquareQuote, Newspaper, PenSquare, User, UserPlus, Users,
+  MessageSquareQuote, Newspaper, PenSquare, SlidersHorizontal, User, UserPlus, Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Role } from '@/types/lms';
@@ -27,6 +27,7 @@ const NAV: Record<Role, Item[]> = {
   content_manager: [
     { href: '/teach', label: 'Courses', icon: BookOpen },
     { href: '/enrollment-requests', label: 'Enrollment requests', icon: ClipboardList },
+    { href: '/enrollment-management', label: 'Enrollment Management', icon: SlidersHorizontal },
     { href: '/story-requests', label: 'Story requests', icon: MessageSquareQuote },
     { href: '/blog-admin', label: 'Blog', icon: Newspaper },
   ],
@@ -52,7 +53,7 @@ export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: ()
   }, [items, router]);
 
   return (
-    <nav className="flex flex-col gap-0.5">
+    <nav className="flex flex-col gap-1">
       {items.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
@@ -62,10 +63,10 @@ export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: ()
             onClick={onNavigate}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors',
+              'relative flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors before:absolute before:inset-y-2.5 before:left-0 before:w-0.5 before:rounded-full before:bg-pine before:opacity-0',
               active
-                ? 'bg-sidebar-accent font-medium text-sidebar-accent-foreground'
-                : 'text-muted-foreground hover:bg-sidebar-accent/50 hover:text-foreground'
+                ? 'bg-sidebar-accent font-semibold text-sidebar-accent-foreground before:opacity-100'
+                : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground'
             )}
           >
             <Icon className="size-4 shrink-0" aria-hidden />

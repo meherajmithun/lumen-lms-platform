@@ -52,7 +52,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     router.refresh();
   }
 
-  if (approvalPending) return <div role="status" className="rounded-xl border border-pine/30 bg-pine-wash p-6 text-center"><h2 className="font-semibold">Instructor request sent</h2><p className="mt-2 text-sm text-muted-foreground">An Admin must approve your instructor account before you can sign in.</p></div>;
+  if (approvalPending) return <div role="status" className="rounded-2xl border border-pine/30 bg-pine-wash p-6 text-center shadow-[var(--shadow-raised)]"><h2 className="font-display text-2xl font-bold tracking-[-0.03em]">Instructor request sent</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">An Admin must approve your instructor account before you can sign in.</p></div>;
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       {mode === 'register' && (
@@ -91,16 +91,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
           <RadioGroup
             value={role}
             onValueChange={(value) => setRole(value as 'student' | 'instructor')}
-            className="grid gap-2"
+            className="grid gap-2.5"
           >
-            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-3 hover:bg-muted/60 has-[:checked]:border-pine has-[:checked]:bg-pine-wash">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border p-3.5 transition-colors hover:bg-muted/60 has-[:checked]:border-pine has-[:checked]:bg-pine-wash">
               <RadioGroupItem value="student" id="role-student" className="mt-0.5" />
               <span className="text-sm">
                 <span className="block font-medium">Take courses</span>
                 <span className="text-muted-foreground">Enroll, work through lessons, take quizzes.</span>
               </span>
             </label>
-            <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border p-3 hover:bg-muted/60 has-[:checked]:border-pine has-[:checked]:bg-pine-wash">
+            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border p-3.5 transition-colors hover:bg-muted/60 has-[:checked]:border-pine has-[:checked]:bg-pine-wash">
               <RadioGroupItem value="instructor" id="role-instructor" className="mt-0.5" />
               <span className="text-sm">
                 <span className="block font-medium">Teach courses</span>
@@ -120,7 +120,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         </p>
       )}
 
-      <Button type="submit" className="w-full" disabled={pending}>
+      <Button type="submit" size="lg" className="w-full" disabled={pending}>
         {pending && <Loader2 className="size-4 animate-spin" aria-hidden />}
         {mode === 'login' ? 'Sign in' : 'Create account'}
       </Button>
