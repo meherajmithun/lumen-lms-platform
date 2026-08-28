@@ -1,7 +1,20 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { BookOpen, CircleCheck, FileQuestion, Lock } from 'lucide-react';
+import {
+  BadgeCheck,
+  BookOpen,
+  CircleCheck,
+  Clock3,
+  FileQuestion,
+  FileText,
+  Gauge,
+  InfinityIcon,
+  Library,
+  Lock,
+  UsersRound,
+  Video,
+} from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { EnrollButton } from '@/components/lms/enroll-button';
 import { getCourseSyllabus, getPublishedCourses } from '@/lib/api/courses';
@@ -68,6 +81,9 @@ export default async function CourseDetailPage({
   }
 
   const lessons = course.syllabus ?? [];
+  const videoLessons = lessons.filter((lesson) => lesson.contentType === 'video');
+  const readingLessons = lessons.filter((lesson) => lesson.contentType === 'text');
+  const videoMinutes = videoLessons.reduce((total, lesson) => total + (lesson.durationMinutes ?? 0), 0);
   const originalPrice = Number(course.price ?? 0);
   const discount = Number(course.discountPercent ?? 0);
   const finalPrice = discountedPrice(originalPrice, discount);
@@ -90,6 +106,36 @@ export default async function CourseDetailPage({
           {course.description && (
             <p className="prose-lesson mt-6 text-foreground">{course.description}</p>
           )}
+
+          <section className="mt-10" aria-labelledby="course-stats-title">
+            <p className="text-xs font-medium uppercase tracking-[0.12em] text-pine">Course stats</p>
+            <h2 id="course-stats-title" className="mt-1 font-heading text-2xl font-semibold tracking-tight">
+              Everything at a glance
+            </h2>
+            <dl className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {[
+                { label: 'Students enrolled', value: String(course.enrollmentCount ?? 0), icon: UsersRound },
+                { label: 'Course duration', value: formatCourseDuration(course.totalDurationMinutes ?? 0), icon: Clock3 },
+                { label: 'Course access', value: 'Lifetime', icon: InfinityIcon },
+                { label: 'Lessons', value: String(lessons.length), icon: Library },
+                { label: 'Course status', value: lessons.length > 0 ? 'Ready' : 'Coming soon', icon: BadgeCheck },
+                { label: 'Video lessons', value: `${videoLessons.length} · ${formatCourseDuration(videoMinutes)}`, icon: Video },
+                { label: 'Reading lessons', value: String(readingLessons.length), icon: FileText },
+                { label: 'Quizzes', value: String(course.quizCount), icon: FileQuestion },
+                { label: 'Level', value: LEVEL_LABEL[course.level], icon: Gauge },
+              ].map(({ label, value, icon: Icon }) => (
+                <div key={label} className="rounded-xl border border-border bg-card p-4">
+                  <dt className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-pine-wash text-pine">
+                      <Icon className="size-4" aria-hidden />
+                    </span>
+                    {label}
+                  </dt>
+                  <dd className="mt-3 font-heading text-lg font-semibold tracking-tight tabular">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
 
           <h2 className="mt-10 font-heading text-lg font-semibold tracking-tight">
             What you&apos;ll work through

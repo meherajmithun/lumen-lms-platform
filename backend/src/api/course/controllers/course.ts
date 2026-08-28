@@ -294,6 +294,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         instructor: { fields: ['id', 'username', 'avatarUrl'] },
         lessons: { fields: ['title', 'order', 'contentType', 'durationMinutes'], sort: 'order:asc' },
         quizzes: { fields: ['title'] },
+        enrollments: { fields: ['documentId'] },
       },
       limit: 1,
     });
@@ -316,6 +317,7 @@ export default factories.createCoreController('api::course.course', ({ strapi })
         discountPercent: course.discountPercent,
         isPublished: course.isPublished,
         instructor: course.instructor,
+        enrollmentCount: (course.enrollments ?? []).length,
         quizCount: (course.quizzes ?? []).length,
         totalDurationMinutes: lessons.reduce(
           (total, lesson) => total + (lesson.durationMinutes ?? 0), 0
