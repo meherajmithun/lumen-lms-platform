@@ -7,6 +7,7 @@
     "title": { "type": "string", "required": true },
     "description": { "type": "text", "required": true },
     "tiers": { "type": "json", "required": true },
+    "loyaltyDiscount": { "type": "decimal", "required": true, "default": 300, "min": 0 },
     "isActive": { "type": "boolean", "required": true, "default": true }
   }
 }

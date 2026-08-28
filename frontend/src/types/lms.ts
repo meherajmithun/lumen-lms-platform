@@ -129,12 +129,13 @@ export type EnrollmentApplication = {
   documentId: string; name: string; email: string; phone: string; discord?: string; institution?: string;
   paymentMethod: 'bkash' | 'rocket' | 'nagad'; transactionId: string; totalAmount: number;
   comboDiscount?: number;
+  loyaltyDiscount?: number;
   status: 'pending' | 'approved' | 'rejected'; courseSummary: Array<{ title: string; amount: number }>;
   createdAt?: string;
   reviewedAt?: string | null;
 };
 export type ComboTier = { courseCount: number; discountAmount: number };
-export type ComboOffer = { title: string; description: string; tiers: ComboTier[]; isActive: boolean };
+export type ComboOffer = { title: string; description: string; tiers: ComboTier[]; loyaltyDiscount: number; isActive: boolean };
 export type StudentStory={documentId:string;studentName:string;title:string;body:string;status?:'pending'|'approved'|'rejected';createdAt?:string};
 
 export type QuestionOption = { id: string; text: string };

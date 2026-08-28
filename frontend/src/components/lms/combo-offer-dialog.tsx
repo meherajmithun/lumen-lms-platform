@@ -1,12 +1,14 @@
 'use client';
 
-import { Gift, Percent } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronRight, Gift, Percent } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { formatCoursePrice } from '@/lib/course-pricing';
 import type { ComboOffer } from '@/types/lms';
 
 export function ComboOfferDialog({ offer }: { offer: ComboOffer }) {
+  const [showLoyalty, setShowLoyalty] = useState(false);
   if (!offer.isActive || offer.tiers.length === 0) return null;
   const maximum = Math.max(...offer.tiers.map((tier) => tier.discountAmount));
   return (
@@ -33,6 +35,31 @@ export function ComboOfferDialog({ offer }: { offer: ComboOffer }) {
             </tbody>
           </table>
         </div>
+        {offer.loyaltyDiscount > 0 && (
+          <div className="rounded-lg border border-border bg-muted/30">
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-auto w-full justify-start gap-2 px-4 py-3 text-left text-sm"
+              aria-expanded={showLoyalty}
+              onClick={() => setShowLoyalty((value) => !value)}
+            >
+              <span className="size-1.5 rounded-full bg-pine" aria-hidden />
+              <span className="font-semibold text-pine">{formatCoursePrice(offer.loyaltyDiscount)}</span>
+              <span className="text-muted-foreground">for Loyal Students</span>
+              <ChevronRight className={`ml-auto size-4 transition-transform ${showLoyalty ? 'rotate-90' : ''}`} aria-hidden />
+            </Button>
+            {showLoyalty && (
+              <div className="border-t border-border px-4 py-4 text-sm leading-relaxed">
+                <h3 className="font-semibold">How It Works</h3>
+                <p className="mt-2 text-muted-foreground">
+                  If you are already enrolled in any of our courses, you will receive a loyalty discount of{' '}
+                  <strong className="text-pine">{formatCoursePrice(offer.loyaltyDiscount)}</strong> on your next enrollment.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

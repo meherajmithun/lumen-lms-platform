@@ -467,6 +467,15 @@ export interface ApiComboOfferComboOffer extends Struct.CollectionTypeSchema {
       'api::combo-offer.combo-offer'
     > &
       Schema.Attribute.Private;
+    loyaltyDiscount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<300>;
     publishedAt: Schema.Attribute.DateTime;
     tiers: Schema.Attribute.JSON & Schema.Attribute.Required;
     title: Schema.Attribute.String & Schema.Attribute.Required;
@@ -582,6 +591,9 @@ export interface ApiEnrollmentApplicationEnrollmentApplication
       'api::enrollment-application.enrollment-application'
     > &
       Schema.Attribute.Private;
+    loyaltyDiscount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     paymentMethod: Schema.Attribute.Enumeration<['bkash', 'rocket', 'nagad']> &
       Schema.Attribute.Required;
