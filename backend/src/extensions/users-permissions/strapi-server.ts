@@ -151,12 +151,14 @@ export default (plugin: Plugin) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
     const id = Number(ctx.params.id);
     if (!Number.isInteger(id) || id < 1) return ctx.badRequest('Invalid instructor request');
-    const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({
-      where: { userId: id, approvalStatus: 'pending' },
-    });
+    const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({ where: { userId: id } });
     if (!request) return ctx.notFound('Instructor request not found');
     const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
     if (!user || user.role?.type !== ROLES.INSTRUCTOR) return ctx.notFound('Instructor request not found');
+    if (request.approvalStatus === 'approved') {
+      return { data: { id: user.id, username: user.username, blocked: user.blocked } };
+    }
+    if (request.approvalStatus !== 'pending') return ctx.badRequest('Instructor request has already been rejected');
     const updated = await strapi.query('plugin::users-permissions.user').update({
       where: { id },
       data: { blocked: false, instructorApprovalPending: false },
@@ -172,12 +174,14 @@ export default (plugin: Plugin) => {
     const strapi = (global as unknown as { strapi: Core.Strapi }).strapi;
     const id = Number(ctx.params.id);
     if (!Number.isInteger(id) || id < 1) return ctx.badRequest('Invalid instructor request');
-    const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({
-      where: { userId: id, approvalStatus: 'pending' },
-    });
+    const request = await strapi.db.query(INSTRUCTOR_REQUEST_UID).findOne({ where: { userId: id } });
     if (!request) return ctx.notFound('Instructor request not found');
     const user = await strapi.query('plugin::users-permissions.user').findOne({ where: { id }, populate: { role: true } });
     if (!user || user.role?.type !== ROLES.INSTRUCTOR) return ctx.notFound('Instructor request not found');
+    if (request.approvalStatus === 'rejected') {
+      return { data: { id: user.id, username: user.username, blocked: user.blocked } };
+    }
+    if (request.approvalStatus !== 'pending') return ctx.badRequest('Instructor request has already been approved');
     const updated = await strapi.query('plugin::users-permissions.user').update({
       where: { id },
       data: { blocked: true, instructorApprovalPending: false },
