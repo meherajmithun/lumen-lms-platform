@@ -63,18 +63,18 @@ export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: ()
             onClick={onNavigate}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'group relative flex items-center gap-2.5 overflow-hidden rounded-xl px-2 py-2 text-sm transition-[color,background-image,box-shadow,transform] duration-200 before:absolute before:inset-y-2.5 before:left-0 before:w-0.5 before:rounded-full before:bg-pine before:opacity-0',
+              'group relative flex items-center gap-2.5 overflow-hidden rounded-xl px-2 py-2 text-sm transition-[color,background-image,box-shadow,transform] duration-200 before:absolute before:inset-y-2.5 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--sidebar-active-marker)] before:opacity-0',
               active
-                ? '[background-image:var(--sidebar-active-gradient)] font-semibold text-sidebar-accent-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_8px_24px_-18px_var(--pine)] before:opacity-100'
-                : 'text-muted-foreground hover:[background-image:var(--sidebar-hover-gradient)] hover:text-foreground'
+                ? '[background-image:var(--sidebar-active-gradient)] font-semibold text-[var(--sidebar-active-foreground)] shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_10px_28px_-18px_#061827] before:opacity-100'
+                : 'text-sidebar-foreground/70 hover:[background-image:var(--sidebar-hover-gradient)] hover:text-sidebar-foreground'
             )}
           >
             <span
               className={cn(
                 'relative z-[1] flex size-7 shrink-0 items-center justify-center rounded-lg transition-[background-color,color,box-shadow] duration-200',
                 active
-                  ? 'bg-card/75 text-pine shadow-sm ring-1 ring-pine/10'
-                  : 'group-hover:bg-card/60 group-hover:text-pine'
+                  ? 'bg-[var(--sidebar-active-icon-bg)] text-[var(--sidebar-active-icon-foreground)] shadow-sm ring-1 ring-white/10'
+                  : 'group-hover:bg-white/10 group-hover:text-[var(--sidebar-hover-icon)]'
               )}
             >
               <Icon className="size-4" aria-hidden />

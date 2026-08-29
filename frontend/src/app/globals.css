@@ -108,16 +108,22 @@
   --chart-4: oklch(0.640 0.095 120);
   --chart-5: oklch(0.480 0.090 300);
 
-  --sidebar: #e4efe8;
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--pine);
-  --sidebar-primary-foreground: #f7fcf9;
-  --sidebar-accent: #d2e5da;
-  --sidebar-accent-foreground: var(--pine-strong);
-  --sidebar-border: #c2d6cb;
-  --sidebar-ring: var(--pine);
-  --sidebar-active-gradient: linear-gradient(105deg, #c9e5d5 0%, #d7e9df 58%, #f2dfcd 132%);
-  --sidebar-hover-gradient: linear-gradient(105deg, rgb(212 236 223 / 0.7), rgb(245 223 204 / 0.45));
+  --sidebar: #e7f0f3;
+  --sidebar-foreground: #142a38;
+  --sidebar-primary: #123f60;
+  --sidebar-primary-foreground: #f5fbff;
+  --sidebar-accent: #d2e3e9;
+  --sidebar-accent-foreground: #0e3148;
+  --sidebar-border: #c1d4dc;
+  --sidebar-ring: #1d6c92;
+  --sidebar-surface-gradient: linear-gradient(165deg, #f0f6f8 0%, #e4eef2 50%, #dae8ed 100%);
+  --sidebar-active-gradient: linear-gradient(105deg, #101821 0%, #123b57 56%, #176783 118%);
+  --sidebar-hover-gradient: linear-gradient(105deg, rgb(187 215 226 / 0.72), rgb(211 230 237 / 0.54));
+  --sidebar-active-foreground: #f3fbff;
+  --sidebar-active-icon-bg: rgb(255 255 255 / 0.14);
+  --sidebar-active-icon-foreground: #dff7ff;
+  --sidebar-active-marker: #70d2f3;
+  --sidebar-hover-icon: #155d80;
 
   /* Surface and rhythm roles. These remain presentation-only and derive from
      the existing palette rather than introducing a parallel colour system. */
@@ -181,16 +187,22 @@
   --chart-4: oklch(0.760 0.095 120);
   --chart-5: oklch(0.680 0.090 300);
 
-  --sidebar: #091d17;
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--pine);
-  --sidebar-primary-foreground: #04110d;
-  --sidebar-accent: #123328;
-  --sidebar-accent-foreground: var(--pine-strong);
-  --sidebar-border: #213c31;
-  --sidebar-ring: var(--pine);
-  --sidebar-active-gradient: linear-gradient(105deg, #15402f 0%, #123328 58%, #35261f 132%);
-  --sidebar-hover-gradient: linear-gradient(105deg, rgb(18 54 41 / 0.72), rgb(59 40 30 / 0.48));
+  --sidebar: #06111b;
+  --sidebar-foreground: #d9e8ef;
+  --sidebar-primary: #78c9e8;
+  --sidebar-primary-foreground: #03101a;
+  --sidebar-accent: #102838;
+  --sidebar-accent-foreground: #dff5ff;
+  --sidebar-border: #183342;
+  --sidebar-ring: #69c4e8;
+  --sidebar-surface-gradient: linear-gradient(165deg, #03080e 0%, #071824 52%, #0a202c 100%);
+  --sidebar-active-gradient: linear-gradient(105deg, #01050a 0%, #08243a 56%, #0d4a63 118%);
+  --sidebar-hover-gradient: linear-gradient(105deg, rgb(10 34 51 / 0.88), rgb(14 53 69 / 0.62));
+  --sidebar-active-foreground: #e7f9ff;
+  --sidebar-active-icon-bg: rgb(143 218 245 / 0.13);
+  --sidebar-active-icon-foreground: #9ee5ff;
+  --sidebar-active-marker: #70d8ff;
+  --sidebar-hover-icon: #86d9f5;
 
   --surface-flat: var(--card);
   --surface-raised: var(--card);

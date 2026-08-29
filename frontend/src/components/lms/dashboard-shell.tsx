@@ -26,9 +26,9 @@ export function DashboardShell({
     <div className="min-h-dvh bg-background">
       <NavigationIndicator />
       <div className="mx-auto flex max-w-[1440px]">
-        <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 px-4 py-5 md:flex">
+        <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-sidebar-border [background-image:var(--sidebar-surface-gradient)] px-4 py-5 text-sidebar-foreground md:flex">
           <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 font-heading text-sm font-bold tracking-tight">
-            <span className="flex size-8 items-center justify-center rounded-lg bg-pine text-primary-foreground shadow-[var(--shadow-raised)]">
+            <span className="flex size-8 items-center justify-center rounded-lg [background-image:var(--sidebar-active-gradient)] text-[var(--sidebar-active-foreground)] shadow-[var(--shadow-raised)]">
               <GraduationCap className="size-4.5" aria-hidden />
             </span>
             Lumen
@@ -38,7 +38,7 @@ export function DashboardShell({
             <div className="flex items-center gap-2 px-3">
               <span
                 aria-hidden
-                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-pine-wash text-[10px] font-semibold text-pine"
+                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-[10px] font-semibold text-sidebar-accent-foreground"
               >
                 {initials}
               </span>
@@ -61,14 +61,14 @@ export function DashboardShell({
                   </Button>
                 }
               />
-              <SheetContent side="left" className="flex w-64 flex-col p-4">
+              <SheetContent side="left" className="flex w-64 flex-col border-sidebar-border [background-image:var(--sidebar-surface-gradient)] p-4 text-sidebar-foreground">
                 <SheetTitle className="mb-5">
                   <Link
                     href="/"
                     onClick={() => setOpen(false)}
                     className="flex items-center gap-2 font-heading text-sm font-semibold"
                   >
-                    <GraduationCap className="size-5 text-pine" aria-hidden />
+                    <GraduationCap className="size-5 text-[var(--sidebar-hover-icon)]" aria-hidden />
                     Lumen
                   </Link>
                 </SheetTitle>
@@ -77,7 +77,7 @@ export function DashboardShell({
                   <div className="flex items-center gap-2 px-3">
                     <span
                       aria-hidden
-                      className="flex size-7 shrink-0 items-center justify-center rounded-full bg-pine-wash text-[10px] font-semibold text-pine"
+                      className="flex size-7 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-[10px] font-semibold text-sidebar-accent-foreground"
                     >
                       {initials}
                     </span>
