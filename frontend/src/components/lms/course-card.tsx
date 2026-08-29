@@ -46,11 +46,6 @@ export function CourseCard({
               <BookOpen className="size-7 text-muted-foreground" aria-hidden />
             </div>
           )}
-          {!course.isPublished && (
-            <span className="absolute left-3 top-3 rounded-full bg-clay-wash px-2 py-0.5 text-xs font-medium text-clay">
-              Draft
-            </span>
-          )}
           {enrolled && (
             <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-pine px-2.5 py-1 text-xs font-semibold text-primary-foreground shadow-sm dark:ring-1 dark:ring-black/20">
               <CircleCheck className="size-3.5" aria-hidden /> Enrolled
