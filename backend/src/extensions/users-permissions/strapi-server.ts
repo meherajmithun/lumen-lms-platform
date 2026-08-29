@@ -123,6 +123,7 @@ export default (plugin: Plugin) => {
                     title: 'New instructor request',
                     message: `${registeredUser.username} (${registeredUser.email})`.slice(0, 240),
                     href: '/admin/instructor-requests',
+                    sourceKey: `instructor:${registeredUser.id}`,
                   },
                 })
               )

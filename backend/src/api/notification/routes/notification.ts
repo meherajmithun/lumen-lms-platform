@@ -5,10 +5,7 @@ export default {
       path: '/notifications/mine',
       handler: 'notification.mine',
       config: {
-        policies: [
-          'global::is-authenticated',
-          { name: 'global::has-role', config: { roles: ['student'] } },
-        ],
+        policies: ['global::is-authenticated'],
       },
     },
     {
@@ -16,10 +13,7 @@ export default {
       path: '/notifications/read-all',
       handler: 'notification.readAll',
       config: {
-        policies: [
-          'global::is-authenticated',
-          { name: 'global::has-role', config: { roles: ['student'] } },
-        ],
+        policies: ['global::is-authenticated'],
       },
     },
   ],

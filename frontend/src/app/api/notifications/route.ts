@@ -4,7 +4,7 @@ import { getMyNotifications, markAllNotificationsRead } from '@/lib/api/notifica
 
 export async function GET() {
   const user = await getCurrentUser();
-  if (!user || user.role !== 'student') return NextResponse.json({ data: [] });
+  if (!user) return NextResponse.json({ data: [] }, { status: 401 });
   try {
     const rows = await getMyNotifications();
     return NextResponse.json({ data: rows });
@@ -15,7 +15,7 @@ export async function GET() {
 
 export async function PUT() {
   const user = await getCurrentUser();
-  if (!user || user.role !== 'student') return NextResponse.json({ ok: false }, { status: 403 });
+  if (!user) return NextResponse.json({ ok: false }, { status: 401 });
   try {
     await markAllNotificationsRead();
     return NextResponse.json({ ok: true });

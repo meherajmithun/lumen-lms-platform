@@ -22,6 +22,7 @@
     "title": { "type": "string", "required": true, "maxLength": 120 },
     "message": { "type": "string", "required": true, "maxLength": 240 },
     "href": { "type": "string", "required": true, "maxLength": 300 },
+    "sourceKey": { "type": "string", "maxLength": 160 },
     "readAt": { "type": "datetime" }
   }
 }

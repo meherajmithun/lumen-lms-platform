@@ -925,6 +925,10 @@ export interface ApiNotificationNotification
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Required;
+    sourceKey: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{

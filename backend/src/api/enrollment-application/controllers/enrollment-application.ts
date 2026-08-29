@@ -49,6 +49,7 @@ export default factories.createCoreController('api::enrollment-application.enrol
               title: 'New enrollment request',
               message: `${String(input.name).trim()}: ${courseNames}`.slice(0, 240),
               href: '/enrollment-requests',
+              sourceKey: `enrollment:${created.documentId}`,
             },
           })
         )
