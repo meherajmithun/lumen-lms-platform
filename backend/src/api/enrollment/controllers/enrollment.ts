@@ -81,7 +81,7 @@ export default factories.createCoreController('api::enrollment.enrollment', ({ s
       ? await Promise.all([
           strapi.documents('api::lesson.lesson').findMany({
             filters: { course: { documentId: { $in: courseIds } } },
-            fields: ['documentId'],
+            fields: ['documentId', 'title', 'order', 'contentType', 'durationMinutes'],
             populate: { course: { fields: ['documentId'] } },
             limit: -1,
           }),
@@ -97,10 +97,12 @@ export default factories.createCoreController('api::enrollment.enrollment', ({ s
       : [[], []];
 
     const lessonIdsByCourse = new Map<string, string[]>();
+    const lessonsByCourse = new Map<string, typeof lessons>();
     for (const lesson of lessons) {
       const courseId = (lesson.course as { documentId?: string } | undefined)?.documentId;
       if (!courseId) continue;
       lessonIdsByCourse.set(courseId, [...(lessonIdsByCourse.get(courseId) ?? []), lesson.documentId]);
+      lessonsByCourse.set(courseId, [...(lessonsByCourse.get(courseId) ?? []), lesson]);
     }
     const completedIdsByCourse = new Map<string, string[]>();
     for (const row of completedRows) {
@@ -116,12 +118,26 @@ export default factories.createCoreController('api::enrollment.enrollment', ({ s
       const progress = courseId
         ? calculateProgress(lessonIdsByCourse.get(courseId) ?? [], completedIdsByCourse.get(courseId) ?? [])
         : { completed: 0, total: 0, percent: 0, completedLessonIds: [] };
+      const completedIds = new Set(progress.completedLessonIds);
+      const completedLessons = courseId
+        ? (lessonsByCourse.get(courseId) ?? [])
+            .filter((lesson) => completedIds.has(lesson.documentId))
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            .map(({ documentId, title, order, contentType, durationMinutes }) => ({
+              documentId,
+              title,
+              order,
+              contentType,
+              durationMinutes,
+            }))
+        : [];
       return {
         documentId: e.documentId,
         enrolledAt: e.enrolledAt,
         status: e.status,
         course: e.course,
         progress,
+        completedLessons,
       };
     });
 

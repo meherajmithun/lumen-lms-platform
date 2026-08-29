@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { BookOpen, CircleCheck, GraduationCap, Newspaper, PenSquare, Users } from 'lucide-react';
 import { PageHeader } from '@/components/lms/page-header';
 import { RoleBadge } from '@/components/lms/role-badge';
-import { SignOutButton } from '@/components/lms/sign-out-button';
 import { requireUser } from '@/lib/auth';
 import { getMyEnrollments } from '@/lib/api/enrollments';
 import { getMyAttempts } from '@/lib/api/quizzes';
@@ -128,9 +127,9 @@ export default async function AccountPage() {
             Your learning
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Stat icon={BookOpen} label="Enrolled" value={enrollments.length} href="/my-courses" />
-            <Stat icon={CircleCheck} label="Lessons done" value={lessonsDone} href="/my-courses" />
-            <Stat icon={GraduationCap} label="Completed" value={finished} href="/my-courses" />
+            <Stat icon={BookOpen} label="Enrolled" value={enrollments.length} href="/my-courses?view=enrolled" />
+            <Stat icon={CircleCheck} label="Lessons done" value={lessonsDone} href="/my-courses?view=lessons" />
+            <Stat icon={GraduationCap} label="Completed" value={finished} href="/my-courses?view=completed" />
             <Stat
               icon={PenSquare}
               label="Best quiz"
@@ -186,26 +185,6 @@ export default async function AccountPage() {
         </section>
       )}
 
-      <section className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border/80 bg-card p-5 shadow-[var(--shadow-raised)]">
-        <div>
-          <p className="text-sm font-medium">Signed in as {user.email}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">
-            Signing out clears your session on this device.
-          </p>
-        </div>
-        <SignOutButton />
-      </section>
-
-      <p className="mt-6 text-xs text-muted-foreground">
-        Need a different role? Only an admin can change it —{' '}
-        {user.role === ROLES.ADMIN ? (
-          <Link href="/admin/users" className="text-pine underline underline-offset-4">
-            manage people
-          </Link>
-        ) : (
-          'ask one to update your account.'
-        )}
-      </p>
     </div>
   );
 }

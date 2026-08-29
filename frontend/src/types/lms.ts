@@ -123,6 +123,7 @@ export type Enrollment = {
   status: 'active' | 'completed';
   course: Course | null;
   progress: CourseProgress;
+  completedLessons: Array<Pick<Lesson, 'documentId' | 'title' | 'order' | 'contentType' | 'durationMinutes'>>;
 };
 
 export type EnrollmentApplication = {
