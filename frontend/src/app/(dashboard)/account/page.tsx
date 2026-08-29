@@ -98,19 +98,10 @@ export default async function AccountPage() {
           <ProfileEditor profile={profile} />
         </div>
 
-        <dl className="mt-5 grid gap-3 border-t border-border pt-4 text-sm sm:grid-cols-2">
+        <dl className="mt-5 border-t border-border pt-4 text-sm">
           <div>
             <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">Account ID</dt>
             <dd className="mt-0.5 tabular">{user.id}</dd>
-          </div>
-          <div>
-            <dt className="text-xs uppercase tracking-[0.1em] text-muted-foreground">What this role can do</dt>
-            <dd className="mt-0.5 text-muted-foreground">
-              {user.role === ROLES.ADMIN && 'Everything, including managing people and their roles.'}
-              {user.role === ROLES.CONTENT_MANAGER && 'All courses and the blog. Not people.'}
-              {user.role === ROLES.INSTRUCTOR && 'Your own courses, their lessons and quizzes.'}
-              {user.role === ROLES.STUDENT && 'Enroll, work through lessons, take quizzes.'}
-            </dd>
           </div>
         </dl>
       </section>
