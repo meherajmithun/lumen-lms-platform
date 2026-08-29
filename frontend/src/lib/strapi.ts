@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { cache } from 'react';
 import { TOKEN_COOKIE_NAME } from './session-token';
 
 const BASE = process.env.STRAPI_URL ?? 'http://localhost:1337';
@@ -20,11 +21,11 @@ type FetchOptions = Omit<RequestInit, 'cache'> & {
   revalidate?: number | false;
 };
 
-async function authHeader(): Promise<string | null> {
+const authHeader = cache(async (): Promise<string | null> => {
   const jar = await cookies();
   const token = jar.get(TOKEN_COOKIE_NAME)?.value;
   return token ? `Bearer ${token}` : null;
-}
+});
 
 /**
  * The only place this app talks to Strapi.

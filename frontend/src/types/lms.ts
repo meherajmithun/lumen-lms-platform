@@ -230,8 +230,6 @@ export type PlatformStats = {
   totalCourses: number;
   totalLessons: number;
   totalEnrollments: number;
-  totalQuizzes: number;
-  totalQuizAttempts: number;
   totalPosts: number;
   publishedPosts: number;
   draftPosts: number;

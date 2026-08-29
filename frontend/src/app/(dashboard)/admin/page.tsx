@@ -119,7 +119,7 @@ export default async function AdminOverviewPage({
   await requireRole('admin');
   const { view } = await searchParams;
   const detailView = view === 'enrollments' ? 'enrollments' : view === 'lessons' ? 'lessons' : null;
-  const stats = await getPlatformStats();
+  const stats = await getPlatformStats(detailView !== null);
 
   return (
     <div className="mx-auto max-w-5xl">

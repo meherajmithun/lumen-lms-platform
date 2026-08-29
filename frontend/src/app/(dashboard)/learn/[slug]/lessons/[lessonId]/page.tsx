@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { LessonPlayer } from '@/components/lms/lesson-player';
-import { getCourseBySlugAuthed, getCourseProgress } from '@/lib/api/courses';
+import { getCourseBySlugAuthed } from '@/lib/api/courses';
 import { getMyEnrollments } from '@/lib/api/enrollments';
 import { getLesson } from '@/lib/api/lessons';
 import { requireRole } from '@/lib/auth';
@@ -13,19 +13,20 @@ export default async function LessonPage({
   await requireRole('student');
   const { slug, lessonId } = await params;
 
-  const course = await getCourseBySlugAuthed(slug);
+  const [course, enrollments, lesson] = await Promise.all([
+    getCourseBySlugAuthed(slug),
+    getMyEnrollments(),
+    getLesson(lessonId),
+  ]);
   if (!course) notFound();
+  if (!lesson) notFound();
 
-  const enrollments = await getMyEnrollments();
-  if (!enrollments.some((e) => e.course?.documentId === course.documentId)) {
+  const enrollment = enrollments.find((e) => e.course?.documentId === course.documentId);
+  if (!enrollment) {
     redirect(`/courses/${slug}`);
   }
 
-  const [lesson, progress] = await Promise.all([
-    getLesson(lessonId),
-    getCourseProgress(course.documentId),
-  ]);
-  if (!lesson) notFound();
+  const progress = enrollment.progress;
 
   const lessons = (course.lessons ?? []).slice().sort((a, b) => a.order - b.order);
 

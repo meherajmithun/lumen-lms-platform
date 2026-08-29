@@ -59,8 +59,9 @@ export async function updateUserRole(userId: number, role: Role): Promise<void> 
   });
 }
 
-export async function getPlatformStats(): Promise<PlatformStats> {
-  const res = await strapiFetch<{ data: PlatformStats }>('/platform-stats');
+export async function getPlatformStats(includeDetails = false): Promise<PlatformStats> {
+  const path = includeDetails ? '/platform-stats?details=true' : '/platform-stats';
+  const res = await strapiFetch<{ data: PlatformStats }>(path);
   return res.data;
 }
 export async function getInstructorRequests():Promise<InstructorRequest[]>{const r=await strapiFetch<{data:InstructorRequest[]}>('/instructor-requests');return r.data??[]}

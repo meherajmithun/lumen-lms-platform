@@ -4,7 +4,7 @@ import { CircleCheck, FileQuestion, PlayCircle } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { LessonSpine } from '@/components/lms/lesson-spine';
 import { PageHeader } from '@/components/lms/page-header';
-import { getCourseBySlugAuthed, getCourseProgress } from '@/lib/api/courses';
+import { getCourseBySlugAuthed } from '@/lib/api/courses';
 import { getMyEnrollments } from '@/lib/api/enrollments';
 import { requireRole } from '@/lib/auth';
 
@@ -16,17 +16,20 @@ export default async function CourseOutlinePage({
   await requireRole('student');
   const { slug } = await params;
 
-  const course = await getCourseBySlugAuthed(slug);
+  const [course, enrollments] = await Promise.all([
+    getCourseBySlugAuthed(slug),
+    getMyEnrollments(),
+  ]);
   if (!course) notFound();
 
   // Enrollment is verified here for a sensible redirect; Strapi refuses the
   // lesson data anyway if this check were somehow skipped.
-  const enrollments = await getMyEnrollments();
-  if (!enrollments.some((e) => e.course?.documentId === course.documentId)) {
+  const enrollment = enrollments.find((e) => e.course?.documentId === course.documentId);
+  if (!enrollment) {
     redirect(`/courses/${slug}`);
   }
 
-  const progress = await getCourseProgress(course.documentId);
+  const progress = enrollment.progress;
   const lessons = (course.lessons ?? []).slice().sort((a, b) => a.order - b.order);
   const done = new Set(progress.completedLessonIds);
   const nextLesson = lessons.find((l) => !done.has(l.documentId)) ?? lessons[0];

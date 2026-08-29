@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import {
   BookMarked, BookOpen, ClipboardList, LayoutDashboard,
   MessageSquareQuote, Newspaper, PenSquare, SlidersHorizontal, User, UserPlus, Users,
@@ -45,12 +44,9 @@ const COMMON: Item[] = [{ href: '/account', label: 'Your profile', icon: User }]
 
 export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const items = useMemo(() => [...NAV[role], ...COMMON], [role]);
-
-  useEffect(() => {
-    for (const { href } of items) router.prefetch(href);
-  }, [items, router]);
+  // Link handles viewport/hover prefetching. Eagerly prefetching every role
+  // route here caused all authenticated data pages to hit Strapi together.
+  const items = [...NAV[role], ...COMMON];
 
   return (
     <nav className="flex flex-col gap-1">

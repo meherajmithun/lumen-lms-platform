@@ -49,7 +49,6 @@ function Stat({
  */
 export default async function AccountPage() {
   const user = await requireUser();
-  const profile = await getMyProfile().catch(() => ({ ...user, bio: '', avatarUrl: '' }));
 
   const isStudent = user.role === ROLES.STUDENT;
   const isAuthor =
@@ -58,7 +57,8 @@ export default async function AccountPage() {
     user.role === ROLES.ADMIN;
   const isBlogAuthor = user.role === ROLES.CONTENT_MANAGER || user.role === ROLES.ADMIN;
 
-  const [enrollments, attempts, courses, posts, stats, learningHistory] = await Promise.all([
+  const [profile, enrollments, attempts, courses, posts, stats, learningHistory] = await Promise.all([
+    getMyProfile().catch(() => ({ ...user, bio: '', avatarUrl: '' })),
     isStudent
       ? getMyEnrollments().then((rows) => rows.filter((row) => row.course !== null)).catch(() => [])
       : Promise.resolve([]),

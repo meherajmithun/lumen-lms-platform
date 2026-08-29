@@ -23,16 +23,18 @@ export default async function CourseEditorPage({
 
   // This endpoint is ownership-guarded in Strapi, so a null here means either
   // "no such course" or "not yours". Either way the editor must not open.
-  const course = await getCourseForEditing(courseId);
+  const [course, instructors, roster] = await Promise.all([
+    getCourseForEditing(courseId),
+    user.role === 'instructor' ? Promise.resolve([]) : listInstructors(),
+    getStudentsProgress(courseId).catch(() => []),
+  ]);
   if (!course) redirect('/403');
-  const instructors = user.role === 'instructor' ? [] : await listInstructors();
 
   /**
    * The roster is owner-only. The course editor endpoint is also owner-guarded
    * and now includes its quiz editor data, avoiding a second request that could
    * hide a successfully created quiz when it failed.
    */
-  const roster = await getStudentsProgress(courseId).catch(() => []);
   const quiz = (course.quizzes?.[0] as Quiz | undefined) ?? null;
 
   const lessons = (course.lessons ?? []).slice().sort((a, b) => a.order - b.order);
