@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +16,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [pending, setPending] = useState(false);
   const [approvalPending, setApprovalPending] = useState(false);
   const [role, setRole] = useState<'student' | 'instructor'>('student');
+  const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -69,15 +70,31 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-          required
-          minLength={mode === 'register' ? 8 : undefined}
-          aria-describedby={mode === 'register' ? 'password-hint' : undefined}
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+            required
+            minLength={mode === 'register' ? 8 : undefined}
+            aria-describedby={mode === 'register' ? 'password-hint' : undefined}
+            className="pr-11"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((visible) => !visible)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+            aria-pressed={showPassword}
+            className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-lg text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-ring/35"
+          >
+            {showPassword ? (
+              <EyeOff className="size-4.5" aria-hidden="true" />
+            ) : (
+              <Eye className="size-4.5" aria-hidden="true" />
+            )}
+          </button>
+        </div>
         {mode === 'register' && (
           <p id="password-hint" className="text-xs text-muted-foreground">
             At least 8 characters, with a letter and a number.
