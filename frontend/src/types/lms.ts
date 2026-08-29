@@ -128,7 +128,7 @@ export type Enrollment = {
 
 export type NotificationItem = {
   documentId: string;
-  type: 'payment_approved' | 'payment_rejected' | 'blog_published';
+  type: 'payment_approved' | 'payment_rejected' | 'blog_published' | 'enrollment_request' | 'instructor_request';
   title: string;
   message: string;
   href: string;
@@ -243,6 +243,7 @@ export type PlatformStats = {
   totalPosts: number;
   publishedPosts: number;
   draftPosts: number;
+  pendingInstructorRequests: number;
   courseDetails: Array<{
     documentId: string;
     title: string;

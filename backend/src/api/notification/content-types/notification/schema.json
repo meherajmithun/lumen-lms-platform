@@ -16,7 +16,7 @@
     },
     "type": {
       "type": "enumeration",
-      "enum": ["payment_approved", "payment_rejected", "blog_published"],
+      "enum": ["payment_approved", "payment_rejected", "blog_published", "enrollment_request", "instructor_request"],
       "required": true
     },
     "title": { "type": "string", "required": true, "maxLength": 120 },

@@ -22,6 +22,8 @@ const SELF_ACTIONS = [
   'plugin::users-permissions.user.me',            // GET /users/me
   'plugin::users-permissions.user.updateProfile', // PUT /users/me/profile
   'plugin::upload.content-api.upload',             // POST /upload (profile image)
+  'api::notification.notification.mine',           // GET /notifications/mine
+  'api::notification.notification.readAll',        // PUT /notifications/read-all
 ];
 
 /** Reading published courses and posts is open to everyone, logged in or not. */
@@ -89,8 +91,6 @@ const STUDENT_LEARNING = [
   'api::quiz-attempt.quiz-attempt.mine',
   'api::learning-session.learning-session.heartbeat',
   'api::learning-session.learning-session.mine',
-  'api::notification.notification.mine',
-  'api::notification.notification.readAll',
 ];
 
 const ADMIN_ONLY = [

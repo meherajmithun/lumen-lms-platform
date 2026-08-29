@@ -109,6 +109,29 @@ export default (plugin: Plugin) => {
               approvalStatus: 'pending',
             },
           });
+          try {
+            const admins = await strapi.query('plugin::users-permissions.user').findMany({
+              where: { role: { type: ROLES.ADMIN }, blocked: false },
+              select: ['id'],
+            }) as Array<{ id: number }>;
+            const notifications = await Promise.allSettled(
+              admins.map((admin) =>
+                strapi.documents('api::notification.notification').create({
+                  data: {
+                    recipient: admin.id,
+                    type: 'instructor_request',
+                    title: 'New instructor request',
+                    message: `${registeredUser.username} (${registeredUser.email})`.slice(0, 240),
+                    href: '/admin/instructor-requests',
+                  },
+                })
+              )
+            );
+            const failures = notifications.filter((result) => result.status === 'rejected').length;
+            if (failures > 0) strapi.log.error(`Could not create ${failures} instructor request notifications`);
+          } catch (error) {
+            strapi.log.error('Could not notify Admins about an instructor request', error);
+          }
           if (created.user) {
             (created.user as Record<string, unknown>).blocked = true;
             (created.user as Record<string, unknown>).instructorApprovalPending = true;
@@ -410,7 +433,7 @@ export default (plugin: Plugin) => {
       usersByRole[role.type] = roleCounts[index];
     }
 
-    const [totalUsers, totalCourses, totalLessons, totalEnrollments, publishedPosts, allPosts, courseDetails] =
+    const [totalUsers, totalCourses, totalLessons, totalEnrollments, publishedPosts, allPosts, pendingInstructorRequests, courseDetails] =
       await Promise.all([
         strapi.query('plugin::users-permissions.user').count(),
         strapi.query('api::course.course').count(),
@@ -418,6 +441,7 @@ export default (plugin: Plugin) => {
         strapi.query('api::enrollment.enrollment').count(),
         strapi.documents('api::post.post').count({ status: 'published' }),
         strapi.documents('api::post.post').count({ status: 'draft' }),
+        strapi.db.query(INSTRUCTOR_REQUEST_UID).count({ where: { approvalStatus: 'pending' } }),
         includeDetails
           ? strapi.documents('api::course.course').findMany({
               fields: ['documentId', 'title'],
@@ -447,6 +471,7 @@ export default (plugin: Plugin) => {
         totalPosts: allPosts,
         publishedPosts,
         draftPosts: Math.max(0, allPosts - publishedPosts),
+        pendingInstructorRequests,
         courseDetails,
       },
     };

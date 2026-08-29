@@ -93,7 +93,7 @@ export function DashboardShell({
             </Sheet>
 
             <div className="ml-auto flex items-center gap-2">
-              {user.role === 'student' && <NotificationMenu />}
+              <NotificationMenu />
               <ThemeToggle />
             </div>
           </header>

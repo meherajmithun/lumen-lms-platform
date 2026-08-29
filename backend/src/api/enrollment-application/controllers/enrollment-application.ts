@@ -2,6 +2,7 @@ import { factories } from '@strapi/strapi';
 import type { ApiContext } from '../../../utils/context';
 import { bodyData } from '../../../utils/request';
 import { comboDiscountFor, DEFAULT_COMBO_TIERS, normalizeComboTiers } from '../../../utils/combo-discount';
+import { ROLES } from '../../../constants/roles';
 const finalPrice = (p: number, d: number) => Math.round(p * (1 - Math.min(100, Math.max(0, d)) / 100) * 100) / 100;
 export default factories.createCoreController('api::enrollment-application.enrollment-application', ({ strapi }) => ({
   async submit(ctx: ApiContext) {
@@ -31,6 +32,30 @@ export default factories.createCoreController('api::enrollment-application.enrol
     const loyaltyDiscount = offer?.isActive === false || priorEnrollments.length === 0 ? 0 : Math.min(subtotal - comboDiscount, configuredLoyaltyDiscount);
     const totalAmount = Math.max(0, subtotal - comboDiscount - loyaltyDiscount);
     const created = await strapi.documents('api::enrollment-application.enrollment-application').create({ data: { student: user.id, courseIds: ids, courseSummary: summary, name: (input.name as string).trim(), email: (input.email as string).trim(), phone: (input.phone as string).trim(), discord: String(input.discord ?? '').trim(), institution: String(input.institution ?? '').trim(), paymentMethod: input.paymentMethod as 'bkash'|'rocket'|'nagad', paymentProofUrl: (input.paymentProofUrl as string).trim(), comboDiscount, loyaltyDiscount, totalAmount, status: 'pending' } });
+    try {
+      const contentManagers = await strapi.query('plugin::users-permissions.user').findMany({
+        where: { role: { type: ROLES.CONTENT_MANAGER }, blocked: false },
+        select: ['id'],
+      }) as Array<{ id: number }>;
+      const courseNames = summary.map((course) => course.title).join(', ');
+      const notifications = await Promise.allSettled(
+        contentManagers.map((manager) =>
+          strapi.documents('api::notification.notification').create({
+            data: {
+              recipient: manager.id,
+              type: 'enrollment_request',
+              title: 'New enrollment request',
+              message: `${String(input.name).trim()}: ${courseNames}`.slice(0, 240),
+              href: '/enrollment-requests',
+            },
+          })
+        )
+      );
+      const failures = notifications.filter((result) => result.status === 'rejected').length;
+      if (failures > 0) strapi.log.error(`Could not create ${failures} enrollment request notifications`);
+    } catch (error) {
+      strapi.log.error('Could not notify Content Managers about an enrollment request', error);
+    }
     return { data: { documentId: created.documentId, status: created.status, comboDiscount, loyaltyDiscount, totalAmount } };
   },
   async queue() { return { data: await strapi.documents('api::enrollment-application.enrollment-application').findMany({ populate: { student: { fields: ['id','username','email'] } }, sort: 'createdAt:desc', limit: -1 }) }; },

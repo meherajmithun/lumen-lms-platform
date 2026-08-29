@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
-  ArrowUpRight, BookOpen, CheckCircle2, FileText, GraduationCap, Mail, Newspaper, Users,
+  ArrowUpRight, BookOpen, CheckCircle2, FileText, GraduationCap, Mail, Newspaper, UserPlus, Users,
 } from 'lucide-react';
 import { PageHeader } from '@/components/lms/page-header';
 import { getPlatformStats } from '@/lib/api/users';
@@ -217,14 +217,24 @@ export default async function AdminOverviewPage({
         <div>
           <RoleBreakdown usersByRole={stats.usersByRole} />
         </div>
-        <StatCard
-          icon={Newspaper}
-          label="Blog posts"
-          value={stats.totalPosts}
-          hint={`${stats.publishedPosts} published · ${stats.draftPosts} draft`}
-          href="/blog-admin"
-          tone="clay"
-        />
+        <div className="grid gap-4">
+          <StatCard
+            icon={UserPlus}
+            label="Instructor requests"
+            value={stats.pendingInstructorRequests}
+            hint="Awaiting review"
+            href="/admin/instructor-requests"
+            tone="blue"
+          />
+          <StatCard
+            icon={Newspaper}
+            label="Blog posts"
+            value={stats.totalPosts}
+            hint={`${stats.publishedPosts} published · ${stats.draftPosts} draft`}
+            href="/blog-admin"
+            tone="clay"
+          />
+        </div>
       </div>
     </div>
   );

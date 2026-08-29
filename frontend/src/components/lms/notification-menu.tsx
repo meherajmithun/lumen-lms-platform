@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Bell, CheckCircle2, Newspaper, XCircle } from 'lucide-react';
+import { Bell, CheckCircle2, ClipboardList, Newspaper, UserPlus, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
@@ -62,6 +62,12 @@ export function NotificationMenu() {
     }
     if (notification.type === 'payment_rejected') {
       return <XCircle className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden />;
+    }
+    if (notification.type === 'enrollment_request') {
+      return <ClipboardList className="mt-0.5 size-4 shrink-0 text-pine" aria-hidden />;
+    }
+    if (notification.type === 'instructor_request') {
+      return <UserPlus className="mt-0.5 size-4 shrink-0 text-pine" aria-hidden />;
     }
     return <Newspaper className="mt-0.5 size-4 shrink-0 text-pine" aria-hidden />;
   }

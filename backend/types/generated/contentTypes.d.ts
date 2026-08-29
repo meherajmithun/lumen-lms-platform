@@ -931,7 +931,13 @@ export interface ApiNotificationNotification
         maxLength: 120;
       }>;
     type: Schema.Attribute.Enumeration<
-      ['payment_approved', 'payment_rejected', 'blog_published']
+      [
+        'payment_approved',
+        'payment_rejected',
+        'blog_published',
+        'enrollment_request',
+        'instructor_request',
+      ]
     > &
       Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
