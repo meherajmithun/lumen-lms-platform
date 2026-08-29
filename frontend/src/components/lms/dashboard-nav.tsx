@@ -63,14 +63,23 @@ export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: ()
             onClick={onNavigate}
             aria-current={active ? 'page' : undefined}
             className={cn(
-              'relative flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-colors before:absolute before:inset-y-2.5 before:left-0 before:w-0.5 before:rounded-full before:bg-pine before:opacity-0',
+              'group relative flex items-center gap-2.5 overflow-hidden rounded-xl px-2 py-2 text-sm transition-[color,background-image,box-shadow,transform] duration-200 before:absolute before:inset-y-2.5 before:left-0 before:w-0.5 before:rounded-full before:bg-pine before:opacity-0',
               active
-                ? 'bg-sidebar-accent font-semibold text-sidebar-accent-foreground before:opacity-100'
-                : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground'
+                ? '[background-image:var(--sidebar-active-gradient)] font-semibold text-sidebar-accent-foreground shadow-[inset_0_1px_0_rgb(255_255_255/0.22),0_8px_24px_-18px_var(--pine)] before:opacity-100'
+                : 'text-muted-foreground hover:[background-image:var(--sidebar-hover-gradient)] hover:text-foreground'
             )}
           >
-            <Icon className="size-4 shrink-0" aria-hidden />
-            {label}
+            <span
+              className={cn(
+                'relative z-[1] flex size-7 shrink-0 items-center justify-center rounded-lg transition-[background-color,color,box-shadow] duration-200',
+                active
+                  ? 'bg-card/75 text-pine shadow-sm ring-1 ring-pine/10'
+                  : 'group-hover:bg-card/60 group-hover:text-pine'
+              )}
+            >
+              <Icon className="size-4" aria-hidden />
+            </span>
+            <span className="relative z-[1]">{label}</span>
           </Link>
         );
       })}

@@ -116,6 +116,8 @@
   --sidebar-accent-foreground: var(--pine-strong);
   --sidebar-border: #c2d6cb;
   --sidebar-ring: var(--pine);
+  --sidebar-active-gradient: linear-gradient(105deg, #c9e5d5 0%, #d7e9df 58%, #f2dfcd 132%);
+  --sidebar-hover-gradient: linear-gradient(105deg, rgb(212 236 223 / 0.7), rgb(245 223 204 / 0.45));
 
   /* Surface and rhythm roles. These remain presentation-only and derive from
      the existing palette rather than introducing a parallel colour system. */
@@ -187,6 +189,8 @@
   --sidebar-accent-foreground: var(--pine-strong);
   --sidebar-border: #213c31;
   --sidebar-ring: var(--pine);
+  --sidebar-active-gradient: linear-gradient(105deg, #15402f 0%, #123328 58%, #35261f 132%);
+  --sidebar-hover-gradient: linear-gradient(105deg, rgb(18 54 41 / 0.72), rgb(59 40 30 / 0.48));
 
   --surface-flat: var(--card);
   --surface-raised: var(--card);
