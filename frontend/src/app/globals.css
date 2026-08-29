@@ -126,6 +126,17 @@
   --sidebar-active-marker: #78d8f4;
   --sidebar-hover-icon: #8cddf4;
 
+  --course-section-gradient:
+    radial-gradient(circle at 8% 0%, rgb(78 166 201 / 0.14), transparent 24rem),
+    linear-gradient(145deg, #fafdff 0%, #edf7fb 100%);
+  --course-card-gradient: linear-gradient(150deg, #ffffff 0%, #f1f9fc 100%);
+  --course-header-gradient: linear-gradient(105deg, #e3f3f9 0%, #d9edf6 58%, #e9f6fa 100%);
+  --enrollment-section-gradient:
+    radial-gradient(circle at 92% 0%, rgb(91 120 193 / 0.13), transparent 25rem),
+    linear-gradient(145deg, #fbfdff 0%, #f1f4fb 100%);
+  --enrollment-card-gradient: linear-gradient(150deg, #ffffff 0%, #f4f5fb 100%);
+  --enrollment-header-gradient: linear-gradient(105deg, #e9eef9 0%, #e2e8f6 58%, #edf3fb 100%);
+
   /* Surface and rhythm roles. These remain presentation-only and derive from
      the existing palette rather than introducing a parallel colour system. */
   --surface-flat: var(--card);
@@ -141,32 +152,32 @@
 }
 
 .dark {
-  /* Ink and deep navy create depth; cool blue accents preserve contrast. */
-  --background: #030a10;
+  /* One midnight system carries every dashboard surface in dark mode. */
+  --background: #020812;
   --foreground: #e9f3f8;
 
-  --card: #081923;
+  --card: #061521;
   --card-foreground: var(--foreground);
-  --popover: #0c202c;
+  --popover: #091c29;
   --popover-foreground: var(--foreground);
 
   --primary: #78c9e8;
   --primary-foreground: #021019;
 
-  --secondary: #102634;
+  --secondary: #0c2231;
   --secondary-foreground: #dcebf2;
 
-  --muted: #122531;
+  --muted: #0e2230;
   --muted-foreground: #9fb2bd;
 
-  --accent: #183346;
+  --accent: #123047;
   --accent-foreground: #b9def0;
 
   --destructive: #ee7a86;
   --destructive-foreground: #24070b;
 
-  --border: #1d3542;
-  --input: #294856;
+  --border: #183546;
+  --input: #244756;
   --ring: #72c9eb;
 
   --pine: #78c9e8;
@@ -207,6 +218,17 @@
   --sidebar-active-marker: #70d8ff;
   --sidebar-hover-icon: #86d9f5;
 
+  --course-section-gradient:
+    radial-gradient(circle at 8% 0%, rgb(55 158 201 / 0.16), transparent 25rem),
+    linear-gradient(145deg, #061521 0%, #082130 100%);
+  --course-card-gradient: linear-gradient(150deg, #081a27 0%, #0a2433 100%);
+  --course-header-gradient: linear-gradient(105deg, #0d2c40 0%, #103b52 58%, #0c2a3c 100%);
+  --enrollment-section-gradient:
+    radial-gradient(circle at 92% 0%, rgb(83 105 191 / 0.17), transparent 25rem),
+    linear-gradient(145deg, #061521 0%, #0b1c31 100%);
+  --enrollment-card-gradient: linear-gradient(150deg, #081925 0%, #101e35 100%);
+  --enrollment-header-gradient: linear-gradient(105deg, #14263e 0%, #1a3150 58%, #11253e 100%);
+
   --surface-flat: var(--card);
   --surface-raised: var(--card);
   --surface-interactive: var(--card);
@@ -237,7 +259,7 @@
     background-image:
       radial-gradient(ellipse at 8% -8%, rgb(49 133 176 / 0.18), transparent 36rem),
       radial-gradient(ellipse at 100% 18%, rgb(47 91 132 / 0.12), transparent 30rem),
-      linear-gradient(180deg, #030a10 0%, #061520 100%);
+      linear-gradient(180deg, #020812 0%, #061522 100%);
   }
   .dark .home-hero {
     background-image:

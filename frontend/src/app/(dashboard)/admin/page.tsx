@@ -137,21 +137,29 @@ export default async function AdminOverviewPage({
       </div>
 
       {detailView && (
-        <section id="platform-details" className="mt-6 scroll-mt-24 rounded-3xl border border-border/80 bg-card/70 p-5 shadow-[var(--shadow-raised)] sm:p-7">
+        <section
+          id="platform-details"
+          className={cn(
+            'mt-6 scroll-mt-24 rounded-3xl border border-border/80 p-5 shadow-[var(--shadow-raised)] sm:p-7',
+            detailView === 'lessons'
+              ? '[background-image:var(--course-section-gradient)]'
+              : '[background-image:var(--enrollment-section-gradient)]'
+          )}
+        >
           {detailView === 'lessons' ? (
             <>
               <SectionHeading eyebrow="Course library" title="Lessons by course" count={stats.totalLessons} />
               <div className="grid gap-4 lg:grid-cols-2">
                 {stats.courseDetails.map((course) => (
-                  <article key={course.documentId} className="overflow-hidden rounded-2xl border border-border/80 bg-card">
-                    <div className="flex items-center justify-between gap-4 border-b border-border/70 bg-[color-mix(in_oklch,var(--chart-3)_8%,transparent)] px-5 py-4">
+                  <article key={course.documentId} className="overflow-hidden rounded-2xl border border-border/80 [background-image:var(--course-card-gradient)] shadow-[0_16px_38px_-30px_rgb(12_69_96/0.65)]">
+                    <div className="flex items-center justify-between gap-4 border-b border-border/70 [background-image:var(--course-header-gradient)] px-5 py-4">
                       <h3 className="font-heading font-semibold tracking-tight">{course.title}</h3>
                       <span className="shrink-0 text-xs tabular text-muted-foreground">{course.lessons.length} lessons</span>
                     </div>
                     {course.lessons.length > 0 ? (
                       <ol className="divide-y divide-border/60">
                         {course.lessons.map((lesson, index) => (
-                          <li key={lesson.documentId} className="flex items-center gap-3 px-5 py-3">
+                          <li key={lesson.documentId} className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-[color-mix(in_oklch,var(--chart-3)_7%,transparent)]">
                             <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--chart-3)_14%,transparent)] text-[11px] font-semibold text-[var(--chart-3)] tabular">
                               {index + 1}
                             </span>
@@ -176,8 +184,8 @@ export default async function AdminOverviewPage({
                 {stats.courseDetails.map((course) => {
                   const enrollments = course.enrollments.filter((enrollment) => enrollment.student !== null);
                   return (
-                    <article key={course.documentId} className="overflow-hidden rounded-2xl border border-border/80 bg-card">
-                      <div className="flex items-center justify-between gap-4 border-b border-border/70 bg-[color-mix(in_oklch,var(--chart-5)_8%,transparent)] px-5 py-4">
+                    <article key={course.documentId} className="overflow-hidden rounded-2xl border border-border/80 [background-image:var(--enrollment-card-gradient)] shadow-[0_16px_38px_-30px_rgb(45_55_112/0.62)]">
+                      <div className="flex items-center justify-between gap-4 border-b border-border/70 [background-image:var(--enrollment-header-gradient)] px-5 py-4">
                         <h3 className="font-heading font-semibold tracking-tight">{course.title}</h3>
                         <span className="shrink-0 text-xs tabular text-muted-foreground">{enrollments.length} enrolled</span>
                       </div>
@@ -186,7 +194,7 @@ export default async function AdminOverviewPage({
                           {enrollments.map((enrollment) => {
                             const student = enrollment.student!;
                             return (
-                              <li key={enrollment.documentId} className="flex items-center gap-3 px-5 py-3">
+                              <li key={enrollment.documentId} className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-[color-mix(in_oklch,var(--chart-5)_7%,transparent)]">
                                 <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--chart-5)_14%,transparent)] text-[11px] font-semibold text-[var(--chart-5)]">
                                   {student.username.slice(0, 2).toUpperCase()}
                                 </span>
