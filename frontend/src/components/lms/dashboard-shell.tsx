@@ -10,6 +10,7 @@ import { RoleBadge } from './role-badge';
 import { ThemeToggle } from './theme-toggle';
 import { SignOutButton } from './sign-out-button';
 import { NavigationIndicator } from './navigation-indicator';
+import { NotificationMenu } from './notification-menu';
 import type { SessionUser } from '@/types/lms';
 
 export function DashboardShell({
@@ -92,6 +93,7 @@ export function DashboardShell({
             </Sheet>
 
             <div className="ml-auto flex items-center gap-2">
+              {user.role === 'student' && <NotificationMenu />}
               <ThemeToggle />
             </div>
           </header>

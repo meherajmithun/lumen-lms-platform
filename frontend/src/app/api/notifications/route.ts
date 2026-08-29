@@ -1,14 +1,25 @@
 import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
-import { getMyEnrollmentApplications } from '@/lib/api/enrollments';
+import { getMyNotifications, markAllNotificationsRead } from '@/lib/api/notifications';
 
 export async function GET() {
   const user = await getCurrentUser();
   if (!user || user.role !== 'student') return NextResponse.json({ data: [] });
   try {
-    const rows = await getMyEnrollmentApplications();
+    const rows = await getMyNotifications();
     return NextResponse.json({ data: rows });
   } catch {
     return NextResponse.json({ data: [] }, { status: 503 });
+  }
+}
+
+export async function PUT() {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'student') return NextResponse.json({ ok: false }, { status: 403 });
+  try {
+    await markAllNotificationsRead();
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ ok: false }, { status: 503 });
   }
 }

@@ -165,7 +165,27 @@ export default factories.createCoreController('api::post.post', ({ strapi }) => 
   /** POST /posts/:id/publish */
   async publish(ctx: ApiContext) {
     const post = await strapi.documents('api::post.post').publish({ documentId: ctx.params.id });
-    if (!post) return ctx.notFound('Post not found');
+    const published = post.entries[0];
+    if (!published) return ctx.notFound('Post not found');
+    const students = await strapi.query('plugin::users-permissions.user').findMany({
+      where: { role: { type: ROLES.STUDENT }, blocked: false },
+      select: ['id'],
+    }) as Array<{ id: number }>;
+    const notifications = await Promise.allSettled(
+      students.map((student) =>
+        strapi.documents('api::notification.notification').create({
+          data: {
+            recipient: student.id,
+            type: 'blog_published',
+            title: 'New blog published',
+            message: String(published.title ?? 'A new article is ready to read.'),
+            href: `/blog/${published.slug}`,
+          },
+        })
+      )
+    );
+    const failures = notifications.filter((result) => result.status === 'rejected').length;
+    if (failures > 0) strapi.log.error(`Could not create ${failures} blog notifications`);
     return { data: post };
   },
 

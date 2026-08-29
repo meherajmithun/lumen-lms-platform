@@ -48,7 +48,23 @@ export default factories.createCoreController('api::enrollment-application.enrol
     if (!['approved','rejected'].includes(decision as string)) return ctx.badRequest('Invalid decision');
     const app = await strapi.documents('api::enrollment-application.enrollment-application').findOne({ documentId: ctx.params.id, populate: { student: { fields: ['id'] } } });
     if (!app) return ctx.notFound('Application not found'); if (app.status !== 'pending') return ctx.badRequest('Already reviewed');
-    if (decision === 'approved') { const studentId = (app.student as {id:number}).id; for (const courseId of app.courseIds as string[]) { const [row] = await strapi.documents('api::enrollment.enrollment').findMany({ filters: { student: { id: studentId }, course: { documentId: courseId } }, limit: 1 }); if (!row) await strapi.documents('api::enrollment.enrollment').create({ data: { student: studentId, course: courseId, enrolledAt: new Date(), status: 'active' } }); } }
-    return { data: await strapi.documents('api::enrollment-application.enrollment-application').update({ documentId: ctx.params.id, data: { status: decision as 'approved'|'rejected', reviewedAt: new Date() } }) };
+    const studentId = (app.student as {id:number}).id;
+    if (decision === 'approved') { for (const courseId of app.courseIds as string[]) { const [row] = await strapi.documents('api::enrollment.enrollment').findMany({ filters: { student: { id: studentId }, course: { documentId: courseId } }, limit: 1 }); if (!row) await strapi.documents('api::enrollment.enrollment').create({ data: { student: studentId, course: courseId, enrolledAt: new Date(), status: 'active' } }); } }
+    const updated = await strapi.documents('api::enrollment-application.enrollment-application').update({ documentId: ctx.params.id, data: { status: decision as 'approved'|'rejected', reviewedAt: new Date() } });
+    const courseNames = (app.courseSummary as Array<{ title?: string }>).map((course) => course.title).filter(Boolean).join(', ');
+    try {
+      await strapi.documents('api::notification.notification').create({
+        data: {
+          recipient: studentId,
+          type: decision === 'approved' ? 'payment_approved' : 'payment_rejected',
+          title: decision === 'approved' ? 'Payment accepted' : 'Payment rejected',
+          message: courseNames || 'Your enrollment application was reviewed.',
+          href: decision === 'approved' ? '/my-courses' : '/enroll',
+        },
+      });
+    } catch (error) {
+      strapi.log.error('Could not create enrollment notification', error);
+    }
+    return { data: updated };
   }
 }));

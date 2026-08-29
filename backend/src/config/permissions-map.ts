@@ -89,6 +89,8 @@ const STUDENT_LEARNING = [
   'api::quiz-attempt.quiz-attempt.mine',
   'api::learning-session.learning-session.heartbeat',
   'api::learning-session.learning-session.mine',
+  'api::notification.notification.mine',
+  'api::notification.notification.readAll',
 ];
 
 const ADMIN_ONLY = [

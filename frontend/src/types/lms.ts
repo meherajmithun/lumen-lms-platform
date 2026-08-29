@@ -126,6 +126,16 @@ export type Enrollment = {
   completedLessons: Array<Pick<Lesson, 'documentId' | 'title' | 'order' | 'contentType' | 'durationMinutes'>>;
 };
 
+export type NotificationItem = {
+  documentId: string;
+  type: 'payment_approved' | 'payment_rejected' | 'blog_published';
+  title: string;
+  message: string;
+  href: string;
+  readAt: string | null;
+  createdAt: string;
+};
+
 export type EnrollmentApplication = {
   documentId: string; name: string; email: string; phone: string; discord?: string; institution?: string;
   paymentMethod: 'bkash' | 'rocket' | 'nagad'; transactionId?: string; paymentProofUrl?: string; totalAmount: number;
