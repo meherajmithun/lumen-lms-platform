@@ -28,16 +28,16 @@ export default async function HomePage() {
           <div className="max-w-5xl">
             <p className="flex items-center gap-3 text-[0.7rem] font-bold uppercase tracking-[0.2em] text-hero-muted">
               <span className="h-px w-8 bg-hero-muted" aria-hidden />
-              Learn in sequence
+              Structured learning. Visible progress.
             </p>
             <h1 className="mt-6 max-w-5xl font-display text-[clamp(3.15rem,7.5vw,6.6rem)] font-bold leading-[0.98] tracking-[-0.065em] text-balance">
-              You always know exactly{' '}
-              <span className="text-hero-muted">where you stopped.</span>
+              Build skills with a{' '}
+              <span className="text-hero-muted">clear path forward.</span>
             </h1>
             <div className="mt-9 grid gap-8 border-t border-hero-foreground/15 pt-8 lg:grid-cols-[minmax(0,39rem)_auto] lg:items-end lg:justify-between">
               <p className="max-w-2xl text-base leading-7 text-hero-muted sm:text-lg sm:leading-8">
-                Courses here are ordered lessons, not a pile of videos. Finish one, mark it done,
-                and the spine fills in. Quizzes are graded the moment you submit.
+                Learn through structured courses, complete lessons in order, test your knowledge
+                with quizzes, and see your progress update as you move forward.
               </p>
               <div className="flex flex-wrap gap-3 lg:justify-end">
                 <Link
