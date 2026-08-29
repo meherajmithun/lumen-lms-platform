@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight, BookOpen, ClipboardList, Plus } from 'lucide-react';
+import { BookOpen, Plus } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
 import { EmptyState } from '@/components/lms/empty-state';
 import { PageHeader } from '@/components/lms/page-header';
 import { getManagedCourses } from '@/lib/api/courses';
-import { getEnrollmentApplications } from '@/lib/api/enrollments';
 import { requireRole } from '@/lib/auth';
 import { ROLES } from '@/types/lms';
 
@@ -17,11 +16,7 @@ export default async function TeachPage() {
   // An instructor is scoped to their own courses; Admin and Content Manager see
   // the whole library. Strapi applies the same narrowing server-side.
   const mine = user.role === ROLES.INSTRUCTOR;
-  const [courses, enrollmentApplications] = await Promise.all([
-    getManagedCourses(mine),
-    user.role === ROLES.CONTENT_MANAGER ? getEnrollmentApplications() : Promise.resolve([]),
-  ]);
-  const pendingEnrollmentRequests = enrollmentApplications.filter((application) => application.status === 'pending').length;
+  const courses = await getManagedCourses(mine);
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -40,23 +35,6 @@ export default async function TeachPage() {
           </Link>
         }
       />
-
-      {user.role === ROLES.CONTENT_MANAGER && (
-        <Link
-          href="/enrollment-requests"
-          className="group mb-6 flex items-center gap-4 rounded-2xl border border-t-2 border-t-[var(--chart-3)] bg-card p-5 shadow-[var(--shadow-raised)] transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-[var(--shadow-float)]"
-        >
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[color-mix(in_oklch,var(--chart-3)_14%,transparent)] text-[var(--chart-3)]">
-            <ClipboardList className="size-5" aria-hidden />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-xs font-medium uppercase tracking-[0.1em] text-muted-foreground">Enrollment requests</span>
-            <span className="mt-1 block font-heading text-2xl font-semibold tabular">{pendingEnrollmentRequests}</span>
-            <span className="block text-xs text-muted-foreground">Awaiting payment review</span>
-          </span>
-          <ArrowUpRight className="size-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
-        </Link>
-      )}
 
       <div id="course-list" className="scroll-mt-24">
         {courses.length === 0 ? (

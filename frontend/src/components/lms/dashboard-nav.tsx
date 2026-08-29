@@ -25,6 +25,7 @@ const NAV: Record<Role, Item[]> = {
     { href: '/blog-admin', label: 'Blog', icon: Newspaper },
   ],
   content_manager: [
+    { href: '/content-manager', label: 'Overview', icon: LayoutDashboard },
     { href: '/teach', label: 'Courses', icon: BookOpen },
     { href: '/enrollment-requests', label: 'Enrollment requests', icon: ClipboardList },
     { href: '/enrollment-management', label: 'Enrollment Management', icon: SlidersHorizontal },

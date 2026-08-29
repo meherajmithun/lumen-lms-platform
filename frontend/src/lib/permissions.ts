@@ -48,6 +48,7 @@ export const homeFor = (role: Role): string => {
     case ROLES.ADMIN:
       return '/admin';
     case ROLES.CONTENT_MANAGER:
+      return '/content-manager';
     case ROLES.INSTRUCTOR:
       return '/teach';
     default:

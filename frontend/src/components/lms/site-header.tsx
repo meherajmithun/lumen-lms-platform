@@ -123,7 +123,7 @@ export async function SiteHeader() {
           <span className={showMarketingNav ? 'hidden lg:inline-flex' : 'inline-flex'}><ThemeToggle /></span>
           {user ? (
             <>
-              {user.role === ROLES.STUDENT && <NotificationMenu />}
+              <NotificationMenu />
               <Link href={homeFor(user.role)} className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'hidden lg:inline-flex')}>
                 Dashboard
               </Link>
