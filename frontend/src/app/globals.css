@@ -53,60 +53,58 @@
 
 /* ---------------------------------------------------------------------------
    Palette
-   Pine green is the brand colour AND the "lesson complete" fill, so progress is
-   literally rendered in the product's own colour. Clay marks "you are here".
-   Neutrals carry a faint green bias rather than being flat grey.
+   Midnight navy is the brand colour and the lesson-complete fill. Steel blue
+   marks the current position, while every neutral carries a restrained blue
+   bias so the interface stays cohesive in light and dark modes.
    --------------------------------------------------------------------------- */
 :root {
   --radius: 0.625rem;
 
-  --background: #eef4f0;
-  --foreground: #10251f;
+  --background: #edf3f6;
+  --foreground: #102432;
 
-  --card: #fdfffe;
+  --card: #fbfdff;
   --card-foreground: var(--foreground);
-  --popover: #fdfffe;
+  --popover: #fbfdff;
   --popover-foreground: var(--foreground);
 
-  /* pine */
-  --primary: #0d6248;
-  --primary-foreground: #f7fcf9;
+  --primary: #155d80;
+  --primary-foreground: #f5fbff;
 
-  --secondary: #dcebe2;
-  --secondary-foreground: #17392e;
+  --secondary: #d9e8ef;
+  --secondary-foreground: #14394d;
 
-  --muted: #e3ede7;
-  --muted-foreground: #566c63;
+  --muted: #e2ecf1;
+  --muted-foreground: #586d79;
 
-  /* clay */
-  --accent: #f0dbc5;
-  --accent-foreground: #7c3f1f;
+  --accent: #d9e7f2;
+  --accent-foreground: #173e5b;
 
   --destructive: #b42332;
   --destructive-foreground: #fff8f8;
 
-  --border: #cbdcd3;
-  --input: #bfd3c8;
-  --ring: #0d7654;
+  --border: #c6d7df;
+  --input: #b8ccd6;
+  --ring: #1b6f96;
 
-  /* Named roles used directly by app components */
-  --pine: #0d6248;
-  --pine-strong: #083e30;
-  --pine-wash: #d4ecdf;
-  --clay: #b35f2e;
-  --clay-wash: #f5dfcc;
-  --spine-empty: #c4d7cd;
+  /* Legacy token names remain for component compatibility; all are blue. */
+  --pine: #155d80;
+  --pine-strong: #0b3952;
+  --pine-wash: #d5e8f0;
+  --clay: #397ca1;
+  --clay-wash: #dfebf2;
+  --spine-empty: #c0d3dc;
 
-  --hero: #073c2e;
-  --hero-foreground: #f5fbf7;
-  --hero-muted: #bad2c6;
-  --hero-panel: #f9fcfa;
+  --hero: #071d2c;
+  --hero-foreground: #f3faff;
+  --hero-muted: #b8d2df;
+  --hero-panel: #f7fbfd;
 
-  --chart-1: oklch(0.428 0.079 164);
-  --chart-2: oklch(0.532 0.128 47);
-  --chart-3: oklch(0.560 0.070 200);
-  --chart-4: oklch(0.640 0.095 120);
-  --chart-5: oklch(0.480 0.090 300);
+  --chart-1: oklch(0.45 0.09 235);
+  --chart-2: oklch(0.54 0.1 245);
+  --chart-3: oklch(0.58 0.08 220);
+  --chart-4: oklch(0.65 0.07 205);
+  --chart-5: oklch(0.5 0.08 270);
 
   --sidebar: #e7f0f3;
   --sidebar-foreground: #142a38;
@@ -130,8 +128,8 @@
   --surface-flat: var(--card);
   --surface-raised: var(--card);
   --surface-interactive: var(--card);
-  --shadow-raised: 0 1px 2px rgb(7 60 46 / 0.08), 0 18px 48px -28px rgb(7 47 37 / 0.38);
-  --shadow-float: 0 4px 10px rgb(7 60 46 / 0.09), 0 28px 72px -30px rgb(7 47 37 / 0.5);
+  --shadow-raised: 0 1px 2px rgb(7 38 57 / 0.08), 0 18px 48px -28px rgb(6 31 48 / 0.38);
+  --shadow-float: 0 4px 10px rgb(7 45 68 / 0.1), 0 28px 72px -30px rgb(5 29 45 / 0.48);
   --content-public: 72rem;
   --content-reading: 68ch;
   --duration-fast: 150ms;
@@ -140,52 +138,51 @@
 }
 
 .dark {
-  /* Black spruce base, jade surfaces, and a restrained bronze accent. The
-     wider tonal spacing keeps dark mode dimensional without turning it grey. */
-  --background: #050f0c;
-  --foreground: #edf6f1;
+  /* Ink and deep navy create depth; cool blue accents preserve contrast. */
+  --background: #030a10;
+  --foreground: #e9f3f8;
 
-  --card: #0c2019;
+  --card: #081923;
   --card-foreground: var(--foreground);
-  --popover: #10271f;
+  --popover: #0c202c;
   --popover-foreground: var(--foreground);
 
-  --primary: #83d9b0;
-  --primary-foreground: #04110d;
+  --primary: #78c9e8;
+  --primary-foreground: #021019;
 
-  --secondary: #122b22;
-  --secondary-foreground: #deece5;
+  --secondary: #102634;
+  --secondary-foreground: #dcebf2;
 
-  --muted: #142820;
-  --muted-foreground: #9eb3aa;
+  --muted: #122531;
+  --muted-foreground: #9fb2bd;
 
-  --accent: #452d20;
-  --accent-foreground: #f0bd91;
+  --accent: #183346;
+  --accent-foreground: #b9def0;
 
   --destructive: #ee7a86;
   --destructive-foreground: #24070b;
 
-  --border: #223d32;
-  --input: #2b4a3d;
-  --ring: #83d9b0;
+  --border: #1d3542;
+  --input: #294856;
+  --ring: #72c9eb;
 
-  --pine: #83d9b0;
-  --pine-strong: #b1ecd0;
-  --pine-wash: #123629;
-  --clay: #e5a16f;
-  --clay-wash: #3b281e;
-  --spine-empty: #29483b;
+  --pine: #78c9e8;
+  --pine-strong: #b7e8fa;
+  --pine-wash: #102b3b;
+  --clay: #83b4d1;
+  --clay-wash: #173040;
+  --spine-empty: #263f4c;
 
-  --hero: #03150f;
-  --hero-foreground: #f1f8f4;
-  --hero-muted: #a7c9b9;
-  --hero-panel: #0b211a;
+  --hero: #020a10;
+  --hero-foreground: #eff8fc;
+  --hero-muted: #a8c6d5;
+  --hero-panel: #091c27;
 
-  --chart-1: oklch(0.706 0.109 164);
-  --chart-2: oklch(0.741 0.108 55);
-  --chart-3: oklch(0.700 0.078 200);
-  --chart-4: oklch(0.760 0.095 120);
-  --chart-5: oklch(0.680 0.090 300);
+  --chart-1: oklch(0.72 0.1 235);
+  --chart-2: oklch(0.76 0.09 245);
+  --chart-3: oklch(0.73 0.08 220);
+  --chart-4: oklch(0.78 0.07 205);
+  --chart-5: oklch(0.72 0.08 270);
 
   --sidebar: #06111b;
   --sidebar-foreground: #d9e8ef;
@@ -224,24 +221,24 @@
   body {
     @apply min-w-0 overflow-x-clip bg-background text-foreground;
     background-image:
-      radial-gradient(circle at 8% -10%, rgb(13 118 84 / 0.1), transparent 32rem),
-      radial-gradient(circle at 100% 12%, rgb(179 95 46 / 0.07), transparent 26rem);
+      radial-gradient(circle at 8% -10%, rgb(27 111 150 / 0.12), transparent 32rem),
+      radial-gradient(circle at 100% 12%, rgb(73 128 165 / 0.08), transparent 26rem);
     background-attachment: fixed;
     font-feature-settings: "kern" 1, "liga" 1;
     text-rendering: optimizeLegibility;
   }
   .dark body {
     background-image:
-      radial-gradient(ellipse at 8% -8%, rgb(67 139 106 / 0.16), transparent 36rem),
-      radial-gradient(ellipse at 100% 18%, rgb(156 91 53 / 0.09), transparent 30rem),
-      linear-gradient(180deg, #050f0c 0%, #071510 100%);
+      radial-gradient(ellipse at 8% -8%, rgb(49 133 176 / 0.18), transparent 36rem),
+      radial-gradient(ellipse at 100% 18%, rgb(47 91 132 / 0.12), transparent 30rem),
+      linear-gradient(180deg, #030a10 0%, #061520 100%);
   }
   .dark .home-hero {
     background-image:
-      radial-gradient(circle at 82% 12%, rgb(131 217 176 / 0.12), transparent 30rem),
-      radial-gradient(circle at 8% 92%, rgb(229 161 111 / 0.07), transparent 28rem),
-      linear-gradient(128deg, #02100c 0%, #062119 52%, #0a3024 100%);
-    box-shadow: inset 0 -1px 0 rgb(167 201 185 / 0.1);
+      radial-gradient(circle at 82% 12%, rgb(120 201 232 / 0.14), transparent 30rem),
+      radial-gradient(circle at 8% 92%, rgb(63 120 156 / 0.1), transparent 28rem),
+      linear-gradient(128deg, #01070c 0%, #071c2a 52%, #0b3044 100%);
+    box-shadow: inset 0 -1px 0 rgb(170 211 230 / 0.1);
   }
   html {
     @apply font-sans;
