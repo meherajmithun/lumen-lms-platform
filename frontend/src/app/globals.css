@@ -106,15 +106,18 @@
   --chart-4: oklch(0.65 0.07 205);
   --chart-5: oklch(0.5 0.08 270);
 
-  --sidebar: #e7f0f3;
+  --sidebar: #cfe1e8;
   --sidebar-foreground: #142a38;
   --sidebar-primary: #123f60;
   --sidebar-primary-foreground: #f5fbff;
   --sidebar-accent: #d2e3e9;
   --sidebar-accent-foreground: #0e3148;
-  --sidebar-border: #c1d4dc;
+  --sidebar-border: #abc5d0;
   --sidebar-ring: #1d6c92;
-  --sidebar-surface-gradient: linear-gradient(165deg, #f0f6f8 0%, #e4eef2 50%, #dae8ed 100%);
+  --sidebar-surface-gradient:
+    radial-gradient(circle at 12% 10%, rgb(43 121 157 / 0.2), transparent 18rem),
+    radial-gradient(circle at 92% 88%, rgb(20 70 100 / 0.1), transparent 22rem),
+    linear-gradient(165deg, #e2eef3 0%, #d2e4eb 52%, #c4dbe4 100%);
   --sidebar-active-gradient: linear-gradient(105deg, #101821 0%, #123b57 56%, #176783 118%);
   --sidebar-hover-gradient: linear-gradient(105deg, rgb(187 215 226 / 0.72), rgb(211 230 237 / 0.54));
   --sidebar-active-foreground: #f3fbff;
@@ -184,15 +187,18 @@
   --chart-4: oklch(0.78 0.07 205);
   --chart-5: oklch(0.72 0.08 270);
 
-  --sidebar: #06111b;
+  --sidebar: #071723;
   --sidebar-foreground: #d9e8ef;
   --sidebar-primary: #78c9e8;
   --sidebar-primary-foreground: #03101a;
   --sidebar-accent: #102838;
   --sidebar-accent-foreground: #dff5ff;
-  --sidebar-border: #183342;
+  --sidebar-border: #22485b;
   --sidebar-ring: #69c4e8;
-  --sidebar-surface-gradient: linear-gradient(165deg, #03080e 0%, #071824 52%, #0a202c 100%);
+  --sidebar-surface-gradient:
+    radial-gradient(circle at 12% 10%, rgb(43 143 185 / 0.2), transparent 18rem),
+    radial-gradient(circle at 92% 88%, rgb(18 76 108 / 0.18), transparent 22rem),
+    linear-gradient(165deg, #02070c 0%, #071a27 52%, #0b2635 100%);
   --sidebar-active-gradient: linear-gradient(105deg, #01050a 0%, #08243a 56%, #0d4a63 118%);
   --sidebar-hover-gradient: linear-gradient(105deg, rgb(10 34 51 / 0.88), rgb(14 53 69 / 0.62));
   --sidebar-active-foreground: #e7f9ff;
