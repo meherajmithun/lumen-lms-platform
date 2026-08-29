@@ -178,8 +178,13 @@ export default async function AccountPage() {
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Stat icon={Users} label="People" value={stats.totalUsers} href="/admin/users" />
-            <Stat icon={BookOpen} label="Courses" value={stats.totalCourses} href="/teach" />
-            <Stat icon={GraduationCap} label="Enrolments" value={stats.totalEnrollments} href="/teach" />
+            <Stat icon={BookOpen} label="Courses" value={stats.totalCourses} href="/teach#course-list" />
+            <Stat
+              icon={GraduationCap}
+              label="Enrolments"
+              value={stats.totalEnrollments}
+              href="/admin?view=enrollments#platform-details"
+            />
             <Stat icon={Newspaper} label="Posts" value={stats.totalPosts} href="/blog-admin" />
           </div>
         </section>

@@ -214,7 +214,7 @@ export default async function AdminOverviewPage({
       )}
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-        <div className="lg:row-span-2">
+        <div>
           <RoleBreakdown usersByRole={stats.usersByRole} />
         </div>
         <StatCard
@@ -224,14 +224,6 @@ export default async function AdminOverviewPage({
           hint={`${stats.publishedPosts} published · ${stats.draftPosts} draft`}
           href="/blog-admin"
           tone="clay"
-        />
-        <StatCard
-          icon={FileText}
-          label="Quiz attempts"
-          value={stats.totalQuizAttempts}
-          hint={`across ${stats.totalQuizzes} quizzes`}
-          href="/teach"
-          tone="blue"
         />
       </div>
     </div>
