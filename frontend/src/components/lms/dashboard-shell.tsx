@@ -28,27 +28,27 @@ export function DashboardShell({
       <NavigationIndicator />
       <div className="mx-auto flex max-w-[1440px]">
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-sidebar-border [background-image:var(--sidebar-surface-gradient)] px-4 py-5 text-sidebar-foreground md:flex">
-          <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 font-heading text-sm font-bold tracking-tight">
-            <span className="flex size-8 items-center justify-center rounded-lg [background-image:var(--sidebar-active-gradient)] text-[var(--sidebar-active-foreground)] shadow-[var(--shadow-raised)]">
+          <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 font-heading text-sm font-bold tracking-tight text-white">
+            <span className="flex size-8 items-center justify-center rounded-lg border border-white/10 [background-image:var(--sidebar-active-gradient)] text-[var(--sidebar-active-foreground)] shadow-[0_10px_28px_-14px_rgb(86_194_229/0.75)]">
               <GraduationCap className="size-4.5" aria-hidden />
             </span>
             Lumen
           </Link>
           <DashboardNav role={user.role} />
-          <div className="mt-auto space-y-3 pt-4">
+          <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
             <div className="flex items-center gap-2 px-3">
               <span
                 aria-hidden
-                className="flex size-7 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-[10px] font-semibold text-sidebar-accent-foreground"
+                className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/10 text-[10px] font-semibold text-white shadow-inner"
               >
                 {initials}
               </span>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium">{user.username}</p>
-                <RoleBadge role={user.role} className="mt-1" />
+                <RoleBadge role={user.role} className="mt-1 bg-white/10 text-sky-100 ring-1 ring-inset ring-white/10" />
               </div>
             </div>
-            <SignOutButton variant="ghost" className="w-full justify-start px-3" />
+            <SignOutButton variant="ghost" className="w-full justify-start px-3 text-sidebar-foreground/80 hover:bg-white/10 hover:text-white" />
           </div>
         </aside>
 
@@ -74,20 +74,20 @@ export function DashboardShell({
                   </Link>
                 </SheetTitle>
                 <DashboardNav role={user.role} onNavigate={() => setOpen(false)} />
-                <div className="mt-auto space-y-3 pt-4">
+                <div className="mt-auto space-y-3 border-t border-white/10 pt-5">
                   <div className="flex items-center gap-2 px-3">
                     <span
                       aria-hidden
-                      className="flex size-7 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-[10px] font-semibold text-sidebar-accent-foreground"
+                      className="flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/10 text-[10px] font-semibold text-white shadow-inner"
                     >
                       {initials}
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{user.username}</p>
-                      <RoleBadge role={user.role} className="mt-1" />
+                      <RoleBadge role={user.role} className="mt-1 bg-white/10 text-sky-100 ring-1 ring-inset ring-white/10" />
                     </div>
                   </div>
-                  <SignOutButton variant="ghost" className="w-full justify-start px-3" />
+                  <SignOutButton variant="ghost" className="w-full justify-start px-3 text-sidebar-foreground/80 hover:bg-white/10 hover:text-white" />
                 </div>
               </SheetContent>
             </Sheet>

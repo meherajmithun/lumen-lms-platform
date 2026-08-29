@@ -106,25 +106,25 @@
   --chart-4: oklch(0.65 0.07 205);
   --chart-5: oklch(0.5 0.08 270);
 
-  --sidebar: #cfe1e8;
-  --sidebar-foreground: #142a38;
-  --sidebar-primary: #123f60;
-  --sidebar-primary-foreground: #f5fbff;
-  --sidebar-accent: #d2e3e9;
-  --sidebar-accent-foreground: #0e3148;
-  --sidebar-border: #abc5d0;
-  --sidebar-ring: #1d6c92;
+  --sidebar: #061725;
+  --sidebar-foreground: #eaf7fc;
+  --sidebar-primary: #78d8f4;
+  --sidebar-primary-foreground: #03111b;
+  --sidebar-accent: #123247;
+  --sidebar-accent-foreground: #eaf8fd;
+  --sidebar-border: #21465b;
+  --sidebar-ring: #78d8f4;
   --sidebar-surface-gradient:
-    radial-gradient(circle at 12% 10%, rgb(43 121 157 / 0.2), transparent 18rem),
-    radial-gradient(circle at 92% 88%, rgb(20 70 100 / 0.1), transparent 22rem),
-    linear-gradient(165deg, #e2eef3 0%, #d2e4eb 52%, #c4dbe4 100%);
-  --sidebar-active-gradient: linear-gradient(105deg, #101821 0%, #123b57 56%, #176783 118%);
-  --sidebar-hover-gradient: linear-gradient(105deg, rgb(187 215 226 / 0.72), rgb(211 230 237 / 0.54));
-  --sidebar-active-foreground: #f3fbff;
-  --sidebar-active-icon-bg: rgb(255 255 255 / 0.14);
-  --sidebar-active-icon-foreground: #dff7ff;
-  --sidebar-active-marker: #70d2f3;
-  --sidebar-hover-icon: #155d80;
+    radial-gradient(circle at 8% 4%, rgb(45 151 190 / 0.28), transparent 17rem),
+    radial-gradient(circle at 102% 86%, rgb(26 98 127 / 0.24), transparent 22rem),
+    linear-gradient(165deg, #06131f 0%, #081e2d 48%, #0a2939 100%);
+  --sidebar-active-gradient: linear-gradient(105deg, #124b69 0%, #176b8d 58%, #2386a2 120%);
+  --sidebar-hover-gradient: linear-gradient(105deg, rgb(27 74 98 / 0.72), rgb(23 91 116 / 0.42));
+  --sidebar-active-foreground: #f5fcff;
+  --sidebar-active-icon-bg: rgb(232 249 255 / 0.14);
+  --sidebar-active-icon-foreground: #dff8ff;
+  --sidebar-active-marker: #78d8f4;
+  --sidebar-hover-icon: #8cddf4;
 
   /* Surface and rhythm roles. These remain presentation-only and derive from
      the existing palette rather than introducing a parallel colour system. */
