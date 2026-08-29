@@ -25,9 +25,16 @@ const deniedExecutableTypes = [
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
   'users-permissions': {
     config: {
-      jwtManagement: 'refresh',
+      // Next.js owns the browser session and stores this JWT in its own
+      // httpOnly cookie for at most seven days. Refresh mode issues a short-lived
+      // access token, but the frontend never receives/retains Strapi's refresh
+      // cookie on its server-to-server login request; users would therefore be
+      // redirected to sign-in when navigating to a freshly rendered page. A
+      // legacy plugin JWT lasts 30 days by Strapi default, while our Next cookie
+      // remains the stricter seven-day limit.
+      jwtManagement: 'legacy-support',
       sessions: {
-        httpOnly: true,
+        httpOnly: false,
       },
     },
   },
