@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   BookMarked, BookOpen, ClipboardList, LayoutDashboard,
   MessageSquareQuote, Newspaper, PenSquare, SlidersHorizontal, User, UserPlus, Users,
@@ -42,11 +43,39 @@ const NAV: Record<Role, Item[]> = {
 /** Every role gets these, below their own section. */
 const COMMON: Item[] = [{ href: '/account', label: 'Your profile', icon: User }];
 
+const prefetchedRoutes = new Set<string>();
+
 export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
   const pathname = usePathname();
-  // Link handles viewport/hover prefetching. Eagerly prefetching every role
-  // route here caused all authenticated data pages to hit Strapi together.
+  const router = useRouter();
   const items = [...NAV[role], ...COMMON];
+
+  useEffect(() => {
+    const destinations = [...NAV[role], ...COMMON]
+      .map(({ href }) => href)
+      .filter((href) => href !== pathname && !prefetchedRoutes.has(href));
+    const timers: number[] = [];
+
+    // Dynamic authenticated routes are only partially prefetched by Link. Warm
+    // the complete destinations one at a time while the browser is idle so a
+    // click can use the client cache without flooding Strapi with parallel work.
+    destinations.forEach((href, index) => {
+      const timer = window.setTimeout(() => {
+        if (document.visibilityState !== 'visible' || prefetchedRoutes.has(href)) return;
+        prefetchedRoutes.add(href);
+        router.prefetch(href);
+      }, 500 + index * 650);
+      timers.push(timer);
+    });
+
+    return () => timers.forEach(window.clearTimeout);
+  }, [pathname, role, router]);
+
+  const prefetchNow = (href: string) => {
+    if (prefetchedRoutes.has(href)) return;
+    prefetchedRoutes.add(href);
+    router.prefetch(href);
+  };
 
   return (
     <nav className="flex flex-col gap-1">
@@ -56,6 +85,8 @@ export function DashboardNav({ role, onNavigate }: { role: Role; onNavigate?: ()
           <Link
             key={href}
             href={href}
+            onPointerEnter={() => prefetchNow(href)}
+            onFocus={() => prefetchNow(href)}
             onClick={onNavigate}
             aria-current={active ? 'page' : undefined}
             className={cn(
