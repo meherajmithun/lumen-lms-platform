@@ -235,6 +235,15 @@ export type PlatformStats = {
   totalPosts: number;
   publishedPosts: number;
   draftPosts: number;
+  courseDetails: Array<{
+    documentId: string;
+    title: string;
+    lessons: Array<Pick<Lesson, 'documentId' | 'title' | 'order' | 'contentType' | 'durationMinutes'>>;
+    enrollments: Array<{
+      documentId: string;
+      student: Pick<StrapiUser, 'id' | 'username' | 'email'> | null;
+    }>;
+  }>;
 };
 
 export type Paginated<T> = {
