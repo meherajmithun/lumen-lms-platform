@@ -187,19 +187,13 @@ export async function seedDemoData(strapi: Core.Strapi): Promise<void> {
       .findOne({ where: { type: u.role } });
 
     if (found) {
-      // Demo mode promises deterministic walkthrough credentials. Reconcile
-      // existing rows too, so databases created by an older seed can log in
-      // without requiring a reset from the admin panel.
-      const updated = await userService.edit(found.id, {
-        username: u.username,
-        email: u.email,
-        password: PASSWORD,
-        confirmed: true,
-        blocked: false,
-        provider: 'local',
-        role: role?.id,
-      });
-      byEmail.set(u.email, updated);
+      // A Railway restart can happen after the users were committed but before
+      // the rest of the seed completed. Do not send an existing user's unique
+      // username/email back through Strapi's Document Service: in Strapi 5 the
+      // uniqueness validator can compare the update with the row itself and
+      // abort bootstrap with "This attribute must be unique". Existing users
+      // are already repaired by repairUsers/repairRoleRelations before seeding.
+      byEmail.set(u.email, found);
       continue;
     }
 
@@ -226,22 +220,9 @@ export async function seedDemoData(strapi: Core.Strapi): Promise<void> {
       filters: { slug }, fields: ['documentId'], limit: 1,
     });
     if (found) {
-      // Seed data is reconciled, not merely detected. This repairs databases
-      // created by older schemas where publication flags or owners drifted.
-      const instructor = byEmail.get(c.owner);
-      await strapi.documents('api::course.course').update({
-        documentId: found.documentId,
-        data: {
-          title: c.title,
-          description: c.description,
-          coverImageUrl: c.coverImageUrl,
-          level: c.level as 'beginner' | 'intermediate' | 'advanced',
-          price: 0,
-          discountPercent: 0,
-          isPublished: true,
-          instructor: instructor?.id,
-        },
-      });
+      // Treat the slug as the idempotency key. Rewriting a title-backed UID on
+      // every boot is unnecessary and can trigger the same self-collision in
+      // Strapi's uniqueness validator as an existing user's username/email.
       const existingLessons = await strapi.documents('api::lesson.lesson').findMany({
         filters: { course: { documentId: found.documentId } },
         fields: ['documentId'], sort: 'order:asc', limit: -1,
