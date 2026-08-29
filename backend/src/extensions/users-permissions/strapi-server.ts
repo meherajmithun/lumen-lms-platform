@@ -404,7 +404,7 @@ export default (plugin: Plugin) => {
         .count({ where: { role: role.id } });
     }
 
-    const [totalUsers, totalCourses, totalLessons, totalEnrollments, totalQuizzes, totalAttempts, courseDetails] =
+    const [totalUsers, totalCourses, totalLessons, totalEnrollments, totalQuizzes, totalAttempts, courseDetails, quizAttempts] =
       await Promise.all([
         strapi.query('plugin::users-permissions.user').count(),
         strapi.query('api::course.course').count(),
@@ -427,6 +427,18 @@ export default (plugin: Plugin) => {
           sort: ['title:asc'],
           limit: -1,
         }),
+        strapi.documents('api::quiz-attempt.quiz-attempt').findMany({
+          fields: ['documentId', 'score', 'correctCount', 'totalQuestions', 'passed', 'submittedAt'],
+          populate: {
+            student: { fields: ['id', 'username', 'email'] },
+            quiz: {
+              fields: ['documentId', 'title'],
+              populate: { course: { fields: ['documentId', 'title'] } },
+            },
+          },
+          sort: ['submittedAt:desc'],
+          limit: -1,
+        }),
       ]);
 
     const publishedPosts = await strapi.documents('api::post.post').count({ status: 'published' });
@@ -445,6 +457,7 @@ export default (plugin: Plugin) => {
         publishedPosts,
         draftPosts: Math.max(0, allPosts - publishedPosts),
         courseDetails,
+        quizAttempts,
       },
     };
   };

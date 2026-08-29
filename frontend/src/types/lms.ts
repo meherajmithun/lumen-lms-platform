@@ -244,6 +244,18 @@ export type PlatformStats = {
       student: Pick<StrapiUser, 'id' | 'username' | 'email'> | null;
     }>;
   }>;
+  quizAttempts: Array<{
+    documentId: string;
+    score: number;
+    correctCount: number;
+    totalQuestions: number;
+    passed: boolean;
+    submittedAt: string;
+    student: Pick<StrapiUser, 'id' | 'username' | 'email'> | null;
+    quiz: (Pick<Quiz, 'documentId' | 'title'> & {
+      course: Pick<Course, 'documentId' | 'title'> | null;
+    }) | null;
+  }>;
 };
 
 export type Paginated<T> = {
