@@ -12,7 +12,32 @@ managers build the material; admins manage people and roles.
 
 ---
 
-## Run it locally
+## Quick local run
+
+1. Install Node.js 20 or 22 and clone the repository.
+2. Run `npm install` inside both `backend/` and `frontend/`.
+3. Copy `backend/.env.example` to `backend/.env` and `frontend/.env.example`
+   to `frontend/.env.local`, then add the generated secrets described below.
+4. Start the backend with `npm run develop` in `backend/`, then start the
+   frontend with `npm run dev` in `frontend/`.
+
+Open [http://localhost:3000](http://localhost:3000). The backend runs at
+[http://localhost:1337](http://localhost:1337) and uses SQLite locally, so no
+separate database installation is required.
+
+## Completed features
+
+- Authentication with Student, Instructor, Content Manager, and Admin roles.
+- Server-enforced role permissions, instructor ownership, and admin role management.
+- Course, ordered text/video lesson, quiz, question, and blog management.
+- Enrollment applications, payment details, approval flow, and enrolled-course access.
+- Sequential lesson learning, completion tracking, learning history, and course progress.
+- Server-side quiz grading with saved attempts and student result history.
+- Admin statistics with course-grouped lessons and enrolled-student drill-downs.
+- Editable profiles, instructor requests, student stories, responsive dashboards,
+  and navy-themed light/dark modes.
+
+## Detailed local setup
 
 **You need:** Node 20 or 22 (`node -v` to check), and npm. Nothing else — no
 database to install, no accounts to create, no Strapi or Vercel sign-up.
@@ -145,7 +170,7 @@ cd backend && npm test
 
 ---
 
-## Features
+## Feature map
 
 | Requirement | Where |
 |---|---|
