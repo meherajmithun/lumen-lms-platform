@@ -11,15 +11,6 @@ import { ROLE_LABELS, ROLES, type Role } from '@/types/lms';
 
 export const metadata: Metadata = { title: 'Overview' };
 
-const formatDate = (value: string) =>
-  new Date(value).toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
 function StatCard({
   icon: Icon,
   label,
@@ -127,31 +118,8 @@ export default async function AdminOverviewPage({
 }) {
   await requireRole('admin');
   const { view } = await searchParams;
-  const detailView = view === 'enrollments'
-    ? 'enrollments'
-    : view === 'lessons'
-      ? 'lessons'
-      : view === 'quiz-attempts'
-        ? 'quiz-attempts'
-        : null;
+  const detailView = view === 'enrollments' ? 'enrollments' : view === 'lessons' ? 'lessons' : null;
   const stats = await getPlatformStats();
-  const attemptGroups = Object.values(
-    stats.quizAttempts.reduce<Record<string, {
-      title: string;
-      courseTitle: string;
-      attempts: typeof stats.quizAttempts;
-    }>>((groups, attempt) => {
-      const key = attempt.quiz?.documentId ?? 'unavailable-quiz';
-      const group = groups[key] ?? {
-        title: attempt.quiz?.title ?? 'Unavailable quiz',
-        courseTitle: attempt.quiz?.course?.title ?? 'Course unavailable',
-        attempts: [],
-      };
-      group.attempts.push(attempt);
-      groups[key] = group;
-      return groups;
-    }, {})
-  );
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -201,7 +169,7 @@ export default async function AdminOverviewPage({
                 ))}
               </div>
             </>
-          ) : detailView === 'enrollments' ? (
+          ) : (
             <>
               <SectionHeading eyebrow="Learning community" title="Students enrolled by course" count={stats.totalEnrollments} />
               <div className="grid gap-4 lg:grid-cols-2">
@@ -241,61 +209,6 @@ export default async function AdminOverviewPage({
                 })}
               </div>
             </>
-          ) : (
-            <>
-              <SectionHeading eyebrow="Assessment activity" title="Attempts by quiz" count={stats.totalQuizAttempts} />
-              {attemptGroups.length > 0 ? (
-                <div className="grid gap-4 lg:grid-cols-2">
-                  {attemptGroups.map((group) => (
-                    <article key={`${group.courseTitle}-${group.title}`} className="overflow-hidden rounded-2xl border border-border/80 bg-card">
-                      <div className="flex items-center justify-between gap-4 border-b border-border/70 bg-[color-mix(in_oklch,var(--chart-3)_8%,transparent)] px-5 py-4">
-                        <div className="min-w-0">
-                          <h3 className="truncate font-heading font-semibold tracking-tight">{group.title}</h3>
-                          <p className="mt-0.5 truncate text-xs text-muted-foreground">{group.courseTitle}</p>
-                        </div>
-                        <span className="shrink-0 text-xs tabular text-muted-foreground">
-                          {group.attempts.length} {group.attempts.length === 1 ? 'attempt' : 'attempts'}
-                        </span>
-                      </div>
-                      <ul className="divide-y divide-border/60">
-                        {group.attempts.map((attempt) => (
-                          <li key={attempt.documentId} className="flex items-center gap-3 px-5 py-3.5">
-                            <span className={cn(
-                              'flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular',
-                              attempt.passed ? 'bg-pine-wash text-pine' : 'bg-clay-wash text-clay'
-                            )}>
-                              {attempt.score}%
-                            </span>
-                            <span className="min-w-0 flex-1">
-                              <span className="block truncate text-sm font-medium">
-                                {attempt.student?.username ?? 'Student unavailable'}
-                              </span>
-                              <span className="mt-0.5 block truncate text-xs text-muted-foreground">
-                                {formatDate(attempt.submittedAt)}
-                              </span>
-                            </span>
-                            <span className="shrink-0 text-right">
-                              <span className="block text-sm font-medium tabular">
-                                {attempt.correctCount}/{attempt.totalQuestions}
-                              </span>
-                              <span className={cn('block text-xs', attempt.passed ? 'text-pine' : 'text-clay')}>
-                                {attempt.passed ? 'Passed' : 'Not passed'}
-                              </span>
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </article>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-border bg-card px-6 py-10 text-center">
-                  <FileText className="mx-auto size-6 text-muted-foreground" aria-hidden />
-                  <p className="mt-3 text-sm font-medium">No quiz attempts yet</p>
-                  <p className="mt-1 text-xs text-muted-foreground">Student submissions will appear here.</p>
-                </div>
-              )}
-            </>
           )}
         </section>
       )}
@@ -317,9 +230,8 @@ export default async function AdminOverviewPage({
           label="Quiz attempts"
           value={stats.totalQuizAttempts}
           hint={`across ${stats.totalQuizzes} quizzes`}
-          href="/admin?view=quiz-attempts#platform-details"
+          href="/teach"
           tone="blue"
-          active={detailView === 'quiz-attempts'}
         />
       </div>
     </div>
