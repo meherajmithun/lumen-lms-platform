@@ -5,7 +5,7 @@
     "singularName": "lesson",
     "pluralName": "lessons",
     "displayName": "Lesson",
-    "description": "A lesson inside a course. Content is either text or a video URL."
+    "description": "A lesson inside a course. Content is text, video, PDF, or an image."
   },
   "options": {
     "draftAndPublish": false
@@ -21,7 +21,9 @@
       "type": "enumeration",
       "enum": [
         "text",
-        "video"
+        "video",
+        "pdf",
+        "image"
       ],
       "default": "text",
       "required": true
@@ -31,6 +33,13 @@
     },
     "videoUrl": {
       "type": "string"
+    },
+    "resourceUrl": {
+      "type": "string"
+    },
+    "resourceName": {
+      "type": "string",
+      "maxLength": 255
     },
     "order": {
       "type": "integer",

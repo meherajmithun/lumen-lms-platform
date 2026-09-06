@@ -77,9 +77,11 @@ export type Course = {
 export type Lesson = {
   documentId: string;
   title: string;
-  contentType: 'text' | 'video';
+  contentType: 'text' | 'video' | 'pdf' | 'image';
   body?: string | null;
   videoUrl?: string | null;
+  resourceUrl?: string | null;
+  resourceName?: string | null;
   order: number;
   durationMinutes?: number | null;
   course?: Course | null;
@@ -89,7 +91,7 @@ export type SyllabusEntry = {
   documentId: string;
   title: string;
   order: number;
-  contentType: 'text' | 'video';
+  contentType: 'text' | 'video' | 'pdf' | 'image';
   durationMinutes: number | null;
 };
 

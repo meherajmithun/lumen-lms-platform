@@ -83,7 +83,7 @@ export default async function CourseOutlinePage({
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium">{lesson.title}</span>
                   <span className="text-xs text-muted-foreground">
-                    {lesson.contentType === 'video' ? 'Video' : 'Reading'}
+                    {{ text: 'Reading', video: 'Video', pdf: 'PDF', image: 'Image' }[lesson.contentType]}
                     {lesson.durationMinutes ? ` · ${lesson.durationMinutes} min` : ''}
                   </span>
                 </span>

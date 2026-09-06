@@ -3,7 +3,7 @@
 import { useOptimistic, useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Check, ChevronLeft, ChevronRight, CircleCheck, FileQuestion, Loader2 } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, CircleCheck, Download, ExternalLink, FileQuestion, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { LessonSpine } from './lesson-spine';
@@ -167,6 +167,32 @@ export function LessonPlayer({
           <div className="mt-8">
             {lesson.contentType === 'video' && lesson.videoUrl ? (
               <VideoEmbed url={lesson.videoUrl} title={lesson.title} />
+            ) : lesson.contentType === 'pdf' && lesson.resourceUrl ? (
+              <div className="space-y-3">
+                <iframe
+                  src={lesson.resourceUrl}
+                  title={lesson.title}
+                  className="h-[70dvh] min-h-[32rem] w-full rounded-xl border border-border bg-white"
+                />
+                <a href={lesson.resourceUrl} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+                  <ExternalLink className="size-4" aria-hidden />
+                  Open PDF in a new tab
+                </a>
+              </div>
+            ) : lesson.contentType === 'image' && lesson.resourceUrl ? (
+              <div className="space-y-3">
+                {/* A plain image preserves the uploaded asset's natural dimensions. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={lesson.resourceUrl}
+                  alt={lesson.title}
+                  className="max-h-[75dvh] w-auto max-w-full rounded-xl border border-border bg-muted/30 object-contain"
+                />
+                <a href={lesson.resourceUrl} download={lesson.resourceName || undefined} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+                  <Download className="size-4" aria-hidden />
+                  Download image
+                </a>
+              </div>
             ) : (
               <div className="prose-lesson">
                 {(lesson.body ?? '').split('\n\n').map((block, i) =>

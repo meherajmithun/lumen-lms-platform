@@ -17,16 +17,18 @@ export const courseSchema = z.object({
 });
 
 /**
- * A lesson is either reading or a video, and the required field follows from
+ * A lesson is reading, video, PDF, or image, and the required field follows from
  * that choice. Strapi validates the same pairing in a lifecycle hook, so a direct
  * API call cannot save a video lesson with no video.
  */
 export const lessonSchema = z
   .object({
     title: z.string().trim().min(2, 'Use at least 2 characters').max(160),
-    contentType: z.enum(['text', 'video']),
+    contentType: z.enum(['text', 'video', 'pdf', 'image']),
     body: z.string().optional().or(z.literal('')),
     videoUrl: z.string().trim().optional().or(z.literal('')),
+    resourceUrl: z.string().trim().optional().or(z.literal('')),
+    resourceName: z.string().trim().max(255).optional().or(z.literal('')),
     order: z.coerce.number().int().min(0),
     durationMinutes: z.coerce.number().int().min(0).max(600).optional(),
   })
@@ -38,6 +40,12 @@ export const lessonSchema = z
       const result = urlish.safeParse(value.videoUrl ?? '');
       if (!result.success) {
         ctx.addIssue({ code: 'custom', path: ['videoUrl'], message: 'Video lessons need a valid URL' });
+      }
+    }
+    if (value.contentType === 'pdf' || value.contentType === 'image') {
+      const result = urlish.safeParse(value.resourceUrl ?? '');
+      if (!result.success) {
+        ctx.addIssue({ code: 'custom', path: ['resourceUrl'], message: 'Choose a file to upload' });
       }
     }
   });

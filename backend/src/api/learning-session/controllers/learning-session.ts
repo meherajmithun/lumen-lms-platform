@@ -24,14 +24,16 @@ export default factories.createCoreController('api::learning-session.learning-se
 
     const lesson = await strapi.documents('api::lesson.lesson').findOne({
       documentId: lessonId,
-      fields: ['documentId', 'contentType', 'body', 'videoUrl'],
+      fields: ['documentId', 'contentType', 'body', 'videoUrl', 'resourceUrl'],
       populate: { course: { fields: ['documentId'] } },
     });
     const course = lesson?.course as { documentId?: string } | null | undefined;
     if (!lesson || !course?.documentId) return ctx.notFound('Lesson not found');
     const hasContent = lesson.contentType === 'video'
       ? Boolean(lesson.videoUrl?.trim())
-      : Boolean(lesson.body?.trim());
+      : lesson.contentType === 'text'
+        ? Boolean(lesson.body?.trim())
+        : Boolean(lesson.resourceUrl?.trim());
     if (!hasContent) return ctx.badRequest('This lesson has no trackable content');
 
     const [enrollment] = await strapi.documents('api::enrollment.enrollment').findMany({

@@ -837,7 +837,7 @@ export interface ApiLessonProgressLessonProgress
 export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
   collectionName: 'lessons';
   info: {
-    description: 'A lesson inside a course. Content is either text or a video URL.';
+    description: 'A lesson inside a course. Content is text, video, PDF, or an image.';
     displayName: 'Lesson';
     pluralName: 'lessons';
     singularName: 'lesson';
@@ -847,7 +847,7 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
   };
   attributes: {
     body: Schema.Attribute.Text;
-    contentType: Schema.Attribute.Enumeration<['text', 'video']> &
+    contentType: Schema.Attribute.Enumeration<['text', 'video', 'pdf', 'image']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'text'>;
     course: Schema.Attribute.Relation<'manyToOne', 'api::course.course'>;
@@ -874,6 +874,11 @@ export interface ApiLessonLesson extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::lesson-progress.lesson-progress'
     >;
+    resourceName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 255;
+      }>;
+    resourceUrl: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &

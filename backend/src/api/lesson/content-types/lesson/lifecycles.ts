@@ -13,7 +13,7 @@ const isUrl = (value: unknown): boolean => {
 };
 
 /**
- * A lesson is either reading or a video, and the matching field has to be filled.
+ * A lesson is reading, video, PDF, or image, and its matching field is required.
  *
  * The app's own form enforces this with zod, but the admin panel and a direct API
  * call do not go through that form — so it is enforced here too, where every
@@ -33,6 +33,10 @@ function assertContentMatchesType(event: { params: { data?: Record<string, unkno
   if (contentType === 'text') {
     const body = typeof data.body === 'string' ? data.body.trim() : '';
     if (body === '') throw new ValidationError('A reading lesson needs some body text.');
+  }
+
+  if ((contentType === 'pdf' || contentType === 'image') && !isUrl(data.resourceUrl)) {
+    throw new ValidationError(`A ${contentType} lesson needs an uploaded file URL.`);
   }
 }
 

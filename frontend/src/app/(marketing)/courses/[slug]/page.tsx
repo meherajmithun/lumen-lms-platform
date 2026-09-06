@@ -85,6 +85,7 @@ export default async function CourseDetailPage({
   const lessons = course.syllabus ?? [];
   const videoLessons = lessons.filter((lesson) => lesson.contentType === 'video');
   const readingLessons = lessons.filter((lesson) => lesson.contentType === 'text');
+  const resourceLessons = lessons.filter((lesson) => lesson.contentType === 'pdf' || lesson.contentType === 'image');
   const videoMinutes = videoLessons.reduce((total, lesson) => total + (lesson.durationMinutes ?? 0), 0);
   const originalPrice = Number(course.price ?? 0);
   const discount = Number(course.discountPercent ?? 0);
@@ -123,6 +124,7 @@ export default async function CourseDetailPage({
                 { label: 'Course status', value: lessons.length > 0 ? 'Ready' : 'Coming soon', icon: BadgeCheck },
                 { label: 'Video lessons', value: `${videoLessons.length} · ${formatCourseDuration(videoMinutes)}`, icon: Video },
                 { label: 'Reading lessons', value: String(readingLessons.length), icon: FileText },
+                { label: 'PDFs & images', value: String(resourceLessons.length), icon: BookOpen },
                 { label: 'Quizzes', value: String(course.quizCount), icon: FileQuestion },
                 { label: 'Level', value: LEVEL_LABEL[course.level], icon: Gauge },
               ].map(({ label, value, icon: Icon }) => (

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronDown, ChevronUp, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileImage, FileText, Loader2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,7 +25,11 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
   const [editing, setEditing] = useState<Lesson | null>(null);
   const [creating, setCreating] = useState(false);
   const [deleting, setDeleting] = useState<Lesson | null>(null);
-  const [contentType, setContentType] = useState<'text' | 'video'>('text');
+  const [contentType, setContentType] = useState<Lesson['contentType']>('text');
+
+  const typeLabel = (type: Lesson['contentType']) => ({
+    text: 'Reading', video: 'Video', pdf: 'PDF', image: 'Image',
+  })[type];
 
   const ordered = lessons.slice().sort((a, b) => a.order - b.order);
 
@@ -91,7 +95,7 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
       {ordered.length === 0 ? (
         <EmptyState
           title="No lessons yet"
-          description="Add the first lesson — it can be written text or a video link."
+          description="Add the first lesson — use text, video, PDF, or an image."
           action={<Button onClick={openCreate}>Add the first lesson</Button>}
         />
       ) : (
@@ -124,7 +128,7 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-medium">{lesson.title}</span>
                 <span className="text-xs text-muted-foreground">
-                  {lesson.contentType === 'video' ? 'Video' : 'Reading'}
+                  {typeLabel(lesson.contentType)}
                   {lesson.durationMinutes ? ` · ${lesson.durationMinutes} min` : ''}
                 </span>
               </span>
@@ -158,7 +162,7 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
           <DialogHeader>
             <DialogTitle>{editing ? 'Edit lesson' : 'Add a lesson'}</DialogTitle>
             <DialogDescription>
-              A lesson is either something to read or a video to watch.
+              Add reading text, a video link, a PDF, or an image.
             </DialogDescription>
           </DialogHeader>
 
@@ -174,8 +178,8 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
 
             <fieldset className="space-y-2">
               <legend className="text-sm font-medium">Content</legend>
-              <div className="flex gap-2">
-                {(['text', 'video'] as const).map((value) => (
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {(['text', 'video', 'pdf', 'image'] as const).map((value) => (
                   <label
                     key={value}
                     className={
@@ -192,7 +196,7 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
                       onChange={() => setContentType(value)}
                       className="sr-only"
                     />
-                    {value === 'text' ? 'Reading' : 'Video'}
+                    {typeLabel(value)}
                   </label>
                 ))}
               </div>
@@ -209,7 +213,7 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
                   placeholder={'Write the lesson.\n\nBlank lines start a new paragraph, and "## " makes a heading.'}
                 />
               </div>
-            ) : (
+            ) : contentType === 'video' ? (
               <div className="space-y-2">
                 <Label htmlFor="lesson-video">Video URL</Label>
                 <Input
@@ -221,6 +225,28 @@ export function LessonManager({ courseId, lessons }: { courseId: string; lessons
                 />
                 <p className="text-xs text-muted-foreground">
                   Paste a YouTube/Vimeo link or a direct MP4, WebM or Ogg URL from Strapi Media Library.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="lesson-resource">
+                  {contentType === 'pdf' ? 'PDF file' : 'Image file'}
+                </Label>
+                <Input
+                  key={contentType}
+                  id="lesson-resource"
+                  name="resourceFile"
+                  type="file"
+                  accept={contentType === 'pdf' ? 'application/pdf,.pdf' : 'image/jpeg,image/png,image/webp,image/gif'}
+                  required={!editing?.resourceUrl}
+                />
+                <input type="hidden" name="existingResourceUrl" value={editing?.resourceUrl ?? ''} />
+                <input type="hidden" name="existingResourceName" value={editing?.resourceName ?? ''} />
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  {contentType === 'pdf' ? <FileText className="size-3.5" aria-hidden /> : <FileImage className="size-3.5" aria-hidden />}
+                  {editing?.resourceUrl
+                    ? `Current: ${editing.resourceName || 'uploaded file'}. Choose another file to replace it.`
+                    : `${contentType === 'pdf' ? 'PDF' : 'JPG, PNG, WebP, or GIF'} · maximum 4 MB.`}
                 </p>
               </div>
             )}

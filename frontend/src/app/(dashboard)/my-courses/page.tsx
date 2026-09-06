@@ -105,7 +105,7 @@ export default async function MyCoursesPage({
                         <CheckCircle2 className="size-4 shrink-0 text-pine" aria-hidden />
                         <span className="min-w-0 flex-1 truncate text-sm font-medium">{lesson.title}</span>
                         <span className="shrink-0 text-xs text-muted-foreground">
-                          {lesson.contentType === 'video' ? 'Video' : 'Reading'}
+                          {{ text: 'Reading', video: 'Video', pdf: 'PDF', image: 'Image' }[lesson.contentType]}
                           {lesson.durationMinutes ? ` · ${lesson.durationMinutes} min` : ''}
                         </span>
                       </Link>

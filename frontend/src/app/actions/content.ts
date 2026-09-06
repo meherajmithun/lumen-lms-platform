@@ -4,7 +4,7 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { requireRole } from '@/lib/auth';
 import { createCourse, deleteCourse, updateCourse } from '@/lib/api/courses';
-import { createLesson, deleteLesson, updateLesson } from '@/lib/api/lessons';
+import { createLesson, deleteLesson, updateLesson, uploadLessonResource } from '@/lib/api/lessons';
 import { createQuestion, createQuiz, deleteQuestion, updateQuestion } from '@/lib/api/quizzes';
 import { courseSchema, lessonSchema, questionSchema, quizSchema } from '@/lib/validation/content';
 import { toUserMessage } from '@/lib/strapi';
@@ -125,11 +125,43 @@ export async function saveLessonAction(
 ): Promise<ActionResult> {
   await requireRole(...AUTHORS);
 
+  const contentType = str(form, 'contentType') || 'text';
+  const file = form.get('resourceFile');
+  const existingResourceUrl = str(form, 'existingResourceUrl');
+  const existingResourceName = str(form, 'existingResourceName');
+  let resourceUrl = existingResourceUrl;
+  let resourceName = existingResourceName;
+
+  if (contentType === 'pdf' || contentType === 'image') {
+    if (file instanceof File && file.size > 0) {
+      const allowed = contentType === 'pdf'
+        ? file.type === 'application/pdf'
+        : ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type);
+      if (!allowed) {
+        return { ok: false, error: contentType === 'pdf' ? 'Choose a PDF file' : 'Choose a JPG, PNG, WebP, or GIF image' };
+      }
+      if (file.size > 4 * 1024 * 1024) {
+        return { ok: false, error: 'The lesson file must be 4 MB or smaller' };
+      }
+      try {
+        const uploaded = await uploadLessonResource(file);
+        resourceUrl = uploaded.url;
+        resourceName = uploaded.name;
+      } catch (error) {
+        return { ok: false, error: toUserMessage(error) };
+      }
+    } else if (!lessonId || !resourceUrl) {
+      return { ok: false, error: 'Choose a file to upload' };
+    }
+  }
+
   const parsed = lessonSchema.safeParse({
     title: str(form, 'title'),
-    contentType: str(form, 'contentType') || 'text',
+    contentType,
     body: str(form, 'body'),
     videoUrl: str(form, 'videoUrl'),
+    resourceUrl,
+    resourceName,
     order: str(form, 'order') || 0,
     durationMinutes: str(form, 'durationMinutes') || 0,
   });
@@ -144,6 +176,12 @@ export async function saveLessonAction(
     contentType: parsed.data.contentType,
     body: parsed.data.contentType === 'text' ? parsed.data.body : null,
     videoUrl: parsed.data.contentType === 'video' ? parsed.data.videoUrl : null,
+    resourceUrl: parsed.data.contentType === 'pdf' || parsed.data.contentType === 'image'
+      ? parsed.data.resourceUrl
+      : null,
+    resourceName: parsed.data.contentType === 'pdf' || parsed.data.contentType === 'image'
+      ? parsed.data.resourceName
+      : null,
     order: parsed.data.order,
     durationMinutes: parsed.data.durationMinutes || null,
   };
