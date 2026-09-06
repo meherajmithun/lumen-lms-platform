@@ -55,6 +55,11 @@ export async function strapiFetch<T>(path: string, options: FetchOptions = {}): 
 
   const response = await fetch(`${BASE}/api${path}`, {
     ...init,
+    // Railway briefly stops accepting requests during a Strapi deploy. Without
+    // a deadline, one backend restart can make the entire server-rendered page
+    // hang until Vercel or the browser times out. Callers may still provide a
+    // shorter or longer signal for exceptional operations.
+    signal: init.signal ?? AbortSignal.timeout(10_000),
     headers: requestHeaders,
     ...(auth
       ? { cache: 'no-store' as const }
