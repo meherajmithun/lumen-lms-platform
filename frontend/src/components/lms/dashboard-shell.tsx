@@ -26,7 +26,7 @@ export function DashboardShell({
   return (
     <div className="min-h-dvh bg-background">
       <NavigationIndicator />
-      <div className="mx-auto flex max-w-[1440px]">
+      <div className="flex w-full">
         <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-sidebar-border [background-image:var(--sidebar-surface-gradient)] px-4 py-5 text-sidebar-foreground md:flex">
           <Link href="/" className="mb-8 flex items-center gap-2.5 px-2 font-heading text-sm font-bold tracking-tight text-white">
             <span className="flex size-8 items-center justify-center rounded-lg border border-white/10 [background-image:var(--sidebar-active-gradient)] text-[var(--sidebar-active-foreground)] shadow-[0_10px_28px_-14px_rgb(86_194_229/0.75)]">
