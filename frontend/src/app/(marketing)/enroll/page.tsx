@@ -45,6 +45,9 @@ export default async function EnrollPage({
         user={user}
         comboOffer={comboOffer!}
         isLoyal={Boolean(enrollments?.length)}
+        enrolledCourseIds={(enrollments ?? [])
+          .map((enrollment) => enrollment.course?.documentId)
+          .filter((id): id is string => Boolean(id))}
         initialSlug={course}
       />
     </main>

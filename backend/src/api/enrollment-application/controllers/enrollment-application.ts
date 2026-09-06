@@ -26,8 +26,19 @@ export default factories.createCoreController('api::enrollment-application.enrol
     const subtotal = summary.reduce((sum, c) => sum + c.amount, 0);
     const [[offer], priorEnrollments] = await Promise.all([
       strapi.documents('api::combo-offer.combo-offer').findMany({ fields: ['tiers','loyaltyDiscount','isActive'], limit: 1, sort: 'updatedAt:desc' }),
-      strapi.documents('api::enrollment.enrollment').findMany({ filters: { student: { id: user.id } }, fields: ['documentId'], limit: 1 }),
+      strapi.documents('api::enrollment.enrollment').findMany({
+        filters: { student: { id: user.id } },
+        fields: ['documentId'],
+        populate: { course: { fields: ['documentId'] } },
+        limit: -1,
+      }),
     ]);
+    const enrolledCourseIds = new Set(priorEnrollments.map((enrollment) =>
+      (enrollment.course as { documentId?: string } | null)?.documentId
+    ));
+    if (ids.some((id) => enrolledCourseIds.has(id))) {
+      return ctx.conflict('You are already enrolled in one or more selected courses');
+    }
     const tiers = offer ? normalizeComboTiers(offer.tiers) : DEFAULT_COMBO_TIERS;
     const comboDiscount = offer?.isActive === false ? 0 : Math.min(subtotal, comboDiscountFor(ids.length, tiers));
     const configuredLoyaltyDiscount = offer ? Number(offer.loyaltyDiscount ?? 300) : 300;
